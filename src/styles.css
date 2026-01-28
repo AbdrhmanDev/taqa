@@ -1,0 +1,17 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "tailwindcss";
+
+
+@theme {
+  --color-body-500: #f7f9fb;
+  --color-primary-500: #1e67a1;
+  --color-brand-600: #266df0;
+}
+
+* {
+  font-family: "Inter", sans-serif;
+}
+.bg-blue-700{
+  background-color: #1E67A1;
+}

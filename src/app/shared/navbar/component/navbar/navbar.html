@@ -1,0 +1,57 @@
+<!-- navbar.component.html -->
+<nav class="bg-white border-b border-gray-200  w-full z-30 top-0">
+  <div class="px-6 py-4">
+    <div class="flex items-end justify-end">
+
+
+      <div class="flex items-center gap-3">
+
+        <!-- Search Input -->
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <input type="text" placeholder="Search stations, devices....."
+            class="w-80 pl-10 pr-4 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-1 focus:ring-green-300 focus:border-green-700 outline-none transition-all" />
+        </div>
+        <div class="card flex justify-center ">
+          <p-select [options]="zones" [(ngModel)]="selectedZone" placeholder="Zones" class="w-[150px]">
+          </p-select>
+        </div>
+
+        <div class="card flex justify-center">
+          <p-select [options]="timeOptions" [(ngModel)]="selectedTime" placeholder="Time" class="w-[150px]">
+          </p-select>
+        </div>
+
+        <div>
+
+        </div>
+
+        <button
+          class="relative p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
+          <!-- Notification Badge -->
+          <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+        </button>
+
+
+        <button (click)="exportData()"
+          class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-white rounded-lg text-blue-500 border-blue-500 border-1  focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          Export
+        </button>
+
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,36 @@
+.bg-info {
+  background-color: rgb(211, 233, 255) !important;
+  width: 250px;
+  min-height: 100vh;
+  ul {
+    padding: 0px;
+    li {
+      list-style: none;
+
+      a {
+        text-decoration: none;
+        color: white;
+        display: block;
+        padding: 10px;
+        span {
+          padding: 0px 10px;
+          font-size: 23px;
+          font-family: Montserrat;
+        }
+      }
+    }
+  }
+  .bg-main-transparent {
+    background-color: #ef9b284d !important;
+    color: #ef9b28 !important;
+  }
+}
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 99;
+}
+img {
+  width: 100%;
+  height: auto;
+}
