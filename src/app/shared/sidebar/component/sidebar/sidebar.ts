@@ -23,40 +23,40 @@ export class Sidebar {
   links: SidebarSection[] = [
     {
       title: '',
-      items: [{ name: 'Dashboard', icon: 'dashboard', route: '/homeDashboard' }],
+      items: [{ name: 'Dashboard', icon: 'dashboard', route: '/dashboard/homeDashboard' }],
     },
     {
       title: 'Monitoring',
       items: [
-        { name: 'Stations', icon: 'stations', route: '/station' },
-        { name: 'Map View', icon: 'map', route: '/map' },
-        { name: 'QR', icon: 'qr', route: '/qr' },
+        { name: 'Stations', icon: 'stations', route: '/dashboard/station' },
+        { name: 'Map View', icon: 'map', route: '/dashboard/map' },
+        { name: 'QR', icon: 'qr', route: '/dashboard/qr' },
       ],
     },
     {
       title: 'Tasks',
-      items: [{ name: 'Request manager', icon: 'tasks', route: '/request-manager' }],
+      items: [{ name: 'Request manager', icon: 'tasks', route: '/dashboard/tasks' }],
     },
     {
       title: 'Reports',
       items: [
-        { name: 'Revenue', icon: 'revenue', route: '/revenue' },
-        { name: 'Report', icon: 'report', route: '/report' },
+        { name: 'Revenue', icon: 'revenue', route: '/dashboard/revenue' },
+        { name: 'Report', icon: 'report', route: '/dashboardreport' },
       ],
     },
     {
       title: 'Setting',
       items: [
-        { name: 'Tariff', icon: 'tariff', route: '/tariff' },
-        { name: 'Maintenance Request', icon: 'maintenance', route: '/requests' },
-        { name: 'User Management', icon: 'users', route: '/users' },
+        { name: 'Tariff', icon: 'tariff', route: '/dashboard/tariff' },
+        { name: 'Maintenance Request', icon: 'maintenance', route: '/dashboard/requests' },
+        { name: 'User Management', icon: 'users', route: '/dashboard/users' },
       ],
     },
     {
       title: 'Other',
       items: [
-        { name: 'Notification', icon: 'bell', route: '/notifications' },
-        { name: 'Settings', icon: 'settings', route: '/settings' },
+        { name: 'Notification', icon: 'bell', route: '/dashboard/notifications' },
+        { name: 'Settings', icon: 'settings', route: '/dashboard/settings' },
       ],
     },
   ];

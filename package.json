@@ -37,6 +37,7 @@
     "ng-apexcharts": "^2.0.4",
     "ng-primitives": "^0.90.0",
     "primeng": "^21.0.4",
+    "quill": "^2.0.3",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

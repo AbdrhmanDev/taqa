@@ -1,0 +1,8 @@
+/* Hide default choose button and button bar */
+.custom-upload .p-fileupload-buttonbar {
+  display: none !important;
+}
+
+.custom-upload .p-fileupload-choose {
+  display: none !important;
+}
