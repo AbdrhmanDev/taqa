@@ -93,6 +93,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/Tariff/components/tarrif/tarrif').then((m) => m.Tarrif),
       },
+      {
+        path: 'chart-price',
+        loadComponent: () =>
+          import('./features/Tariff/components/chart-price/chart-price').then((m) => m.ChartPrice),
+      },
     ],
   },
 
