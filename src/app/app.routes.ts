@@ -98,6 +98,18 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/Tariff/components/chart-price/chart-price').then((m) => m.ChartPrice),
       },
+      {
+        path: 'profile-user',
+        loadComponent: () =>
+          import('./features/setting/components/profile-user/profile-user').then(
+            (m) => m.ProfileUser,
+          ),
+      },
+      {
+        path: 'logs',
+        loadComponent: () =>
+          import('./features/setting/components/logs-user/logs-user').then((m) => m.LogsUser),
+      },
     ],
   },
 

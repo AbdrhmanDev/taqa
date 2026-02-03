@@ -56,7 +56,7 @@ export class Sidebar {
       title: 'Other',
       items: [
         { name: 'Notification', icon: 'bell', route: '/dashboard/notifications' },
-        { name: 'Settings', icon: 'settings', route: '/dashboard/settings' },
+        { name: 'Settings', icon: 'settings', route: '/dashboard/profile-user' },
       ],
     },
   ];
