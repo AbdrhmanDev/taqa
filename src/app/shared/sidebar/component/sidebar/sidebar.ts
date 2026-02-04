@@ -35,13 +35,13 @@ export class Sidebar {
     },
     {
       title: 'Tasks',
-      items: [{ name: 'Request manager', icon: 'tasks', route: '/dashboard/tasks' }],
+      items: [{ name: 'Request manager', icon: 'tasks', route: '/dashboard/lists' }],
     },
     {
       title: 'Reports',
       items: [
         { name: 'Revenue', icon: 'revenue', route: '/dashboard/revenue' },
-        { name: 'Report', icon: 'report', route: '/dashboardreport' },
+        { name: 'Report', icon: 'report', route: '/dashboard/report' },
       ],
     },
     {
