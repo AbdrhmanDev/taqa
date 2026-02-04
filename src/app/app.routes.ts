@@ -74,30 +74,30 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/stations/components/station/station').then((m) => m.Station),
       },
-      {
-        path: 'requests',
-        loadComponent: () =>
-          import('./features/Maintenance Request/components/requests/requests').then(
-            (m) => m.Requests,
-          ),
-      },
-      {
-        path: 'create-ticket',
-        loadComponent: () =>
-          import('./features/Maintenance Request/components/create-ticket/create-ticket').then(
-            (m) => m.CreateTicket,
-          ),
-      },
-      {
-        path: 'tariff',
-        loadComponent: () =>
-          import('./features/Tariff/components/tarrif/tarrif').then((m) => m.Tarrif),
-      },
-      {
-        path: 'chart-price',
-        loadComponent: () =>
-          import('./features/Tariff/components/chart-price/chart-price').then((m) => m.ChartPrice),
-      },
+      // {
+      //   path: 'requests',
+      //   loadComponent: () =>
+      //     import('./features/Maintenance Request/components/requests/requests').then(
+      //       (m) => m.Requests,
+      //     ),
+      // },
+      // {
+      //   path: 'create-ticket',
+      //   loadComponent: () =>
+      //     import('./features/Maintenance Request/components/create-ticket/create-ticket').then(
+      //       (m) => m.CreateTicket,
+      //     ),
+      // },
+      // {
+      //   path: 'tariff',
+      //   loadComponent: () =>
+      //     import('./features/Tariff/components/tarrif/tarrif').then((m) => m.Tarrif),
+      // },
+      // {
+      //   path: 'chart-price',
+      //   loadComponent: () =>
+      //     import('./features/Tariff/components/chart-price/chart-price').then((m) => m.ChartPrice),
+      // },
       {
         path: 'profile-user',
         loadComponent: () =>
@@ -109,6 +109,21 @@ export const routes: Routes = [
         path: 'logs',
         loadComponent: () =>
           import('./features/setting/components/logs-user/logs-user').then((m) => m.LogsUser),
+      },
+      {
+        path: 'lists',
+        loadComponent: () =>
+          import('./features/request-manager/components/lists/lists').then((m) => m.Lists),
+      },
+      {
+        path: 'board',
+        loadComponent: () =>
+          import('./features/request-manager/components/board/board').then((m) => m.Board),
+      },
+      {
+        path: 'history',
+        loadComponent: () =>
+          import('./features/request-manager/components/history/history').then((m) => m.History),
       },
     ],
   },
