@@ -110,21 +110,21 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/setting/components/logs-user/logs-user').then((m) => m.LogsUser),
       },
-      {
-        path: 'lists',
-        loadComponent: () =>
-          import('./features/request-manager/components/lists/lists').then((m) => m.Lists),
-      },
-      {
-        path: 'board',
-        loadComponent: () =>
-          import('./features/request-manager/components/board/board').then((m) => m.Board),
-      },
-      {
-        path: 'history',
-        loadComponent: () =>
-          import('./features/request-manager/components/history/history').then((m) => m.History),
-      },
+      // {
+      //   path: 'lists',
+      //   loadComponent: () =>
+      //     import('./features/request-manager/components/lists/lists').then((m) => m.Lists),
+      // },
+      // {
+      //   path: 'board',
+      //   loadComponent: () =>
+      //     import('./features/request-manager/components/board/board').then((m) => m.Board),
+      // },
+      // {
+      //   path: 'history',
+      //   loadComponent: () =>
+      //     import('./features/request-manager/components/history/history').then((m) => m.History),
+      // },
     ],
   },
 
