@@ -17,23 +17,25 @@
       </div>
 
       <!-- Form -->
-      <form class="space-y-5">
+      <form [formGroup]="otpForm" (ngSubmit)="onSendOtp()" class="space-y-5">
 
         <div>
 
           <div class="card flex justify-center pb-4">
-            <p-inputotp [(ngModel)]="value" name="otpCode" [integerOnly]="true" [length]="6"></p-inputotp>
+            <p-inputotp formControlName="otp" [(ngModel)]="value" name="otpCode" [integerOnly]="true"
+              [length]="6"></p-inputotp>
 
           </div>
 
-
+          <input type="hidden" formControlName="email" />
           <button type="submit" class="w-full bg-teal-500 hover:bg-teal-600
                  text-white font-medium py-3 rounded-lg transition">
             Send
           </button>
 
         </div>
-        <span class="text-center mt-2">Didn’t receive code?<a class="ps-2 underline text-purple-800">Resend</a></span>
+        <span class="text-center mt-2">Didn’t receive code?<a class="cursor-pointer ps-2 underline text-purple-800"
+            (click)="onResendOtp()">Resend</a></span>
       </form>
     </div>
   </div>

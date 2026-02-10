@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SidebarItem, SidebarSection } from '../../models/sidebar';
 import { RouterModule } from '@angular/router';
+import { Authen } from '../../../../features/auth/service/authen';
 @Component({
   selector: 'app-sidebar',
   imports: [RouterModule],
@@ -8,6 +9,7 @@ import { RouterModule } from '@angular/router';
   styleUrl: './sidebar.scss',
 })
 export class Sidebar {
+  constructor(private _Authen: Authen) {}
   @Input() isDrawer: boolean = false;
   @Input() isCollapsed: boolean = true;
 
@@ -40,7 +42,7 @@ export class Sidebar {
     {
       title: 'Reports',
       items: [
-        { name: 'Revenue', icon: 'revenue', route: '/dashboard/revenue' },
+        { name: 'Revenue', icon: 'revenue', route: '/dashboard/Revenue' },
         { name: 'Report', icon: 'report', route: '/dashboard/report' },
       ],
     },
@@ -60,4 +62,7 @@ export class Sidebar {
       ],
     },
   ];
+  logout() {
+    this._Authen.logout();
+  }
 }

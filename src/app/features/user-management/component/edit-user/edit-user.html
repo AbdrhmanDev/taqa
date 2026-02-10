@@ -1,0 +1,31 @@
+<div class="flex flex-col gap-6">
+
+  <!-- Description -->
+  <span class="text-sm text-gray-500">
+    Update user information.
+  </span>
+
+  <!-- Form Card -->
+  <div class="bg-gray-50 rounded-xl p-5 border border-gray-200">
+
+    <div class="flex flex-col gap-2">
+      <label class="text-sm font-medium text-gray-700">
+        User Role
+      </label>
+
+      <p-select [options]="userType" optionLabel="label" optionValue="value" placeholder="Select a role" class="w-full">
+      </p-select>
+    </div>
+
+  </div>
+
+  <!-- Actions -->
+  <div class="flex justify-end gap-3 pt-2">
+    <p-button label="Cancel" severity="secondary" class="p-button-text" (click)="closePopup()">
+    </p-button>
+
+    <p-button label="Save Changes" severity="primary" (click)="save()">
+    </p-button>
+  </div>
+
+</div>

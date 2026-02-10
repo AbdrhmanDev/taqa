@@ -3,10 +3,11 @@ import { RouterOutlet } from '@angular/router';
 import { initFlowbite } from 'flowbite';
 import { Sidebar } from './shared/sidebar/component/sidebar/sidebar';
 import { Navbar } from './shared/navbar/component/navbar/navbar';
+import { Toast } from 'primeng/toast';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Sidebar, Navbar],
+  imports: [RouterOutlet, Sidebar, Navbar, Toast],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

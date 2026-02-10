@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
+import { filter } from 'rxjs';
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -11,7 +12,14 @@ import { CommonModule } from '@angular/common';
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',
 })
-export class Navbar {
+export class Navbar implements OnInit {
+  pageTitle = '';
+  constructor(private router: Router) {
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+      this.pageTitle = this.getRouteTitle();
+    });
+  }
+  ngOnInit(): void {}
   showTimeDropdown = false;
   selectedTime = 'Time';
   timeOptions = [
@@ -36,5 +44,12 @@ export class Navbar {
   exportData() {
     console.log('Exporting data...');
     // Add your export logic here
+  }
+  private getRouteTitle(): string {
+    let route = this.router.routerState.root;
+    while (route.firstChild) {
+      route = route.firstChild;
+    }
+    return route.snapshot.title ?? '';
   }
 }

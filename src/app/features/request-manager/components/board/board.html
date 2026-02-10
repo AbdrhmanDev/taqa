@@ -1,194 +1,235 @@
-    <div class="">
-      <div>
-        <h2 class="text-xl">Request Manager</h2>
-      <p class="text-sm text-gray-400 pt-2">Short description will be placed here</p>
+<div class="">
+  <div>
+    <h2 class="text-xl">Request Manager</h2>
+    <p class="text-sm text-gray-400 pt-2">Short description will be placed here</p>
+  </div>
+  <div class="flex items-center gap-3 mt-4">
+
+    <!-- Search Input -->
+    <div class="relative">
+      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
       </div>
-      <div class="flex items-center gap-3 mt-4">
-
-        <!-- Search Input -->
-        <div class="relative">
-          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
-          <input type="text" placeholder="Search Tasks..."
-            class="w-80 pl-10 pr-4 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-1 focus:ring-green-300 focus:border-green-700 outline-none transition-all" />
-        </div>
-        <div class="card flex justify-center ">
-          <p-select [options]=""  placeholder="ALL Tickets" class="w-[150px]">
-          </p-select>
-        </div>
-        <div>
-        </div>
+      <input type="text" placeholder="Search Tasks..."
+        class="w-80 pl-10 pr-4 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-1 focus:ring-green-300 focus:border-green-700 outline-none transition-all" />
     </div>
-   <div class="flex items-center justify-between gap-3">
-        <div class="w-[280px] mt-3 rounded-xl border border-[#E6EEF3] bg-white p-4 space-y-3">
-
-  <!-- Header -->
-  <div class="flex items-center justify-between">
-    <div class="flex items-center gap-2">
-      <span class="flex items-center gap-1 rounded-full bg-[#F1EEFF] px-2 py-0.5 text-xs text-[#6C63FF]">
-        ● Station-name
-      </span>
-
-      <!-- status -->
-      <span class="rounded-full bg-[#E7F7EF] px-2 py-0.5 text-xs text-[#2E7D32]">
-        Solved
-      </span>
+    <div class="card flex justify-center ">
+      <p-select [options]="" placeholder="ALL Tickets" class="w-[150px]">
+      </p-select>
     </div>
-
-    <!-- menu -->
-    <span class="text-[#9AA3AF] cursor-pointer">⋮</span>
-  </div>
-
-  <!-- Body -->
-  <div>
-    <h3 class="text-sm font-semibold text-[#1F2937]">
-      Ticket_name
-    </h3>
-    <p class="mt-1 text-xs text-[#6B7280]">
-      Create page where there is...
-    </p>
-  </div>
-
-  <hr class="border-[#E6EEF3]" />
-
-  <!-- Footer -->
-  <div class="flex items-center justify-between text-xs text-[#6B7280]">
-    <div class="flex items-center gap-1">
-      <i class="pi pi-user text-sm"></i>
-      Eng_name
+    <div>
     </div>
-    <span>Jan 6, 2026</span>
   </div>
-
-</div>
+  <div class="flex mt-3 items-center justify-around gap-8">
     <div class="w-[280px] mt-3 rounded-xl border border-[#E6EEF3] bg-white p-4 space-y-3">
 
-  <!-- Header -->
-  <div class="flex items-center justify-between">
-    <div class="flex items-center gap-2">
-      <span class="flex items-center gap-1 rounded-full bg-[#F1EEFF] px-2 py-0.5 text-xs text-[#6C63FF]">
-        ● Station-name
-      </span>
+      <!-- Header -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="flex items-center gap-1 rounded-full bg-[#F1EEFF] px-2 py-0.5 text-xs text-[#6C63FF]">
+            ● Station-name
+          </span>
 
-      <!-- status -->
-      <span class="rounded-full bg-[#E7F7EF] px-2 py-0.5 text-xs text-[#2E7D32]">
-        Reassign
-      </span>
+          <!-- status -->
+          <span class="rounded-full bg-[#E7F7EF] px-2 py-0.5 text-xs text-[#2E7D32]">
+            Solved
+          </span>
+        </div>
+
+        <!-- menu -->
+        <span class="text-[#9AA3AF] cursor-pointer">⋮</span>
+      </div>
+
+      <!-- Body -->
+      <div>
+        <h3 class="text-sm font-semibold text-[#1F2937]">
+          Ticket_name
+        </h3>
+        <p class="mt-1 text-xs text-[#6B7280]">
+          Create page where there is...
+        </p>
+      </div>
+
+      <hr class="border-[#E6EEF3]" />
+
+      <!-- Footer -->
+      <div class="flex items-center justify-between text-xs text-[#6B7280]">
+        <div class="flex items-center gap-1">
+          <i class="pi pi-user text-sm"></i>
+          Eng_name
+        </div>
+        <span>Jan 6, 2026</span>
+      </div>
+
     </div>
-
-    <!-- menu -->
-    <span class="text-[#9AA3AF] cursor-pointer">⋮</span>
-  </div>
-
-  <!-- Body -->
-  <div>
-    <h3 class="text-sm font-semibold text-[#1F2937]">
-      Feature request
-    </h3>
-    <p class="mt-1 text-xs text-[#6B7280]">
-      Create page where there is...
-    </p>
-  </div>
-
-  <hr class="border-[#E6EEF3]" />
-
-  <!-- Footer -->
-  <div class="flex items-center justify-between text-xs text-[#6B7280]">
-    <div class="flex items-center gap-1">
-      <i class="pi pi-user text-sm"></i>
-      Eng_name
-    </div>
-    <span>Jan 6, 2026</span>
-  </div>
-
-</div>
     <div class="w-[280px] mt-3 rounded-xl border border-[#E6EEF3] bg-white p-4 space-y-3">
 
-  <!-- Header -->
-  <div class="flex items-center justify-between">
-    <div class="flex items-center gap-2">
-      <span class="flex items-center gap-1 rounded-full bg-[#F1EEFF] px-2 py-0.5 text-xs text-[#6C63FF]">
-        ● Station-name
-      </span>
+      <!-- Header -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="flex items-center gap-1 rounded-full bg-[#F1EEFF] px-2 py-0.5 text-xs text-[#6C63FF]">
+            ● Station-name
+          </span>
 
-      <!-- status -->
-      <span class="rounded-full bg-[#E7F7EF] px-2 py-0.5 text-xs text-[#2E7D32]">
-        Solved
-      </span>
+          <!-- status -->
+          <span class="rounded-full bg-[#E7F7EF] px-2 py-0.5 text-xs text-[#2E7D32]">
+            Reassign
+          </span>
+        </div>
+
+        <!-- menu -->
+        <span class="text-[#9AA3AF] cursor-pointer">⋮</span>
+      </div>
+
+      <!-- Body -->
+      <div>
+        <h3 class="text-sm font-semibold text-[#1F2937]">
+          Feature request
+        </h3>
+        <p class="mt-1 text-xs text-[#6B7280]">
+          Create page where there is...
+        </p>
+      </div>
+
+      <hr class="border-[#E6EEF3]" />
+
+      <!-- Footer -->
+      <div class="flex items-center justify-between text-xs text-[#6B7280]">
+        <div class="flex items-center gap-1">
+          <i class="pi pi-user text-sm"></i>
+          Eng_name
+        </div>
+        <span>Jan 6, 2026</span>
+      </div>
+
     </div>
-
-    <!-- menu -->
-    <span class="text-[#9AA3AF] cursor-pointer">⋮</span>
-  </div>
-
-  <!-- Body -->
-  <div>
-    <h3 class="text-sm font-semibold text-[#1F2937]">
-      Ticket_name
-    </h3>
-    <p class="mt-1 text-xs text-[#6B7280]">
-      Create page where there is...
-    </p>
-  </div>
-
-  <hr class="border-[#E6EEF3]" />
-
-  <!-- Footer -->
-  <div class="flex items-center justify-between text-xs text-[#6B7280]">
-    <div class="flex items-center gap-1">
-      <i class="pi pi-user text-sm"></i>
-      Eng_name
-    </div>
-    <span>Jan 6, 2026</span>
-  </div>
-
-</div>
     <div class="w-[280px] mt-3 rounded-xl border border-[#E6EEF3] bg-white p-4 space-y-3">
 
-  <!-- Header -->
-  <div class="flex items-center justify-between">
-    <div class="flex items-center gap-2">
-      <span class="flex items-center gap-1 rounded-full bg-[#F1EEFF] px-2 py-0.5 text-xs text-[#6C63FF]">
-        ● Station-name
-      </span>
+      <!-- Header -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="flex items-center gap-1 rounded-full bg-[#F1EEFF] px-2 py-0.5 text-xs text-[#6C63FF]">
+            ● Station-name
+          </span>
 
-      <!-- status -->
-      <span class="rounded-full bg-[#E7F7EF] px-2 py-0.5 text-xs text-[#2E7D32]">
-        In progress
-      </span>
+          <!-- status -->
+          <span class="rounded-full bg-[#E7F7EF] px-2 py-0.5 text-xs text-[#2E7D32]">
+            Solved
+          </span>
+        </div>
+
+        <!-- menu -->
+        <span class="text-[#9AA3AF] cursor-pointer">⋮</span>
+      </div>
+
+      <!-- Body -->
+      <div>
+        <h3 class="text-sm font-semibold text-[#1F2937]">
+          Ticket_name
+        </h3>
+        <p class="mt-1 text-xs text-[#6B7280]">
+          Create page where there is...
+        </p>
+      </div>
+
+      <hr class="border-[#E6EEF3]" />
+
+      <!-- Footer -->
+      <div class="flex items-center justify-between text-xs text-[#6B7280]">
+        <div class="flex items-center gap-1">
+          <i class="pi pi-user text-sm"></i>
+          Eng_name
+        </div>
+        <span>Jan 6, 2026</span>
+      </div>
+
     </div>
+    <div class="w-[280px] mt-3 rounded-xl border border-[#E6EEF3] bg-white p-4 space-y-3">
 
-    <!-- menu -->
-    <span class="text-[#9AA3AF] cursor-pointer">⋮</span>
-  </div>
+      <!-- Header -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="flex items-center gap-1 rounded-full bg-[#F1EEFF] px-2 py-0.5 text-xs text-[#6C63FF]">
+            ● Station-name
+          </span>
 
-  <!-- Body -->
-  <div>
-    <h3 class="text-sm font-semibold text-[#1F2937]">
-      Ticket_name
-    </h3>
-    <p class="mt-1 text-xs text-[#6B7280]">
-      Create page where there is...
-    </p>
-  </div>
+          <!-- status -->
+          <span class="rounded-full bg-[#E7F7EF] px-2 py-0.5 text-xs text-[#2E7D32]">
+            In progress
+          </span>
+        </div>
 
-  <hr class="border-[#E6EEF3]" />
+        <!-- menu -->
+        <span class="text-[#9AA3AF] cursor-pointer">⋮</span>
+      </div>
 
-  <!-- Footer -->
-  <div class="flex items-center justify-between text-xs text-[#6B7280]">
-    <div class="flex items-center gap-1">
-      <i class="pi pi-user text-sm"></i>
-      Eng_name
+      <!-- Body -->
+      <div>
+        <h3 class="text-sm font-semibold text-[#1F2937]">
+          Ticket_name
+        </h3>
+        <p class="mt-1 text-xs text-[#6B7280]">
+          Create page where there is...
+        </p>
+      </div>
+
+      <hr class="border-[#E6EEF3]" />
+
+      <!-- Footer -->
+      <div class="flex items-center justify-between text-xs text-[#6B7280]">
+        <div class="flex items-center gap-1">
+          <i class="pi pi-user text-sm"></i>
+          Eng_name
+        </div>
+        <span>Jan 6, 2026</span>
+      </div>
+
     </div>
-    <span>Jan 6, 2026</span>
+    <div class="w-[280px] mt-3 rounded-xl border border-[#E6EEF3] bg-white p-4 space-y-3">
+
+      <!-- Header -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="flex items-center gap-1 rounded-full bg-[#F1EEFF] px-2 py-0.5 text-xs text-[#6C63FF]">
+            ● Station-name
+          </span>
+
+          <!-- status -->
+          <span class="rounded-full bg-[#E7F7EF] px-2 py-0.5 text-xs text-[#2E7D32]">
+            In progress
+          </span>
+        </div>
+
+        <!-- menu -->
+        <span class="text-[#9AA3AF] cursor-pointer">⋮</span>
+      </div>
+
+      <!-- Body -->
+      <div>
+        <h3 class="text-sm font-semibold text-[#1F2937]">
+          Ticket_name
+        </h3>
+        <p class="mt-1 text-xs text-[#6B7280]">
+          Create page where there is...
+        </p>
+      </div>
+
+      <hr class="border-[#E6EEF3]" />
+
+      <!-- Footer -->
+      <div class="flex items-center justify-between text-xs text-[#6B7280]">
+        <div class="flex items-center gap-1">
+          <i class="pi pi-user text-sm"></i>
+          Eng_name
+        </div>
+        <span>Jan 6, 2026</span>
+      </div>
+
+    </div>
   </div>
+
 
 </div>
-   </div>
-
-       
-    </div>

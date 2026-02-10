@@ -1,3 +1,4 @@
+import { authGuard } from './core/guards/auth-guard';
 import { Dashboard } from './features/dashboard/component/dashboard/dashboard';
 import { Routes } from '@angular/router';
 
@@ -34,6 +35,7 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: Dashboard,
+    canActivate: [authGuard],
     children: [
       {
         path: '',
@@ -46,6 +48,7 @@ export const routes: Routes = [
           import('./features/dashboard/component/home-dashboard/home-dashboard').then(
             (m) => m.HomeDashboard,
           ),
+        title: 'Dashboard',
       },
       {
         path: 'chartDashboard',
@@ -53,78 +56,115 @@ export const routes: Routes = [
           import('./features/dashboard/component/chart-dashboard/chart-dashboard').then(
             (m) => m.ChartDashboard,
           ),
+        title: 'Dashboard',
       },
       {
         path: 'users',
         loadComponent: () =>
           import('./features/user-management/component/users/users').then((m) => m.Users),
+        title: 'User Management',
       },
+
       {
         path: 'add-user',
         loadComponent: () =>
           import('./features/user-management/component/add-user/add-user').then((m) => m.AddUser),
+        title: 'Add User',
       },
       {
         path: 'add-role',
         loadComponent: () =>
           import('./features/user-management/component/add-role/add-role').then((m) => m.AddRole),
+        title: 'Add Role',
       },
       {
         path: 'station',
         loadComponent: () =>
           import('./features/stations/components/station/station').then((m) => m.Station),
+        title: 'Stations',
       },
-      // {
-      //   path: 'requests',
-      //   loadComponent: () =>
-      //     import('./features/Maintenance Request/components/requests/requests').then(
-      //       (m) => m.Requests,
-      //     ),
-      // },
-      // {
-      //   path: 'create-ticket',
-      //   loadComponent: () =>
-      //     import('./features/Maintenance Request/components/create-ticket/create-ticket').then(
-      //       (m) => m.CreateTicket,
-      //     ),
-      // },
-      // {
-      //   path: 'tariff',
-      //   loadComponent: () =>
-      //     import('./features/Tariff/components/tarrif/tarrif').then((m) => m.Tarrif),
-      // },
-      // {
-      //   path: 'chart-price',
-      //   loadComponent: () =>
-      //     import('./features/Tariff/components/chart-price/chart-price').then((m) => m.ChartPrice),
-      // },
+      {
+        path: 'requests',
+        loadComponent: () =>
+          import('./features/Maintenance Request/components/requests/requests').then(
+            (m) => m.Requests,
+          ),
+        title: 'Maintenance Request',
+      },
+      {
+        path: 'create-ticket',
+        loadComponent: () =>
+          import('./features/Maintenance Request/components/create-ticket/create-ticket').then(
+            (m) => m.CreateTicket,
+          ),
+        title: 'Create Ticket',
+      },
+      {
+        path: 'tariff',
+        loadComponent: () =>
+          import('./features/Tariff/components/tarrif/tarrif').then((m) => m.Tarrif),
+        title: 'Tariff',
+      },
+      {
+        path: 'chart-price',
+        loadComponent: () =>
+          import('./features/Tariff/components/chart-price/chart-price').then((m) => m.ChartPrice),
+        title: 'Tariff',
+      },
       {
         path: 'profile-user',
         loadComponent: () =>
           import('./features/setting/components/profile-user/profile-user').then(
             (m) => m.ProfileUser,
           ),
+        title: 'Profile',
       },
       {
         path: 'logs',
         loadComponent: () =>
           import('./features/setting/components/logs-user/logs-user').then((m) => m.LogsUser),
+        title: 'Profile',
       },
-      // {
-      //   path: 'lists',
-      //   loadComponent: () =>
-      //     import('./features/request-manager/components/lists/lists').then((m) => m.Lists),
-      // },
-      // {
-      //   path: 'board',
-      //   loadComponent: () =>
-      //     import('./features/request-manager/components/board/board').then((m) => m.Board),
-      // },
-      // {
-      //   path: 'history',
-      //   loadComponent: () =>
-      //     import('./features/request-manager/components/history/history').then((m) => m.History),
-      // },
+      {
+        path: 'lists',
+        loadComponent: () =>
+          import('./features/request-manager/components/lists/lists').then((m) => m.Lists),
+        title: 'Request Manager',
+      },
+      {
+        path: 'board',
+        loadComponent: () =>
+          import('./features/request-manager/components/board/board').then((m) => m.Board),
+        title: 'Request Manager',
+      },
+      {
+        path: 'history',
+        loadComponent: () =>
+          import('./features/request-manager/components/history/history').then((m) => m.History),
+        title: 'Request Manager',
+      },
+      {
+        path: 'Revenue',
+        loadComponent: () =>
+          import('./features/revenue/component/revenue-all/revenue-all').then((m) => m.RevenueAll),
+        title: 'Revenue',
+      },
+      {
+        path: 'Revenue-chart',
+        loadComponent: () =>
+          import('./features/revenue/component/revenue-chart/revenue-chart').then(
+            (m) => m.RevenueChart,
+          ),
+        title: 'Revenue',
+      },
+      {
+        path: 'Revenue-table',
+        loadComponent: () =>
+          import('./features/revenue/component/revenue-table/revenue-table').then(
+            (m) => m.RevenueTable,
+          ),
+        title: 'Revenue',
+      },
     ],
   },
 
