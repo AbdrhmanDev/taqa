@@ -75,7 +75,7 @@
                   <td>{{ user.phoneNumber }}</td>
                   <td>
 
-                    <button class="p-2 cursor-pointer" (click)="showdeletePopup = true">
+                    <button class="p-2 cursor-pointer" (click)="openDelete(user.id)">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                         <path
                           d="M13.1966 4.94752V4.28771C13.1966 3.36388 13.1966 2.90196 13.0169 2.5491C12.8587 2.23872 12.6064 1.98637 12.296 1.82823C11.9431 1.64844 11.4812 1.64844 10.5574 1.64844H9.23774C8.31391 1.64844 7.85199 1.64844 7.49913 1.82823C7.18875 1.98637 6.9364 2.23872 6.77826 2.5491C6.59847 2.90196 6.59847 3.36388 6.59847 4.28771V4.94752M8.24801 9.48377V13.6076M11.5471 9.48377V13.6076M2.47461 4.94752H17.3205M15.671 4.94752V14.185C15.671 15.5707 15.671 16.2636 15.4013 16.7929C15.1641 17.2584 14.7855 17.637 14.32 17.8742C13.7907 18.1439 13.0978 18.1439 11.7121 18.1439H8.08306C6.69731 18.1439 6.00444 18.1439 5.47515 17.8742C5.00958 17.637 4.63106 17.2584 4.39384 16.7929C4.12415 16.2636 4.12415 15.5707 4.12415 14.185V4.94752"
@@ -86,7 +86,7 @@
                     <p-dialog [(visible)]="showdeletePopup" header="Delete User" [modal]="true"
                       [style]="{ width: '20vw' }" [closable]="true" [draggable]="false" [resizable]="false">
 
-                      <app-delete-user (close)="showdeletePopup = false"></app-delete-user>
+                      <app-delete-user [userId]="selectedUserId" (close)="showdeletePopup = false"></app-delete-user>
 
                     </p-dialog>
                     <button class="p-2 cursor-pointer" (click)="showEditPopup = true">
@@ -116,35 +116,57 @@
         </p-tabpanel>
         <p-tabpanel value="1">
           <div class="card">
-            <p-table [value]="allUsers" [tableStyle]="{ 'min-width': '50rem' }">
+            <p-table [value]="allRoles" [tableStyle]="{ 'min-width': '50rem' }">
               <ng-template #header>
                 <tr>
-                  <th>UserName</th>
-                  <th>Email</th>
                   <th>RoleName</th>
-                  <th>PhoneNumber</th>
+                  <th>Claims</th>
+                  <th>Areas</th>
+                  <th>Actions</th>
 
 
                 </tr>
               </ng-template>
               <ng-template #body let-roles>
                 <tr>
-                  <td>{{ roles.id }}</td>
-                  <td>{{ roles.name }}</td>
+                  <td>{{ roles.roleName }}</td>
+                  <td>{{ getClaimValues(roles.claims) }}</td>
+                  <td>{{ getAreaNames(roles.areas) }}</td>
+
 
                   <td>
-                    <button><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
-                        fill="none">
+
+                    <button class="p-2 cursor-pointer" (click)="deleteRole(roles.roleName)">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path
+                          d="M13.1966 4.94752V4.28771C13.1966 3.36388 13.1966 2.90196 13.0169 2.5491C12.8587 2.23872 12.6064 1.98637 12.296 1.82823C11.9431 1.64844 11.4812 1.64844 10.5574 1.64844H9.23774C8.31391 1.64844 7.85199 1.64844 7.49913 1.82823C7.18875 1.98637 6.9364 2.23872 6.77826 2.5491C6.59847 2.90196 6.59847 3.36388 6.59847 4.28771V4.94752M8.24801 9.48377V13.6076M11.5471 9.48377V13.6076M2.47461 4.94752H17.3205M15.671 4.94752V14.185C15.671 15.5707 15.671 16.2636 15.4013 16.7929C15.1641 17.2584 14.7855 17.637 14.32 17.8742C13.7907 18.1439 13.0978 18.1439 11.7121 18.1439H8.08306C6.69731 18.1439 6.00444 18.1439 5.47515 17.8742C5.00958 17.637 4.63106 17.2584 4.39384 16.7929C4.12415 16.2636 4.12415 15.5707 4.12415 14.185V4.94752"
+                          stroke="#B42318" stroke-width="1.64954" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </button>
+
+                    <p-dialog [(visible)]="showdeletePopup" header="Delete User" [modal]="true"
+                      [style]="{ width: '20vw' }" [closable]="true" [draggable]="false" [resizable]="false">
+
+                      <app-delete-user [roleName]="selectedRole" (close)="showdeletePopup = false"></app-delete-user>
+
+                    </p-dialog>
+                    <button class="p-2 cursor-pointer" (click)="showEditPopup = true">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                         <path
                           d="M2.37265 14.9393C2.41054 14.5982 2.42949 14.4277 2.48108 14.2683C2.52686 14.1269 2.59154 13.9924 2.67336 13.8683C2.76558 13.7284 2.8869 13.6071 3.12953 13.3645L14.0217 2.47232C14.9327 1.56131 16.4098 1.56131 17.3208 2.47233C18.2318 3.38334 18.2318 4.8604 17.3208 5.77141L6.42862 16.6636C6.18598 16.9062 6.06467 17.0275 5.92481 17.1197C5.80073 17.2016 5.66617 17.2662 5.52476 17.312C5.36538 17.3636 5.19487 17.3826 4.85383 17.4205L2.0625 17.7306L2.37265 14.9393Z"
                           stroke="#475467" stroke-width="1.64954" stroke-linecap="round" stroke-linejoin="round" />
-                      </svg></button>
-                    <button><svg xmlns="http://www.w3.org/2000/svg" width="17" height="19" viewBox="0 0 17 19"
-                        fill="none">
-                        <path
-                          d="M11.5463 4.12721V3.46739C11.5463 2.54356 11.5463 2.08165 11.3665 1.72879C11.2083 1.41841 10.956 1.16606 10.6456 1.00791C10.2927 0.828125 9.83081 0.828125 8.90698 0.828125H7.58735C6.66352 0.828125 6.2016 0.828125 5.84874 1.00791C5.53836 1.16606 5.28601 1.41841 5.12787 1.72879C4.94808 2.08165 4.94808 2.54356 4.94808 3.46739V4.12721M6.59762 8.66346V12.7873M9.89671 8.66346V12.7873M0.824219 4.12721H15.6701M14.0206 4.12721V13.3647C14.0206 14.7504 14.0206 15.4433 13.7509 15.9726C13.5137 16.4381 13.1351 16.8167 12.6696 17.0539C12.1403 17.3236 11.4474 17.3236 10.0617 17.3236H6.43267C5.04692 17.3236 4.35405 17.3236 3.82476 17.0539C3.35919 16.8167 2.98067 16.4381 2.74345 15.9726C2.47376 15.4433 2.47376 14.7504 2.47376 13.3647V4.12721"
-                          stroke="#B42318" stroke-width="1.64954" stroke-linecap="round" stroke-linejoin="round" />
-                      </svg></button>
+                      </svg>
+                    </button>
+
+                    <p-dialog [(visible)]="showEditPopup" header="Edit Profile" [modal]="true"
+                      [style]="{ width: '30vw',  }" [closable]="true" [draggable]="false" [resizable]="false">
+
+                      <app-edit-user (close)="showEditPopup = false"></app-edit-user>
+
+                    </p-dialog>
+
+
+
                   </td>
                   <td>
 

@@ -15,4 +15,9 @@ export class User {
   addUser(data: IUser | any): Observable<string> {
     return this.http.post(environment.url + 'auth/SignUp', data, { responseType: 'text' });
   }
+  deleteUser(userId: number): Observable<string> {
+    return this.http.delete(environment.url + 'auth/DeleteUser/' + userId, {
+      responseType: 'text',
+    });
+  }
 }
