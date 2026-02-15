@@ -9,8 +9,8 @@ import { IUser } from '../models/iuser';
 })
 export class User {
   constructor(private http: HttpClient) {}
-  getAllUsers(): Observable<IUser> {
-    return this.http.get<IUser>(environment.url + 'auth/GetAllUsersWithRoles');
+  getAllUsers(): Observable<IUser[]> {
+    return this.http.get<IUser[]>(environment.url + 'auth/GetAllUsersWithRoles');
   }
   addUser(data: IUser | any): Observable<string> {
     return this.http.post(environment.url + 'auth/SignUp', data, { responseType: 'text' });
@@ -19,5 +19,11 @@ export class User {
     return this.http.delete(environment.url + 'auth/DeleteUser/' + userId, {
       responseType: 'text',
     });
+  }
+  getAllRoles(): Observable<string> {
+    return this.http.get<string>(environment.url + 'auth/GetAllRoles');
+  }
+  editUserRole(payload: any): Observable<string> {
+    return this.http.put<string>(environment.url + 'auth/UpdateUser', payload);
   }
 }

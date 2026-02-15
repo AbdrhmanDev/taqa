@@ -1,33 +1,28 @@
-<div class="bg-white rounded-xl shadow-sm p-6">
-  <form class="space-y-6">
-
+<div class="bg-white rounded-xl shadow-sm p-6 m-5 mt-10">
+  <form [formGroup]="addRoleForm" (ngSubmit)="onAddRole()" class="space-y-6 m-5">
 
     <div class="grid grid-cols-12 gap-6">
 
-      <div class="col-span-12 md:col-span-3">
-        <label class="label">Roles</label>
-        <p-select [options]="allRoles" optionLabel="label" optionValue="value" placeholder="Select a role"
-          class="w-full">
-        </p-select>
+      <div class="col-span-12 md:col-span-4">
+        <label class="label block mb-2">Role</label>
+        <input formControlName="roleName" type="text" placeholder="Enter new role"
+          class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" />
       </div>
-      <div class="col-span-12 md:col-span-3">
-        <label class="label">Claims</label>
-        <p-select [options]="allRoles" optionLabel="label" optionValue="value" placeholder="Select a claims"
-          class="w-full">
-        </p-select>
+
+      <div class="col-span-12 md:col-span-4">
+        <label class="label block mb-2">Claims</label>
+        <p-multiselect formControlName="claims" [options]="allClaims" optionLabel="claimName"
+          placeholder="Select claims" [maxSelectedLabels]="3" class="w-full"></p-multiselect>
       </div>
-      <div class="col-span-12 md:col-span-3">
-        <label class="label">Areas</label>
-        <p-select [options]="allRoles" optionLabel="label" optionValue="value" placeholder="Select a area"
-          class="w-full">
-        </p-select>
-      </div>
-      <div class="col-span-12">
-        <p-editor [style]="{ height: '200px' }" placeholder="Details about user">
-        </p-editor>
+
+      <div class="col-span-12 md:col-span-4">
+        <label class="label block mb-2">Zones</label>
+        <p-multiselect formControlName="zoneIds" [options]="allZones" optionLabel="name" optionValue="zoneId"
+          placeholder="Select zones" [maxSelectedLabels]="3" class="w-full"></p-multiselect>
       </div>
 
     </div>
+
     <div class="flex justify-between pt-4">
       <button type="button" class="px-5 py-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200">
         Cancel

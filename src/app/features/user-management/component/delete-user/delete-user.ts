@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { User } from '../../services/user';
 import { MessageService } from 'primeng/api';
@@ -12,6 +12,12 @@ import { Role } from '../../services/role';
 export class DeleteUser implements OnInit {
   @Input() userId!: number;
   @Input() roleName!: string;
+  @Output() deletedUser = new EventEmitter<void>();
+  @Output() deletedRole = new EventEmitter<void>();
+  @Output() close = new EventEmitter<void>();
+  showdeletePopup: boolean = false;
+  @Input() userData: any;
+
   constructor(
     private user: User,
     private messageService: MessageService,
@@ -22,41 +28,38 @@ export class DeleteUser implements OnInit {
     this.user.deleteUser(this.userId).subscribe({
       next: (res) => {
         console.log(res);
-        this.showSuccess();
+        this.showSuccess('Role deleted successfully');
+        this.deletedUser.emit();
+        this.close.emit();
       },
       error: (err) => {
         console.log(err);
-        this.showError();
       },
     });
   }
   onDeleteRole() {
-    debugger;
     this.Role.deleteRole(this.roleName).subscribe({
       next: (res) => {
         console.log(res);
-        this.showSuccess();
+        this.showSuccess('Role deleted successfully');
+        this.deletedRole.emit();
+        this.close.emit();
       },
       error: (err) => {
         console.log(err);
-        this.showError();
       },
     });
   }
-  showSuccess() {
+  showSuccess(message: string) {
     this.messageService.add({
       severity: 'success',
       summary: 'Success',
-      detail: 'User deleted successfully',
+      detail: message,
       life: 2000,
     });
   }
-  showError() {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Failed delete User',
-      detail: 'Message Content',
-      life: 2000,
-    });
+
+  closePopup() {
+    this.close.emit();
   }
 }

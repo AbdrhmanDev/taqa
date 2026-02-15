@@ -11,6 +11,7 @@ import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { globalInterceptor } from './core/interceptor/global-interceptor';
+import { errorInterceptor } from './core/interceptor/error-interceptor';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -19,7 +20,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideAnimations(),
     MessageService,
-    provideHttpClient(withInterceptors([globalInterceptor])),
+    provideHttpClient(withInterceptors([globalInterceptor, errorInterceptor])),
     providePrimeNG({
       theme: {
         preset: Aura,

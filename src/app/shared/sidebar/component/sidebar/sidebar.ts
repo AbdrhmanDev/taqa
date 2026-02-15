@@ -49,7 +49,9 @@ export class Sidebar {
     {
       title: 'Setting',
       items: [
+        { name: 'Configuration', icon: 'layers-01', route: '/dashboard/profile-user' },
         { name: 'Tariff', icon: 'tariff', route: '/dashboard/tariff' },
+        { name: 'Alarm & Alert', icon: 'alarm-alert', route: '/dashboard/tariff' },
         { name: 'Maintenance Request', icon: 'maintenance', route: '/dashboard/requests' },
         { name: 'User Management', icon: 'users', route: '/dashboard/users' },
       ],

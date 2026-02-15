@@ -18,3 +18,13 @@ export interface Area {
   areaId: number;
   areaName: string;
 }
+export interface IAddRole {
+  roleName: string;
+  claims: Claim[];
+  zoneIds: number[];
+}
+
+export interface Claim {
+  type: string;
+  value: string;
+}

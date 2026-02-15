@@ -1,31 +1,45 @@
 <div class="flex flex-col gap-6">
 
   <!-- Description -->
-  <span class="text-sm text-gray-500">
-    Update user information.
+  <span class="text-xl text-gray-500">
+    Update Role information.
   </span>
 
   <!-- Form Card -->
-  <div class="bg-gray-50 rounded-xl p-5 border border-gray-200">
+  <div class="bg-white-50 rounded-xl p-5 border border-gray-200">
 
-    <div class="flex flex-col gap-2">
-      <label class="text-sm font-medium text-gray-700">
-        User Role
-      </label>
+    <form [formGroup]="editRoleForm" class="flex flex-col gap-4">
 
-      <p-select [options]="userType" optionLabel="label" optionValue="value" placeholder="Select a role" class="w-full">
-      </p-select>
-    </div>
+      <!-- Role Name -->
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-700">Role Name</label>
+        <input type="text" formControlName="roleName" placeholder="Enter role name"
+          class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" />
+      </div>
 
+      <!-- Claims -->
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-700">Claims</label>
+        <p-multiselect [options]="allClaims" formControlName="claims" optionLabel="claimName" optionValue="claimName"
+          placeholder=" Select claims" [maxSelectedLabels]="3" class="w-full" [filter]="true"
+          [showClear]="true"></p-multiselect>
+      </div>
+
+      <!-- Zones -->
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-700">Zones</label>
+        <p-multiselect [options]="allZones" formControlName="zones" optionLabel="name" optionValue="zoneId"
+          placeholder="Select zones" [maxSelectedLabels]="3" class="w-full" [filter]="true"
+          [showClear]="true"></p-multiselect>
+      </div>
+
+    </form>
   </div>
 
   <!-- Actions -->
   <div class="flex justify-end gap-3 pt-2">
-    <p-button label="Cancel" severity="secondary" class="p-button-text" (click)="closePopup()">
-    </p-button>
-
-    <p-button label="Save Changes" severity="primary" (click)="save()">
-    </p-button>
+    <p-button label="Cancel" severity="secondary" class="p-button-text" (click)="closePopup()"></p-button>
+    <p-button label="Save Changes" severity="secondary" (click)="save()"></p-button>
   </div>
 
 </div>

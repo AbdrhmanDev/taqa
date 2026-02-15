@@ -5,6 +5,8 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { SelectModule } from 'primeng/select';
 import { MessageService } from 'primeng/api';
 import { User } from '../../services/user';
+import { Role } from '../../services/role';
+import { IRoles } from '../../models/iroles';
 @Component({
   selector: 'app-add-user',
   imports: [EditorModule, FileUploadModule, SelectModule, ReactiveFormsModule],
@@ -12,15 +14,15 @@ import { User } from '../../services/user';
   styleUrl: './add-user.scss',
 })
 export class AddUser implements OnInit {
-  userType = [
-    { label: 'Admin', value: 'Admin' },
-    { label: 'User', value: 'User' },
-  ];
+  allRoles: any;
   constructor(
     private _User: User,
     private messageService: MessageService,
+    private _Role: Role,
   ) {}
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.onGetAllRoles();
+  }
   addUserForm = new FormGroup({
     roleName: new FormControl('', Validators.required),
     userName: new FormControl('', Validators.required),
@@ -33,26 +35,30 @@ export class AddUser implements OnInit {
     this._User.addUser(this.addUserForm.value).subscribe({
       next: (res) => {
         console.log(res);
-        this.showSuccess();
+        this.showSuccess('Add User Successfully');
       },
       error: (err) => {
         console.log(err);
       },
     });
   }
-  showSuccess() {
+
+  onGetAllRoles() {
+    this._Role.getAllRoles().subscribe({
+      next: (res) => {
+        this.allRoles = res;
+        console.log(res);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+  showSuccess(message: string) {
     this.messageService.add({
       severity: 'success',
       summary: 'Success',
-      detail: 'Add USer is Success',
-      life: 2000,
-    });
-  }
-  showError() {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Failed Add User',
-      detail: 'Message Content',
+      detail: message,
       life: 2000,
     });
   }
