@@ -45,9 +45,14 @@
             </span>
 
 
-
+            @if(currentTab == '0' ){
             <input type="email" id="Email" placeholder="Search by email" class="w-80 rounded-lg border border-gray-300 pl-11 pr-4 py-2.5 text-sm
              focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" />
+            }@else {
+            <input type="text" id="role" placeholder="Search by Role" class="w-80 rounded-lg border border-gray-300 pl-11 pr-4 py-2.5 text-sm
+             focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" />
+            }
+
           </div>
         </div>
       </div>
