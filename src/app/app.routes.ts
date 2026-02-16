@@ -187,6 +187,12 @@ export const routes: Routes = [
           import('./features/alarm-alerts/components/alarm-add/alarm-add').then((m) => m.AlarmAdd),
         title: 'Alarm & Alert Management',
       },
+      {
+        path:'create-alarm',
+        loadComponent: () =>
+          import('./features/alarm-alerts/components/create-alarm/create-alarm').then((m) => m.CreateAlarm),
+        title: 'Alarm & Alert Management',
+      }
     ],
   },
 
