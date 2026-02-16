@@ -165,6 +165,28 @@ export const routes: Routes = [
           ),
         title: 'Revenue',
       },
+      {
+        path: 'alarm-alert',
+        loadComponent: () =>
+          import('./features/alarm-alerts/components/alarm-alerts-home/alarm-alerts-home').then(
+            (m) => m.AlarmAlertsHome,
+          ),
+        title: 'Alarm & Alerts',
+      },
+      {
+        path: 'alarm-view',
+        loadComponent: () =>
+          import('./features/alarm-alerts/components/alarm-view/alarm-view').then(
+            (m) => m.AlarmView,
+          ),
+        title: 'Alarm & Alerts',
+      },
+      {
+        path: 'alarm-add',
+        loadComponent: () =>
+          import('./features/alarm-alerts/components/alarm-add/alarm-add').then((m) => m.AlarmAdd),
+        title: 'Alarm & Alert Management',
+      },
     ],
   },
 
