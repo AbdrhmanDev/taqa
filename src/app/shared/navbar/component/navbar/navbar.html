@@ -23,14 +23,28 @@
           <input type="text" placeholder="Search stations, devices....."
             class="w-80 pl-10 pr-4 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-1 focus:ring-green-300 focus:border-green-700 outline-none transition-all" />
         </div>
-        <div class="card flex justify-center ">
+        <!-- <div class="card flex justify-center ">
           <p-select [options]="zones" [(ngModel)]="selectedZone" placeholder="Zones" class="w-[150px]">
           </p-select>
-        </div>
+        </div> -->
 
         <div class="card flex justify-center">
-          <p-select [options]="timeOptions" [(ngModel)]="selectedTime" placeholder="Time" class="w-[150px]">
+          <p-select (onChange)="getAllDashboardData()" optionLabel="label" optionValue="value" [options]="timeOptions"
+            [(ngModel)]="selectedTime" placeholder="Time" class="w-[150px]">
           </p-select>
+          @if(selectedTime === 5){
+          <div class="flex gap-3 items-center ms-4">
+            <p-datepicker [(ngModel)]="dateRange" selectionMode="range" dateFormat="yy-mm-dd"
+              placeholder="Select Date Range">
+            </p-datepicker>
+            <button (click)="getAllDashboardData()"
+              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-white rounded-lg text-blue-500 border-blue-500 border-1  focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+              Apply
+            </button>
+
+
+          </div>
+          }
         </div>
 
         <div>
@@ -48,7 +62,7 @@
         </button>
 
 
-        <button (click)="exportData()"
+        <button
           class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-white rounded-lg text-blue-500 border-blue-500 border-1  focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
