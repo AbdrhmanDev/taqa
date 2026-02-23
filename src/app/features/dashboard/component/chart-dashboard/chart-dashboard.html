@@ -12,7 +12,8 @@
   <!-- Gas chart -->
   <div class="w-full lg:w-1/2 bg-white rounded-3xl shadow-sm p-4">
     <h3 class="pb-2 font-bold">Gas Volume Trend</h3>
-    <highcharts-chart [options]="gasChartOptions" style="width: 100%; height: 400px; display: block;">
+    <highcharts-chart [Highcharts]="Highcharts" [options]="gasChartOptions" [update]="updateFlag"
+      (updateChange)="updateFlag = false" style="width: 100%; height: 400px; display: block;">
     </highcharts-chart>
 
 

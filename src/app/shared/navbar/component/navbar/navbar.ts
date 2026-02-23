@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs';
-import { Dashboard } from '../../../../features/dashboard/service/dashboard';
+import { dashboardService } from '../../../../features/dashboard/service/dashboard';
 import { DatePickerModule } from 'primeng/datepicker';
 @Component({
   selector: 'app-navbar',
@@ -26,7 +26,7 @@ export class Navbar implements OnInit {
   pageTitle = '';
   constructor(
     private router: Router,
-    private dashboardService: Dashboard,
+    private dashboardService: dashboardService,
     private SharedData: SharedData,
   ) {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {

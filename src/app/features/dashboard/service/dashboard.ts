@@ -5,7 +5,7 @@ import { environment } from '../../../../env/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class Dashboard {
+export class dashboardService {
   constructor(private http: HttpClient) {}
   dashboardSummary(duration: number, from: string = '', to: string = ''): Observable<any> {
     let params: any = { duration };

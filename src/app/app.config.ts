@@ -12,15 +12,13 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { globalInterceptor } from './core/interceptor/global-interceptor';
 import { errorInterceptor } from './core/interceptor/error-interceptor';
-import { provideHighcharts } from 'highcharts-angular';
-import Highcharts from 'highcharts';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideHttpClient(),
-    provideHighcharts(),
     provideAnimations(),
     MessageService,
     provideHttpClient(withInterceptors([globalInterceptor, errorInterceptor])),
