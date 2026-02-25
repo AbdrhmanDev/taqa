@@ -146,29 +146,11 @@
                   </svg>
                 </button>
               </div>
-              <div class="w-11 h-11 rounded-lg flex items-center justify-center flex-shrink-0"
-                [ngClass]="getIconBg(action.type)">
-                <svg *ngIf="action.type === 'ticket'" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  stroke-width="2" class="w-5 h-5" [ngClass]="getIconColor(action.type)">
-                  <rect x="2" y="7" width="20" height="14" rx="2" />
-                  <path d="M16 3l-4 4-4-4" />
-                  <path d="M12 12v4M9.5 14h5" />
-                </svg>
-                <svg *ngIf="action.type === 'log'" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  stroke-width="2" class="w-5 h-5" [ngClass]="getIconColor(action.type)">
-                  <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                  <path d="M13.73 21a2 2 0 01-3.46 0" />
-                </svg>
-                <svg *ngIf="action.type === 'email'" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  stroke-width="2" class="w-5 h-5" [ngClass]="getIconColor(action.type)">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                  <polyline points="22,6 12,13 2,6" />
-                </svg>
-              </div>
+
 
               <!-- Info -->
               <div class="flex-1 min-w-0">
-                <p class="text-sm font-semibold text-gray-900 truncate">{{ action.title }} Aya</p>
+                <p class="text-sm font-semibold text-gray-900 truncate">{{ action.title }}</p>
                 <p class="text-xs text-gray-500 truncate">{{ action.description }}</p>
               </div>
 
