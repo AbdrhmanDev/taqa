@@ -34,6 +34,7 @@ export class Navbar implements OnInit {
     });
   }
   ngOnInit(): void {
+    this.selectedTime = 0;
     this.getDashbaordSummary();
     this.getDashbaordRevenue();
     this.getDashbaordGas();

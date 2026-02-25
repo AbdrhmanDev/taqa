@@ -1,0 +1,11 @@
+.p-step:has(~ .p-step-active) .p-stepper-separator {
+  background: #3f51ae !important;
+}
+.p-step-active .p-step-number {
+  background: var(--p-stepper-step-number-active-background);
+  border-color: var(--p-stepper-step-number-active-border-color);
+  color: #2a12b0 !important;
+}
+.p-step-active .p-step-title {
+  color: #2a12b0 !important;
+}

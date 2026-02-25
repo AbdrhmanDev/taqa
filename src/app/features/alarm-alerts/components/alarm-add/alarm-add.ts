@@ -12,6 +12,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { CommonModule } from '@angular/common';
 import { EditorModule } from 'primeng/editor';
 import { CreateAlarm } from '../create-alarm/create-alarm';
+import { PreviewAlarm } from '../preview-alarm/preview-alarm';
 @Component({
   selector: 'app-alar-add',
   imports: [
@@ -26,8 +27,9 @@ import { CreateAlarm } from '../create-alarm/create-alarm';
     TextareaModule,
     ChipModule,
     CommonModule,
-    CreateAlarm
-],
+    CreateAlarm,
+    PreviewAlarm,
+  ],
   templateUrl: './alarm-add.html',
   styleUrl: './alarm-add.scss',
 })
@@ -35,10 +37,10 @@ export class AlarmAdd {
   alarmScope: 'single' | 'all' = 'single';
   machine: 'Dispensers' | 'Compressors' = 'Dispensers';
   severityLevel: 'low' | 'medium' | 'critical' = 'low';
-  setSeverity(level: 'low' | 'medium' | 'critical'){
+  setSeverity(level: 'low' | 'medium' | 'critical') {
     this.severityLevel = level;
   }
-    setScope(scope: 'single' | 'all') {
+  setScope(scope: 'single' | 'all') {
     this.alarmScope = scope;
 
     if (scope === 'all') {

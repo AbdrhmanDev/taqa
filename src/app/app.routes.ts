@@ -188,11 +188,21 @@ export const routes: Routes = [
         title: 'Alarm & Alert Management',
       },
       {
-        path:'create-alarm',
+        path: 'create-alarm',
         loadComponent: () =>
-          import('./features/alarm-alerts/components/create-alarm/create-alarm').then((m) => m.CreateAlarm),
+          import('./features/alarm-alerts/components/create-alarm/create-alarm').then(
+            (m) => m.CreateAlarm,
+          ),
         title: 'Alarm & Alert Management',
-      }
+      },
+      {
+        path: 'preview-alarm',
+        loadComponent: () =>
+          import('./features/alarm-alerts/components/preview-alarm/preview-alarm').then(
+            (m) => m.PreviewAlarm,
+          ),
+        title: 'Alarm & Alert Management',
+      },
     ],
   },
 

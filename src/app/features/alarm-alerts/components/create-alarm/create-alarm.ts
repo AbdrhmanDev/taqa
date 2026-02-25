@@ -7,7 +7,6 @@ import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputNumberModule } from 'primeng/inputnumber';
 
-
 import { InputTextModule } from 'primeng/inputtext';
 import { StepsModule } from 'primeng/steps';
 
@@ -39,7 +38,7 @@ interface TimeUnit {
     InputNumberModule,
     SelectModule,
     InputTextModule,
-   
+
     StepsModule,
   ],
   templateUrl: './create-alarm.html',
@@ -52,24 +51,23 @@ export class CreateAlarm {
     { label: 'Preview Results' },
   ];
 
-  activeIndex: number = 1;
-  enableAdvancedRules: boolean = true;
+  enableAdvanced = true;
+  showFrequency = true;
+  showDuration = true;
 
-  frequencyTimes: number = 10;
-  frequencyDuration: number = 10;
-  frequencyUnit: TimeUnit = { label: 'minutes', value: 'minutes' };
+  freqTimes = 10;
+  freqWithin = 10;
+  freqUnit = 'minutes';
+  durTime = 10;
+  durUnit = 'minutes';
 
-  durationTime: number = 10;
-  durationUnit: TimeUnit = { label: 'minutes', value: 'minutes' };
-
-  timeUnits: TimeUnit[] = [
-    { label: 'seconds', value: 'seconds' },
+  timeUnits = [
     { label: 'minutes', value: 'minutes' },
     { label: 'hours', value: 'hours' },
+    { label: 'days', value: 'days' },
   ];
 
   priorityOptions = [
-    { label: 'Select priority', value: '' },
     { label: 'Low', value: 'low' },
     { label: 'Medium', value: 'medium' },
     { label: 'High', value: 'high' },
@@ -78,15 +76,32 @@ export class CreateAlarm {
 
   autoAssignOptions = [
     { label: 'unassigned', value: 'unassigned' },
-    { label: 'Team Lead', value: 'team_lead' },
-    { label: 'On-call Engineer', value: 'on_call' },
+    { label: 'Team Lead', value: 'teamlead' },
+    { label: 'Engineer', value: 'engineer' },
   ];
 
-  actions: Action[] = [
+  availableActions: any[] = [
+    {
+      type: 'ticket',
+      title: 'Create Maintenance Ticket',
+      description: 'Automatically create a maintenance ticket',
+    },
+    {
+      type: 'log',
+      title: 'Log only',
+      description: 'Record alarm in system log without notification',
+    },
+    {
+      type: 'email',
+      title: 'Email Notification',
+      description: 'Send email to specified recipients',
+    },
+  ];
+
+  actions: any[] = [
     {
       id: 1,
       type: 'ticket',
-      icon: 'pi pi-cog',
       title: 'Create Maintenance Ticket',
       description: 'Automatically create a maintenance ticket',
       enabled: true,
@@ -96,7 +111,6 @@ export class CreateAlarm {
     {
       id: 2,
       type: 'email',
-      icon: 'pi pi-envelope',
       title: 'Email Notification',
       description: 'Send email to specified recipients',
       enabled: true,
@@ -105,69 +119,77 @@ export class CreateAlarm {
     {
       id: 3,
       type: 'log',
-      icon: 'pi pi-bell',
       title: 'Log only',
       description: 'Record alarm in system log without notification',
       enabled: true,
     },
   ];
 
-  availableActions = [
-    {
-      type: 'ticket',
-      icon: 'pi pi-cog',
-      title: 'Create Maintenance Ticket',
-      description: 'Automatically create a maintenance ticket',
-    },
-    {
-      type: 'log',
-      icon: 'pi pi-bell',
-      title: 'Log only',
-      description: 'Record alarm in system log without notification',
-    },
-    {
-      type: 'email',
-      icon: 'pi pi-envelope',
-      title: 'Email Notification',
-      description: 'Send email to specified recipients',
-    },
-  ];
-
-  deleteAction(actionId: number): void {
-    this.actions = this.actions.filter((a) => a.id !== actionId);
+  getIconBg(type: string): string {
+    const map: Record<string, string> = {
+      ticket: 'bg-violet-100',
+      log: 'bg-orange-100',
+      email: 'bg-red-100',
+    };
+    return map[type] || 'bg-gray-100';
   }
 
-  moveActionUp(index: number): void {
-    if (index > 0) {
-      [this.actions[index], this.actions[index - 1]] = [
-        this.actions[index - 1],
-        this.actions[index],
-      ];
-    }
+  getIconColor(type: string): string {
+    const map: Record<string, string> = {
+      ticket: 'text-violet-700',
+      log: 'text-orange-700',
+      email: 'text-red-600',
+    };
+    return map[type] || 'text-gray-600';
   }
 
-  moveActionDown(index: number): void {
-    if (index < this.actions.length - 1) {
-      [this.actions[index], this.actions[index + 1]] = [
-        this.actions[index + 1],
-        this.actions[index],
-      ];
-    }
+  getCardBorder(type: string): string {
+    const map: Record<string, string> = {
+      ticket: 'bg-violet-50 border-violet-200',
+      log: 'bg-orange-50 border-orange-200',
+      email: 'bg-red-50 border-red-200',
+    };
+    return map[type] || 'bg-gray-50 border-gray-200';
+  }
+
+  moveUp(index: number): void {
+    if (index === 0) return;
+    const arr = [...this.actions];
+    [arr[index - 1], arr[index]] = [arr[index], arr[index - 1]];
+    this.actions = arr;
+  }
+
+  moveDown(index: number): void {
+    if (index === this.actions.length - 1) return;
+    const arr = [...this.actions];
+    [arr[index], arr[index + 1]] = [arr[index + 1], arr[index]];
+    this.actions = arr;
+  }
+
+  deleteAction(id: number): void {
+    this.actions = this.actions.filter((a) => a.id !== id);
+  }
+
+  incrementFreq(): void {
+    this.freqTimes++;
+  }
+  decrementFreq(): void {
+    if (this.freqTimes > 1) this.freqTimes--;
   }
 
   cancel(): void {
     console.log('Cancel');
   }
 
-  previous(): void {
-    if (this.activeIndex > 0) {
-      this.activeIndex--;
-    }
-  }
+  // previous(): void {
+  //   if (this.activeIndex > 0) {
+  //     this.activeIndex--;
+  //   }
+  // }
 
-  next(): void {
-    if (this.activeIndex < this.steps.length - 1) {
-      this.activeIndex++;
-    }
-  }
+  // next(): void {
+  //   if (this.activeIndex < this.steps.length - 1) {
+  //     this.activeIndex++;
+  //   }
+  // }
 }

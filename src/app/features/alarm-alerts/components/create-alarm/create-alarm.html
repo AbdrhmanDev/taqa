@@ -1,208 +1,314 @@
-<div class=" rounded-lg p-6  ">
-  <!-- Header -->
-  <div class="mb-8">
-    <h1 class="text-2xl font-semibold text-gray-900 mb-1">Alarm & Alert Management</h1>
-    <p class="text-sm text-gray-500">Create comprehensive alarm rules with automated actions</p>
-  </div>
+<div class="">
+  <div class="">
 
-  <!-- Steps -->
+    <!-- ───── Header ───── -->
+    <div class="px-7 pt-7 pb-0">
 
 
-  <!-- Advanced Rules Section -->
-  <div class="mb-6">
-    <div class="flex items-start gap-3">
-      <p-checkbox [(ngModel)]="enableAdvancedRules" [binary]="true" inputId="advanced-rules">
-      </p-checkbox>
-      <div class="flex-1">
-        <label for="advanced-rules" class="text-sm font-medium text-gray-900 cursor-pointer">
-          Enable Advanced Rules & Automation
-        </label>
-        <p class="text-xs text-gray-500 mt-1">
-          Add conditional logic to prevent false alarms and control when alerts are triggered (Frequency Rule & Duration
-          Rule)
-        </p>
-      </div>
-    </div>
+      <!-- ───── Stepper ───── -->
 
-    <!-- Rule Buttons -->
-    <div class="flex gap-3 mt-4" *ngIf="enableAdvancedRules">
-      <button pButton label="Frequency Rule" icon="pi pi-plus" class="p-button-rounded p-button-sm"
-        styleClass="bg-indigo-600 hover:bg-indigo-700 border-indigo-600">
-      </button>
-      <button pButton label="Duration Rule" icon="pi pi-plus" class="p-button-rounded p-button-sm p-button-secondary">
-      </button>
-    </div>
-  </div>
 
-  <!-- Logic Rules -->
-  <div class="space-y-6 mb-8" *ngIf="enableAdvancedRules">
-    <!-- Frequency Rule -->
-    <div class="border border-gray-200 rounded-lg p-4">
-      <div class="flex items-center justify-between mb-4">
-        <div class="flex items-center gap-2">
-          <i class="pi pi-sync text-gray-600"></i>
-          <span class="font-medium text-gray-900">Frequency Rule</span>
-        </div>
-        <button class="text-red-500 hover:text-red-700">
-          <i class="pi pi-trash"></i>
-        </button>
-      </div>
-
-      <div class="flex items-center flex-wrap gap-4">
-        <span class="text-sm text-gray-700">
-          Alarm occurs at least
-        </span>
-
-        <p-inputNumber [(ngModel)]="frequencyTimes" [showButtons]="true" [min]="1" [max]="999" class="w-24"
-          inputStyleClass="text-center">
-        </p-inputNumber>
-
-        <span class="text-sm text-gray-700">
-          times within
-        </span>
-
-        <!-- <p-inputNumber 
-    [(ngModel)]="frequencyDuration" 
-    [showButtons]="false"
-    [min]="1"
-    class="w-24"
-    inputStyleClass="text-center">
-  </p-inputNumber>
-
-  <p-select 
-    [(ngModel)]="frequencyUnit" 
-    [options]="timeUnits" 
-    optionLabel="label"
-    class="w-32">
-  </p-select> -->
-      </div>
-
-    </div>
-
-    <!-- Duration Rule -->
-    <div class="border border-gray-200 rounded-lg p-4">
-      <div class="flex items-center justify-between mb-4">
-        <div class="flex items-center gap-2">
-          <i class="pi pi-clock text-gray-600"></i>
-          <span class="font-medium text-gray-900">Duration Rule</span>
-        </div>
-        <button class="text-red-500 hover:text-red-700">
-          <i class="pi pi-trash"></i>
-        </button>
-      </div>
-
-      <div class="flex items-center gap-3 flex-wrap">
-        <span class="text-sm text-gray-700">Condition persists for at least</span>
-        <p-inputNumber [(ngModel)]="durationTime" [showButtons]="false" [min]="1" class="w-24"
-          inputStyleClass="text-center">
-        </p-inputNumber>
-        <!-- <p-select 
-          [(ngModel)]="durationUnit" 
-          [options]="timeUnits" 
-          optionLabel="label"
-          class="w-32">
-        </p-select> -->
-        <span class="text-sm text-gray-700">continuously</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Available Actions -->
-  <div class="mb-6">
-    <h3 class="text-sm font-medium text-gray-900 mb-4">Available Action</h3>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div *ngFor="let action of availableActions"
-        class="border border-gray-200 rounded-lg p-4 hover:border-indigo-300 hover:shadow-sm transition-all cursor-pointer"
-        [class.bg-indigo-50]="action.type === 'ticket'" [class.border-indigo-200]="action.type === 'ticket'"
-        [class.bg-orange-50]="action.type === 'log'" [class.border-orange-200]="action.type === 'log'"
-        [class.bg-red-50]="action.type === 'email'" [class.border-red-200]="action.type === 'email'">
-        <div class="flex items-start gap-3">
-          <div class="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center"
-            [class.bg-indigo-100]="action.type === 'ticket'" [class.bg-orange-100]="action.type === 'log'"
-            [class.bg-red-100]="action.type === 'email'">
-            <i [class]="action.icon" [class.text-indigo-600]="action.type === 'ticket'"
-              [class.text-orange-600]="action.type === 'log'" [class.text-red-600]="action.type === 'email'"></i>
-          </div>
-          <div class="flex-1">
-            <h4 class="text-sm font-medium text-gray-900">{{action.title}}</h4>
-            <p class="text-xs text-gray-500 mt-1">{{action.description}}</p>
+      <!-- ───── Advanced Rules Toggle ───── -->
+      <div class="mb-5">
+        <div class="flex gap-3 items-start">
+          <input type="checkbox" id="advancedRules" [(ngModel)]="enableAdvanced"
+            class="w-4 h-4 mt-0.5 accent-indigo-600 cursor-pointer flex-shrink-0" />
+          <div>
+            <label for="advancedRules" class="text-sm font-semibold text-gray-900 cursor-pointer">
+              Enable Advanced Rules &amp; Automation
+            </label>
+            <p class="text-xs text-gray-500 mt-1">
+              Add conditional logic to prevent false alarms and control when alerts are triggered
+              (Frequency Rule &amp; Duration Rule)
+            </p>
           </div>
         </div>
+
+        <!-- Rule Buttons -->
+        <div *ngIf="enableAdvanced" class="flex gap-3 mt-4 justify-end">
+          <button (click)="showFrequency = true" class="flex items-center gap-1.5 px-4 py-2 rounded-full bg-indigo-600 hover:bg-indigo-700
+                   text-white text-sm font-medium transition-colors">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3.5 h-3.5">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Frequency Rule
+          </button>
+          <button (click)="showDuration = true" class="flex items-center gap-1.5 px-4 py-2 rounded-full bg-gray-500 hover:bg-gray-600
+                   text-white text-sm font-medium transition-colors">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3.5 h-3.5">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Duration Rule
+          </button>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Action Priority Order -->
-  <div class="mb-6">
-    <h3 class="text-sm font-medium text-gray-900 mb-4">Action Priority Order</h3>
+      <!-- ───── Logic Rules ───── -->
+      <div *ngIf="enableAdvanced && (showFrequency || showDuration)" class="mb-6">
+        <p class="text-xs text-gray-500 font-medium mb-3">Logic Rule</p>
 
-    <div class="space-y-4">
-      <div *ngFor="let action of actions; let i = index" class="border border-gray-200 rounded-lg bg-gray-50">
-        <!-- Action Header -->
-        <div class="flex items-center gap-4 p-4">
-          <!-- Order Controls -->
-          <div class="flex flex-col gap-1">
-            <button (click)="moveActionUp(i)" [disabled]="i === 0"
-              class="text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed">
-              <i class="pi pi-chevron-up text-xs"></i>
-            </button>
-            <span class="text-sm font-medium text-gray-700 text-center">{{i + 1}}</span>
-            <button (click)="moveActionDown(i)" [disabled]="i === actions.length - 1"
-              class="text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed">
-              <i class="pi pi-chevron-down text-xs"></i>
+        <!-- Frequency Rule -->
+        <div *ngIf="showFrequency" class="border border-gray-200 rounded-xl p-4 mb-3">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2 text-gray-700">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                <polyline points="23 4 23 10 17 10" />
+                <polyline points="1 20 1 14 7 14" />
+                <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+              </svg>
+              <span class="text-sm font-semibold">Frequency Rule</span>
+            </div>
+            <button (click)="showFrequency = false" class="text-red-500 hover:text-red-700 transition-colors">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                <path d="M10 11v6M14 11v6M9 6V4h6v2" />
+              </svg>
             </button>
           </div>
+          <div class="flex items-center gap-3 flex-wrap">
+            <span class="text-sm text-gray-700">Alarm occurs at least</span>
 
-          <!-- Action Icon and Info -->
-          <div class="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center"
-            [class.bg-indigo-100]="action.type === 'ticket'" [class.bg-orange-100]="action.type === 'log'"
-            [class.bg-red-100]="action.type === 'email'">
-            <i [class]="action.icon" [class.text-indigo-600]="action.type === 'ticket'"
-              [class.text-orange-600]="action.type === 'log'" [class.text-red-600]="action.type === 'email'"></i>
-          </div>
+            <!-- Number input with buttons -->
+            <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden bg-white">
+              <input type="number" [(ngModel)]="freqTimes"
+                class="w-14 text-center text-sm py-1.5 px-2 border-none outline-none text-gray-900" />
+              <div class="flex flex-col border-l border-gray-200">
+                <button (click)="incrementFreq()"
+                  class="px-2 py-0.5 bg-gray-50 hover:bg-gray-100 border-b border-gray-200 flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                    class="w-2.5 h-2.5 text-gray-500">
+                    <polyline points="18 15 12 9 6 15" />
+                  </svg>
+                </button>
+                <button (click)="decrementFreq()"
+                  class="px-2 py-0.5 bg-gray-50 hover:bg-gray-100 flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                    class="w-2.5 h-2.5 text-gray-500">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+              </div>
+            </div>
 
-          <div class="flex-1">
-            <h4 class="text-sm font-medium text-gray-900">{{action.title}}</h4>
-            <p class="text-xs text-gray-500">{{action.description}}</p>
-          </div>
+            <span class="text-sm text-gray-700">times within</span>
 
-          <!-- Toggle and Delete -->
-          <div class="flex items-center gap-3">
-            <p-inputSwitch [(ngModel)]="action.enabled"></p-inputSwitch>
-            <button (click)="deleteAction(action.id)" class="text-red-500 hover:text-red-700">
-              <i class="pi pi-trash"></i>
-            </button>
+            <input type="number" [(ngModel)]="freqWithin" class="w-16 text-center text-sm py-1.5 px-2 border border-gray-300 rounded-lg outline-none
+                     focus:ring-2 focus:ring-indigo-300 text-gray-900" />
+
+            <select [(ngModel)]="freqUnit" class="text-sm py-1.5 px-3 border border-gray-300 rounded-lg outline-none
+                     focus:ring-2 focus:ring-indigo-300 text-gray-700 bg-white">
+              <option *ngFor="let u of timeUnits" [value]="u.value">{{ u.label }}</option>
+            </select>
           </div>
         </div>
 
-        <!-- Action Details -->
-        <div class="px-4 pb-4">
-          <!-- Ticket Details -->
-          <div *ngIf="action.type === 'ticket'" class="grid grid-cols-2 gap-4 mt-2">
-            <div>
-              <label class="text-xs font-medium text-gray-700 mb-2 block">Ticket priority</label>
-              <p-select [(ngModel)]="action.priority" [options]="priorityOptions" optionLabel="label"
-                optionValue="value" placeholder="Select priority" styleClass="w-full" [showClear]="true">
-              </p-select>
+        <!-- Duration Rule -->
+        <div *ngIf="showDuration" class="border border-gray-200 rounded-xl p-4">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2 text-gray-700">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              <span class="text-sm font-semibold">Duration Rule</span>
+            </div>
+            <button (click)="showDuration = false" class="text-red-500 hover:text-red-700 transition-colors">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                <path d="M10 11v6M14 11v6M9 6V4h6v2" />
+              </svg>
+            </button>
+          </div>
+          <div class="flex items-center gap-3 flex-wrap">
+            <span class="text-sm text-gray-700">Condition persists for at least</span>
+            <input type="number" [(ngModel)]="durTime" class="w-16 text-center text-sm py-1.5 px-2 border border-gray-300 rounded-lg outline-none
+                     focus:ring-2 focus:ring-indigo-300 text-gray-900" />
+            <select [(ngModel)]="durUnit" class="text-sm py-1.5 px-3 border border-gray-300 rounded-lg outline-none
+                     focus:ring-2 focus:ring-indigo-300 text-gray-700 bg-white">
+              <option *ngFor="let u of timeUnits" [value]="u.value">{{ u.label }}</option>
+            </select>
+            <span class="text-sm text-gray-700">continuously</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ───── Available Actions ───── -->
+      <div class="mb-6">
+        <p class="text-sm font-semibold text-gray-900 mb-3">Available Action</p>
+        <div class="grid grid-cols-2 gap-3">
+          <div *ngFor="let action of availableActions"
+            class="border rounded-xl p-3 cursor-pointer flex gap-3 items-start hover:shadow-sm transition-shadow"
+            [ngClass]="getCardBorder(action.type)">
+            <!-- Icon -->
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+              [ngClass]="getIconBg(action.type)">
+              <!-- Ticket -->
+              <svg *ngIf="action.type === 'ticket'" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" class="w-5 h-5" [ngClass]="getIconColor(action.type)">
+                <rect x="2" y="7" width="20" height="14" rx="2" />
+                <path d="M16 3l-4 4-4-4" />
+                <path d="M12 12v4M9.5 14h5" />
+              </svg>
+              <!-- Bell -->
+              <svg *ngIf="action.type === 'log'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                class="w-5 h-5" [ngClass]="getIconColor(action.type)">
+                <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 01-3.46 0" />
+              </svg>
+              <!-- Mail -->
+              <svg *ngIf="action.type === 'email'" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" class="w-5 h-5" [ngClass]="getIconColor(action.type)">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
             </div>
             <div>
-              <label class="text-xs font-medium text-gray-700 mb-2 block">Auto-Assign to</label>
-              <p-select [(ngModel)]="action.autoAssign" [options]="autoAssignOptions" optionLabel="label"
-                optionValue="value" styleClass="w-full">
-              </p-select>
+              <p class="text-sm font-semibold text-gray-900">{{ action.title }}</p>
+              <p class="text-xs text-gray-500 mt-0.5">{{ action.description }}</p>
             </div>
           </div>
+        </div>
+      </div>
 
-          <!-- Email Recipients -->
-          <div *ngIf="action.type === 'email'" class="mt-2">
-            <label class="text-xs font-medium text-gray-700 mb-2 block">Email Recipients (comma-separated)</label>
-            <input type="text" pInputText [(ngModel)]="action.recipients" class="w-full text-sm"
-              placeholder="Enter email addresses">
+      <!-- ───── Action Priority Order ───── -->
+      <div class="mb-7">
+        <p class="text-sm font-semibold text-gray-900 mb-3">Action Priority Order</p>
+        <div class="flex flex-col gap-3">
+          <div *ngFor="let action of actions; let i = index"
+            class="border border-gray-200 rounded-xl bg-gray-50 overflow-hidden">
+
+            <!-- Row -->
+            <div class="flex items-center gap-3 p-3.5">
+              <!-- Order Controls -->
+              <div class="flex flex-col items-center gap-0.5">
+                <button (click)="moveUp(i)" [disabled]="i === 0"
+                  class="p-0.5 text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-3 h-3">
+                    <polyline points="18 15 12 9 6 15" />
+                  </svg>
+                </button>
+                <span class="text-sm font-semibold text-gray-600">{{ i + 1 }}</span>
+                <button (click)="moveDown(i)" [disabled]="i === actions.length - 1"
+                  class="p-0.5 text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-3 h-3">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Icon -->
+              <div class="w-11 h-11 rounded-lg flex items-center justify-center flex-shrink-0"
+                [ngClass]="getIconBg(action.type)">
+                <svg *ngIf="action.type === 'ticket'" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" class="w-5 h-5" [ngClass]="getIconColor(action.type)">
+                  <rect x="2" y="7" width="20" height="14" rx="2" />
+                  <path d="M16 3l-4 4-4-4" />
+                  <path d="M12 12v4M9.5 14h5" />
+                </svg>
+                <svg *ngIf="action.type === 'log'" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" class="w-5 h-5" [ngClass]="getIconColor(action.type)">
+                  <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                  <path d="M13.73 21a2 2 0 01-3.46 0" />
+                </svg>
+                <svg *ngIf="action.type === 'email'" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" class="w-5 h-5" [ngClass]="getIconColor(action.type)">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                  <polyline points="22,6 12,13 2,6" />
+                </svg>
+              </div>
+
+              <!-- Info -->
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-gray-900 truncate">{{ action.title }}</p>
+                <p class="text-xs text-gray-500 truncate">{{ action.description }}</p>
+              </div>
+
+              <!-- Toggle -->
+              <button (click)="action.enabled = !action.enabled"
+                class="relative w-11 h-6 rounded-full transition-colors flex-shrink-0"
+                [ngClass]="action.enabled ? 'bg-indigo-600' : 'bg-gray-300'">
+                <span class="absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-all"
+                  [ngClass]="action.enabled ? 'left-6' : 'left-1'"></span>
+              </button>
+
+              <!-- Delete -->
+              <button (click)="deleteAction(action.id)"
+                class="text-red-500 hover:text-red-700 transition-colors flex-shrink-0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                  <path d="M10 11v6M14 11v6M9 6V4h6v2" />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Ticket Details -->
+            <div *ngIf="action.type === 'ticket'" class="border-t border-gray-100 px-4 py-3">
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="text-xs font-semibold text-gray-600 block mb-1.5">Ticket priority</label>
+                  <select [(ngModel)]="action.priority" class="w-full text-sm py-2 px-3 border border-gray-300 rounded-lg outline-none
+                           focus:ring-2 focus:ring-indigo-300 text-gray-700 bg-white">
+                    <option value="">Select priority</option>
+                    <option *ngFor="let o of priorityOptions" [value]="o.value">{{ o.label }}</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-xs font-semibold text-gray-600 block mb-1.5">Auto-Assign to</label>
+                  <select [(ngModel)]="action.autoAssign" class="w-full text-sm py-2 px-3 border border-gray-300 rounded-lg outline-none
+                           focus:ring-2 focus:ring-indigo-300 text-gray-700 bg-white">
+                    <option *ngFor="let o of autoAssignOptions" [value]="o.value">{{ o.label }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Email Details -->
+            <div *ngIf="action.type === 'email'" class="border-t border-gray-100 px-4 py-3">
+              <label class="text-xs font-semibold text-gray-600 block mb-1.5">
+                Email Recipients (comma-separated)
+              </label>
+              <input type="text" [(ngModel)]="action.recipients" placeholder="Enter email addresses" class="w-full text-sm py-2 px-3 border border-gray-300 rounded-lg outline-none
+                       focus:ring-2 focus:ring-indigo-300 text-gray-700" />
+            </div>
+
+            <!-- Log Details -->
+            <div *ngIf="action.type === 'log'" class="border-t border-gray-100 px-4 py-3">
+              <p class="text-xs text-gray-400">No additional configuration required.</p>
+            </div>
+
           </div>
         </div>
       </div>
     </div>
+
+    <!-- ───── Footer ───── -->
+    <!-- <div class="flex items-center justify-between px-7 py-4 border-t border-gray-100 bg-white">
+      <button class="px-5 py-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-600
+                     hover:bg-gray-50 transition-colors">
+        Cancel
+      </button>
+      <div class="flex gap-2.5">
+        <button class="flex items-center gap-1.5 px-5 py-2 rounded-lg border border-gray-300 text-sm font-medium
+                       text-gray-600 hover:bg-gray-50 transition-colors">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3.5 h-3.5">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+          Previous
+        </button>
+        <button class="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700
+                       text-white text-sm font-semibold transition-colors">
+          Next
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3.5 h-3.5">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </button>
+      </div>
+    </div> -->
+
   </div>
-
-
 </div>

@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { Navbar } from '../../../../shared/navbar/component/navbar/navbar';
 import { ChartDashboard } from '../chart-dashboard/chart-dashboard';
 import { SharedData } from '../../../../shared/service/shared-data';
+import { RealtimeAlarmsDashboard } from '../../service/realtime-alarms-dashboard';
 @Component({
   selector: 'app-home-dashboard',
   imports: [Sidebar, CommonModule, RouterModule, Navbar, ChartDashboard],
@@ -15,12 +16,18 @@ export class HomeDashboard implements OnInit {
   dashboardData: any;
   dashboardRevenueData: any;
   dashboardGasData: any;
+  isLoading: boolean = true;
+  alarms: any[] = [];
 
-  constructor(private sharedData: SharedData) {}
+  constructor(
+    private sharedData: SharedData,
+    private realTime: RealtimeAlarmsDashboard,
+  ) {}
   ngOnInit(): void {
     this.getSummaryData();
     this.getGasData();
     this.getRevenueData();
+    this.onStartConnection();
   }
   getSummaryData() {
     this.sharedData.dashboardSummary$.subscribe({
@@ -50,5 +57,16 @@ export class HomeDashboard implements OnInit {
       },
       error: (error) => console.log(error),
     });
+  }
+  async onStartConnection() {
+    await this.realTime.startConnection();
+    this.realTime.showAlarms((data) => {
+      console.log('Received alarm data:', data);
+      this.isLoading = false;
+      this.alarms.unshift(data);
+    });
+  }
+  ngOnDestroy(): void {
+    this.realTime.stopConnection();
   }
 }
