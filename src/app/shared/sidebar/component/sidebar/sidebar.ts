@@ -25,7 +25,10 @@ export class Sidebar {
   links: SidebarSection[] = [
     {
       title: '',
-      items: [{ name: 'Dashboard', icon: 'dashboard', route: '/dashboard/homeDashboard' }],
+      items: [
+        { name: 'Dashboard', icon: 'dashboard', route: '/dashboard/homeDashboard' },
+        { name: 'Tech ops', icon: 'dashboard', route: '/dashboard/tech-ops' },
+      ],
     },
     {
       title: 'Monitoring',

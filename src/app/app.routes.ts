@@ -59,6 +59,12 @@ export const routes: Routes = [
         title: 'Dashboard',
       },
       {
+        path: 'tech-ops',
+        loadComponent: () =>
+          import('./features/dashboard/component/tech-ops/tech-ops').then((m) => m.TechOps),
+        title: 'Tech Ops',
+      },
+      {
         path: 'users',
         loadComponent: () =>
           import('./features/user-management/component/users/users').then((m) => m.Users),
