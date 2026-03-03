@@ -6,6 +6,7 @@ import { Navbar } from '../../../../shared/navbar/component/navbar/navbar';
 import { ChartDashboard } from '../chart-dashboard/chart-dashboard';
 import { SharedData } from '../../../../shared/service/shared-data';
 import { RealtimeAlarmsDashboard } from '../../service/realtime-alarms-dashboard';
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-home-dashboard',
   imports: [Sidebar, CommonModule, RouterModule, Navbar, ChartDashboard],
@@ -22,6 +23,7 @@ export class HomeDashboard implements OnInit {
   constructor(
     private sharedData: SharedData,
     private realTime: RealtimeAlarmsDashboard,
+    private cdr: ChangeDetectorRef,
   ) {}
   ngOnInit(): void {
     this.getSummaryData();
@@ -64,6 +66,7 @@ export class HomeDashboard implements OnInit {
       console.log('Received alarm data:', data);
       this.isLoading = false;
       this.alarms.unshift(data);
+      this.cdr.detectChanges();
     });
   }
   ngOnDestroy(): void {

@@ -13,39 +13,25 @@
 
   <!-- Zone Select -->
   <div class="card flex justify-center">
-    <p-select [options]="zones" [(ngModel)]="selectedZone" placeholder="Zones" class="w-[150px]">
-    </p-select>
+    <p-select [options]="zones" [(ngModel)]="selectedZone" placeholder="Zones" class="w-[150px]"></p-select>
   </div>
 </div>
-<div class="m-4 mt-3">
-  <h3 class="text-bold text-2xl">Zone Name</h3>
-</div>
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 m-3 mt-4">
 
-  <!-- Card Component (repeat with different status) -->
-  <!-- ONLINE Card -->
-  <div class="bg-white rounded-2xl border border-teal-300 p-4 shadow-sm space-y-3">
+<!-- Loading Spinner -->
+<div *ngIf="isLoading" class="m-3 flex justify-center items-center min-h-40">
+  <div class="flex flex-col items-center gap-3">
+    <div class="w-10 h-10 border-4 border-gray-200 border-t-blue-900 rounded-full animate-spin"></div>
+    <p class="text-gray-400 text-sm">Loading alarms...</p>
+  </div>
+</div>
+
+<!-- TechOps Cards -->
+<div *ngIf="!isLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 m-3 mt-4">
+  <div class="bg-white rounded-2xl border border-teal-300 p-4 shadow-sm space-y-3" *ngFor="let station of techOpsData">
     <!-- Header -->
     <div class="flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <span class="text-2xl">
-          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
-            <path
-              d="M1.75 20.75V5.75C1.75 3.39298 1.75 2.21447 2.48223 1.48223C3.21447 0.75 4.39298 0.75 6.75 0.75H9.75C12.107 0.75 13.2855 0.75 14.0178 1.48223C14.75 2.21447 14.75 3.39298 14.75 5.75V20.75"
-              stroke="#3E4A60" stroke-width="1.5" />
-            <path d="M0.75 20.75H15.75" stroke="#3E4A60" stroke-width="1.5" stroke-linecap="round" />
-            <path d="M1.75 9.75H14.75" stroke="#3E4A60" stroke-width="1.5" stroke-linecap="round" />
-            <path
-              d="M19.75 7.27662L20.1972 7.05539C20.4662 6.92234 20.6007 6.85582 20.6753 6.73628C20.75 6.61674 20.75 6.46799 20.75 6.17048V5.47636C20.75 4.8326 20.75 4.51071 20.5755 4.36265C20.5202 4.3158 20.4553 4.28144 20.3853 4.26197C20.164 4.20041 19.8933 4.37896 19.3518 4.73606C18.6572 5.19425 18.3098 5.42335 18.0885 5.7501C18.015 5.85863 17.9525 5.9741 17.902 6.09482C17.75 6.45824 17.75 6.87125 17.75 7.69727V9.32973C17.75 9.56184 17.9402 9.75 18.1748 9.75C18.5222 9.75 18.8346 9.54074 18.9636 9.22162L19.75 7.27662Z"
-              stroke="#3E4A60" stroke-width="1.5" stroke-linejoin="round" />
-            <path
-              d="M18.2278 9.75C18.4289 11.1363 18.8952 12.7198 18.7055 14.1299C18.5338 15.407 17.5225 16.4376 16.1925 16.6912C15.8843 16.75 15.5062 16.75 14.75 16.75"
-              stroke="#3E4A60" stroke-width="1.5" stroke-linejoin="round" />
-          </svg>
-        </span>
-        <span class="font-semibold text-gray-800">North Station</span>
-      </div>
-      <span class="text-xs font-medium text-green-600 bg-green-100 px-2 py-0.5 rounded-full">Online</span>
+      <span class="font-semibold text-gray-800">{{ station.stationName }}</span>
+      <span class="text-xs font-medium text-green-600 bg-green-100 px-2 py-0.5 rounded-full">{{ station.status }}</span>
     </div>
 
     <!-- Type + Dispensers -->
@@ -56,7 +42,7 @@
       </div>
       <div class="text-right">
         <p class="text-xs text-gray-500">Dispensers</p>
-        <p class="text-sm font-bold text-gray-800">2/3</p>
+        <p class="text-sm font-bold text-gray-800">{{ station.dispensers }}</p>
       </div>
     </div>
 
@@ -64,208 +50,29 @@
 
     <!-- Stats Grid -->
     <div class="grid grid-cols-2 gap-y-2 text-xs text-gray-500">
-      <div>Beacon Availability <span class="text-gray-800 font-semibold">60 %</span></div>
-      <div>Efficiency <span class="text-gray-800 font-semibold">90 %</span></div>
-      <div>Total Revenue <span class="text-gray-800 font-semibold">7005.45<small>EGP</small></span></div>
-      <div>Vehicles Charged <span class="text-gray-800 font-semibold">300<small>Car</small></span></div>
+      <div> Availability <span class="text-gray-800 font-semibold">{{ station.availability }}</span></div>
+      <div>Efficiency <span class="text-gray-800 font-semibold">{{ station.efficiency }}</span></div>
+      <div>Total Revenue <span class="text-gray-800 font-semibold">{{ station.totalRevenue }}<small>EGP</small></span>
+      </div>
+      <div>Vehicles Charged <span class="text-gray-800 font-semibold">{{ station.vehiclesCharged
+          }}<small>Car</small></span></div>
+      <div>Pressure <span class="text-gray-800 font-semibold">{{ station.pressure }}</span></div>
+      <div>State <span class="text-gray-800 font-semibold">{{ station.state }}</span></div>
     </div>
 
     <hr class="border-gray-100" />
 
     <div class="flex justify-between text-xs text-gray-500">
       <span>Gas Volume Sold</span>
-      <span class="font-semibold text-gray-800">13123 <small>L</small></span>
+      <span class="font-semibold text-gray-800">{{ station.gasVolumeSold }} <small>L</small></span>
     </div>
 
     <div class="flex justify-between text-xs text-gray-500">
-      <span>Dispensing pressure</span>
-      <span class="font-semibold text-gray-800">6454 ##</span>
+      <span>CompManufacturer</span>
+      <span class="font-semibold text-gray-800">{{ station.compManufacturer }}</span>
     </div>
 
     <hr class="border-gray-100" />
-
-    <p class="text-[11px] text-gray-400 text-center">Last update 09:29:30 2025-06-01</p>
+    <p class="text-[11px] text-gray-400 text-center">{{ station.lastUpdate }}</p>
   </div>
-
-  <!-- OFFLINE Card -->
-  <div class="bg-white rounded-2xl border border-red-400 p-4 shadow-sm space-y-3">
-    <div class="flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <span class="text-2xl">
-          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
-            <path
-              d="M1.75 20.75V5.75C1.75 3.39298 1.75 2.21447 2.48223 1.48223C3.21447 0.75 4.39298 0.75 6.75 0.75H9.75C12.107 0.75 13.2855 0.75 14.0178 1.48223C14.75 2.21447 14.75 3.39298 14.75 5.75V20.75"
-              stroke="#3E4A60" stroke-width="1.5" />
-            <path d="M0.75 20.75H15.75" stroke="#3E4A60" stroke-width="1.5" stroke-linecap="round" />
-            <path d="M1.75 9.75H14.75" stroke="#3E4A60" stroke-width="1.5" stroke-linecap="round" />
-            <path
-              d="M19.75 7.27662L20.1972 7.05539C20.4662 6.92234 20.6007 6.85582 20.6753 6.73628C20.75 6.61674 20.75 6.46799 20.75 6.17048V5.47636C20.75 4.8326 20.75 4.51071 20.5755 4.36265C20.5202 4.3158 20.4553 4.28144 20.3853 4.26197C20.164 4.20041 19.8933 4.37896 19.3518 4.73606C18.6572 5.19425 18.3098 5.42335 18.0885 5.7501C18.015 5.85863 17.9525 5.9741 17.902 6.09482C17.75 6.45824 17.75 6.87125 17.75 7.69727V9.32973C17.75 9.56184 17.9402 9.75 18.1748 9.75C18.5222 9.75 18.8346 9.54074 18.9636 9.22162L19.75 7.27662Z"
-              stroke="#3E4A60" stroke-width="1.5" stroke-linejoin="round" />
-            <path
-              d="M18.2278 9.75C18.4289 11.1363 18.8952 12.7198 18.7055 14.1299C18.5338 15.407 17.5225 16.4376 16.1925 16.6912C15.8843 16.75 15.5062 16.75 14.75 16.75"
-              stroke="#3E4A60" stroke-width="1.5" stroke-linejoin="round" />
-          </svg>
-        </span>
-        <span class="font-semibold text-gray-800">North Station</span>
-      </div>
-      <span class="text-xs font-medium text-red-500 bg-red-100 px-2 py-0.5 rounded-full">Offline</span>
-    </div>
-
-    <div class="flex items-center justify-between">
-      <div class="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1">
-        # Type Compressors
-        <span class="bg-green-500 text-white text-[10px] px-1.5 py-0.5 rounded-full ml-1">on</span>
-      </div>
-      <div class="text-right">
-        <p class="text-xs text-gray-500">Dispensers</p>
-        <p class="text-sm font-bold text-gray-800">2/3</p>
-      </div>
-    </div>
-
-    <hr class="border-gray-100" />
-
-    <div class="grid grid-cols-2 gap-y-2 text-xs text-gray-500">
-      <div>Beacon Availability <span class="text-gray-800 font-semibold">60 %</span></div>
-      <div>Efficiency <span class="text-gray-800 font-semibold">90 %</span></div>
-      <div>Total Revenue <span class="text-gray-800 font-semibold">7005.45<small>EGP</small></span></div>
-      <div>Vehicles Charged <span class="text-gray-800 font-semibold">300<small>Car</small></span></div>
-    </div>
-
-    <hr class="border-gray-100" />
-
-    <div class="flex justify-between text-xs text-gray-500">
-      <span>Gas Volume Sold</span>
-      <span class="font-semibold text-gray-800">13123 <small>L</small></span>
-    </div>
-
-    <div class="flex justify-between text-xs text-gray-500">
-      <span>Dispensing pressure</span>
-      <span class="font-semibold text-gray-800">6454 ##</span>
-    </div>
-
-    <hr class="border-gray-100" />
-
-    <p class="text-[11px] text-gray-400 text-center">Last update 09:29:30 2025-06-01</p>
-  </div>
-
-  <!-- ONLINE Card 3 -->
-  <div class="bg-white rounded-2xl border border-teal-300 p-4 shadow-sm space-y-3">
-    <div class="flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <span class="text-2xl"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"
-            fill="none">
-            <path
-              d="M1.75 20.75V5.75C1.75 3.39298 1.75 2.21447 2.48223 1.48223C3.21447 0.75 4.39298 0.75 6.75 0.75H9.75C12.107 0.75 13.2855 0.75 14.0178 1.48223C14.75 2.21447 14.75 3.39298 14.75 5.75V20.75"
-              stroke="#3E4A60" stroke-width="1.5" />
-            <path d="M0.75 20.75H15.75" stroke="#3E4A60" stroke-width="1.5" stroke-linecap="round" />
-            <path d="M1.75 9.75H14.75" stroke="#3E4A60" stroke-width="1.5" stroke-linecap="round" />
-            <path
-              d="M19.75 7.27662L20.1972 7.05539C20.4662 6.92234 20.6007 6.85582 20.6753 6.73628C20.75 6.61674 20.75 6.46799 20.75 6.17048V5.47636C20.75 4.8326 20.75 4.51071 20.5755 4.36265C20.5202 4.3158 20.4553 4.28144 20.3853 4.26197C20.164 4.20041 19.8933 4.37896 19.3518 4.73606C18.6572 5.19425 18.3098 5.42335 18.0885 5.7501C18.015 5.85863 17.9525 5.9741 17.902 6.09482C17.75 6.45824 17.75 6.87125 17.75 7.69727V9.32973C17.75 9.56184 17.9402 9.75 18.1748 9.75C18.5222 9.75 18.8346 9.54074 18.9636 9.22162L19.75 7.27662Z"
-              stroke="#3E4A60" stroke-width="1.5" stroke-linejoin="round" />
-            <path
-              d="M18.2278 9.75C18.4289 11.1363 18.8952 12.7198 18.7055 14.1299C18.5338 15.407 17.5225 16.4376 16.1925 16.6912C15.8843 16.75 15.5062 16.75 14.75 16.75"
-              stroke="#3E4A60" stroke-width="1.5" stroke-linejoin="round" />
-          </svg></span>
-        <span class="font-semibold text-gray-800">North Station</span>
-      </div>
-      <span class="text-xs font-medium text-green-600 bg-green-100 px-2 py-0.5 rounded-full">Online</span>
-    </div>
-
-    <div class="flex items-center justify-between">
-      <div class="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1">
-        # Type Compressors
-        <span class="bg-green-500 text-white text-[10px] px-1.5 py-0.5 rounded-full ml-1">on</span>
-      </div>
-      <div class="text-right">
-        <p class="text-xs text-gray-500">Dispensers</p>
-        <p class="text-sm font-bold text-gray-800">2/3</p>
-      </div>
-    </div>
-
-    <hr class="border-gray-100" />
-
-    <div class="grid grid-cols-2 gap-y-2 text-xs text-gray-500">
-      <div>Beacon Availability <span class="text-gray-800 font-semibold">60 %</span></div>
-      <div>Efficiency <span class="text-gray-800 font-semibold">90 %</span></div>
-      <div>Total Revenue <span class="text-gray-800 font-semibold">7005.45<small>EGP</small></span></div>
-      <div>Vehicles Charged <span class="text-gray-800 font-semibold">300<small>Car</small></span></div>
-    </div>
-
-    <hr class="border-gray-100" />
-
-    <div class="flex justify-between text-xs text-gray-500">
-      <span>Gas Volume Sold</span>
-      <span class="font-semibold text-gray-800">13123 <small>L</small></span>
-    </div>
-
-    <div class="flex justify-between text-xs text-gray-500">
-      <span>Dispensing pressure</span>
-      <span class="font-semibold text-gray-800">6454 ##</span>
-    </div>
-
-    <hr class="border-gray-100" />
-
-    <p class="text-[11px] text-gray-400 text-center">Last update 09:29:30 2025-06-01</p>
-  </div>
-
-  <!-- ONLINE Card 4 -->
-  <div class="bg-white rounded-2xl border border-teal-300 p-4 shadow-sm space-y-3">
-    <div class="flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <span class="text-2xl"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"
-            fill="none">
-            <path
-              d="M1.75 20.75V5.75C1.75 3.39298 1.75 2.21447 2.48223 1.48223C3.21447 0.75 4.39298 0.75 6.75 0.75H9.75C12.107 0.75 13.2855 0.75 14.0178 1.48223C14.75 2.21447 14.75 3.39298 14.75 5.75V20.75"
-              stroke="#3E4A60" stroke-width="1.5" />
-            <path d="M0.75 20.75H15.75" stroke="#3E4A60" stroke-width="1.5" stroke-linecap="round" />
-            <path d="M1.75 9.75H14.75" stroke="#3E4A60" stroke-width="1.5" stroke-linecap="round" />
-            <path
-              d="M19.75 7.27662L20.1972 7.05539C20.4662 6.92234 20.6007 6.85582 20.6753 6.73628C20.75 6.61674 20.75 6.46799 20.75 6.17048V5.47636C20.75 4.8326 20.75 4.51071 20.5755 4.36265C20.5202 4.3158 20.4553 4.28144 20.3853 4.26197C20.164 4.20041 19.8933 4.37896 19.3518 4.73606C18.6572 5.19425 18.3098 5.42335 18.0885 5.7501C18.015 5.85863 17.9525 5.9741 17.902 6.09482C17.75 6.45824 17.75 6.87125 17.75 7.69727V9.32973C17.75 9.56184 17.9402 9.75 18.1748 9.75C18.5222 9.75 18.8346 9.54074 18.9636 9.22162L19.75 7.27662Z"
-              stroke="#3E4A60" stroke-width="1.5" stroke-linejoin="round" />
-            <path
-              d="M18.2278 9.75C18.4289 11.1363 18.8952 12.7198 18.7055 14.1299C18.5338 15.407 17.5225 16.4376 16.1925 16.6912C15.8843 16.75 15.5062 16.75 14.75 16.75"
-              stroke="#3E4A60" stroke-width="1.5" stroke-linejoin="round" />
-          </svg></span>
-        <span class="font-semibold text-gray-800">North Station</span>
-      </div>
-      <span class="text-xs font-medium text-green-600 bg-green-100 px-2 py-0.5 rounded-full">Online</span>
-    </div>
-
-    <div class="flex items-center justify-between">
-      <div class="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1">
-        # Type Compressors
-        <span class="bg-green-500 text-white text-[10px] px-1.5 py-0.5 rounded-full ml-1">on</span>
-      </div>
-      <div class="text-right">
-        <p class="text-xs text-gray-500">Dispensers</p>
-        <p class="text-sm font-bold text-gray-800">2/3</p>
-      </div>
-    </div>
-
-    <hr class="border-gray-100" />
-
-    <div class="grid grid-cols-2 gap-y-2 text-xs text-gray-500">
-      <div>Beacon Availability <span class="text-gray-800 font-semibold">60 %</span></div>
-      <div>Efficiency <span class="text-gray-800 font-semibold">90 %</span></div>
-      <div>Total Revenue <span class="text-gray-800 font-semibold">7005.45<small>EGP</small></span></div>
-      <div>Vehicles Charged <span class="text-gray-800 font-semibold">300<small>Car</small></span></div>
-    </div>
-
-    <hr class="border-gray-100" />
-
-    <div class="flex justify-between text-xs text-gray-500">
-      <span>Gas Volume Sold</span>
-      <span class="font-semibold text-gray-800">13123 <small>L</small></span>
-    </div>
-
-    <div class="flex justify-between text-xs text-gray-500">
-      <span>Dispensing pressure</span>
-      <span class="font-semibold text-gray-800">6454 ##</span>
-    </div>
-
-    <hr class="border-gray-100" />
-
-    <p class="text-[11px] text-gray-400 text-center">Last update 09:29:30 2025-06-01</p>
-  </div>
-
 </div>
