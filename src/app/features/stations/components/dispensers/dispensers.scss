@@ -1,0 +1,15 @@
+.p-tablist-tab-list {
+  position: relative;
+  display: flex;
+  justify-content: flex-end !important;
+
+  /* border-style: solid; */
+  // border-color: var(--p-tabs-tablist-border-color);
+  /* border-width: var(--p-tabs-tablist-border-width); */
+}
+
+.p-tab-active {
+  background-color: rgb(245, 245, 245) !important;
+  box-shadow: inset;
+  border-radius: 15px;
+}

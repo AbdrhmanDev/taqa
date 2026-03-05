@@ -90,6 +90,58 @@ export const routes: Routes = [
         title: 'Stations',
       },
       {
+        path: 'station-details',
+        loadComponent: () =>
+          import('./features/stations/components/station-detatils/station-detatils').then(
+            (m) => m.StationDetatils,
+          ),
+        title: 'Stations Details',
+      },
+      {
+        path: 'overview',
+        loadComponent: () =>
+          import('./features/stations/components/over-view/over-view').then((m) => m.OverView),
+        title: 'Stations',
+      },
+      {
+        path: 'compressors',
+        loadComponent: () =>
+          import('./features/stations/components/comprossers/comprossers').then(
+            (m) => m.Comprossers,
+          ),
+        title: 'Stations',
+      },
+      {
+        path: 'compressors',
+        loadComponent: () =>
+          import('./features/stations/components/comprossers/comprossers').then(
+            (m) => m.Comprossers,
+          ),
+        title: 'Stations',
+      },
+      {
+        path: 'dispensers',
+        loadComponent: () =>
+          import('./features/stations/components/dispensers/dispensers').then((m) => m.Dispensers),
+        title: 'Stations',
+      },
+      {
+        path: 'station-alarm',
+        loadComponent: () =>
+          import('./features/stations/components/station-alarm/station-alarm').then(
+            (m) => m.StationAlarm,
+          ),
+        title: 'Stations',
+      },
+      {
+        path: 'station-tickets',
+        loadComponent: () =>
+          import('./features/stations/components/station-tickets/station-tickets').then(
+            (m) => m.StationTickets,
+          ),
+        title: 'Stations',
+      },
+      {
         path: 'requests',
         loadComponent: () =>
           import('./features/Maintenance Request/components/requests/requests').then(

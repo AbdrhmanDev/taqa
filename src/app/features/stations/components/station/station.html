@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2 mt-4 justify-between">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2 mt-4 ms-3 me-3 justify-between">
 
   <!-- Card 1: Total Revenue -->
   <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all">
@@ -160,65 +160,179 @@
 
 </div>
 <!-- table -->
-<div class="bg-white rounded-xl shadow-sm p-6 ms-3 me-3">
+<div class="bg-white rounded-xl shadow-sm p-6 ms-3 me-3 mt-8">
   <form class="space-y-6">
 
 
-    <div class="grid grid-cols-12 gap-6">
-      <div class="col-span-12 md:col-span-3"> <label class="block text-sm font-medium text-gray-700 mb-1"> Type of
-          alerts
+    <div class="grid grid-cols-12 gap-4 items-end">
+
+      <!--  Search -->
+      <div class="col-span-6 md:col-span-6 lg:col-span-4">
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+
+          <input type="text" placeholder="Search stations..." class="w-full pl-10 pr-4 py-2 text-sm text-gray-300 border border-gray-300 rounded-lg bg-white
+               focus:ring-1 focus:ring-green-300 focus:border-green-700 outline-none transition-all" />
+        </div>
+      </div>
+
+      <!--  Zones -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-3 lg:col-span-2">
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          All Zones
         </label>
+
         <p-select optionLabel="label" optionValue="value" placeholder="All" class="w-full">
         </p-select>
       </div>
 
-
-      <div class="col-span-12 md:col-span-3"> <label class="block text-sm font-medium text-gray-700 mb-1"> Ticket ID
+      <!-- Status -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-3 lg:col-span-2">
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Status
         </label>
+
         <p-select optionLabel="label" optionValue="value" placeholder="All" class="w-full">
         </p-select>
       </div>
-
-
-      <div class="col-span-12 md:col-span-3"> <label class="block text-sm font-medium text-gray-700 mb-1">Status
-        </label>
-        <p-select optionLabel="label" optionValue="value" placeholder="All" class="w-full">
-        </p-select>
-      </div>
-
-      <div class="col-span-12 md:col-span-3"> <label class="block text-sm font-medium text-gray-700 mb-1"> Date
-        </label>
-        <p-datepicker placeholder="Date" [(ngModel)]="date" [ngModelOptions]="{standalone: true}"
-          [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" />
-      </div>
-
 
     </div>
   </form>
-  <p-table class="mt-6" [value]="station" [paginator]="true" [rows]="5" [tableStyle]="{ 'min-width': '50rem' }"
-    [rowsPerPageOptions]="[5, 10, 20]">
-    <ng-template #header>
-      <tr class="">
-        <th class="">Ticket_ID</th>
-        <th>Station</th>
-        <th>Date Create</th>
-        <th>Throughput</th>
-        <th>status</th>
-        <th>Action</th>
+  <div class="flex justify-between items-center mt-6">
+
+    <div></div>
+
+    <div class="flex gap-3">
+      <button (click)="exportCSV()"
+        class="flex items-center  gap-2 px-4 py-2 text-sm  bg-gray-200 rounded-lg hover:bg-gray-50 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path
+            d="M2.33464 8.66406V8.12826C2.33464 6.15001 2.33464 5.16088 2.64726 4.37089C3.14985 3.10087 4.21273 2.0991 5.56021 1.6254C6.39839 1.33075 7.44784 1.33075 9.54676 1.33075C10.7461 1.33075 11.3458 1.33075 11.8248 1.49912C12.5948 1.7698 13.2021 2.34225 13.4893 3.06797C13.668 3.5194 13.668 4.08461 13.668 5.21504V8.00687V8.66406"
+            stroke="#101828" stroke-linecap="round" stroke-linejoin="round" />
+          <path
+            d="M2.33529 7.99219C2.33529 6.76489 3.33021 5.76997 4.55751 5.76997C5.00136 5.76997 5.52464 5.84774 5.9562 5.7321C6.33963 5.62936 6.63913 5.32987 6.74187 4.94643C6.8575 4.51488 6.77973 3.9916 6.77973 3.54774C6.77973 2.32044 7.77465 1.32552 9.00195 1.32552"
+            stroke="#101828" stroke-linecap="round" stroke-linejoin="round" />
+          <path
+            d="M5.00065 11.4771C4.9637 10.6835 4.41501 10.6641 3.67068 10.6641C2.52408 10.6641 2.33398 10.9348 2.33398 11.9974V13.3307C2.33398 14.3934 2.52408 14.6641 3.67068 14.6641C4.41501 14.6641 4.9637 14.6446 5.00065 13.851M13.6673 10.6641L12.4826 13.7939C12.263 14.374 12.1532 14.664 11.9793 14.664C11.8054 14.664 11.6956 14.374 11.476 13.7939L10.2913 10.6641M8.58462 10.6641H7.79736C7.48275 10.6641 7.32544 10.6641 7.20136 10.7148C6.77879 10.8876 6.78454 11.2939 6.78454 11.6641C6.78454 12.0342 6.77879 12.4405 7.20136 12.6133C7.32544 12.6641 7.48275 12.6641 7.79736 12.6641C8.11197 12.6641 8.26927 12.6641 8.39336 12.7148C8.81592 12.8876 8.81017 13.2939 8.81017 13.6641C8.81017 14.0342 8.81592 14.4405 8.39336 14.6133C8.26927 14.6641 8.11197 14.6641 7.79736 14.6641H6.9399"
+            stroke="#101828" stroke-linecap="round" />
+        </svg>
+        Export CSV
+      </button>
+
+      <button (click)="exportPDF()"
+        class="flex items-center  gap-2 px-4 py-2 text-sm  bg-gray-200 rounded-lg hover:bg-gray-50 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path
+            d="M2.33464 8.66406V8.12826C2.33464 6.15001 2.33464 5.16088 2.64726 4.37089C3.14985 3.10087 4.21273 2.0991 5.56021 1.6254C6.39839 1.33075 7.44784 1.33075 9.54676 1.33075C10.7461 1.33075 11.3458 1.33075 11.8248 1.49912C12.5948 1.7698 13.2021 2.34225 13.4893 3.06797C13.668 3.5194 13.668 4.08461 13.668 5.21504V8.00687V8.66406"
+            stroke="#101828" stroke-linecap="round" stroke-linejoin="round" />
+          <path
+            d="M2.33529 7.99219C2.33529 6.76489 3.33021 5.76997 4.55751 5.76997C5.00136 5.76997 5.52464 5.84774 5.9562 5.7321C6.33963 5.62936 6.63913 5.32987 6.74187 4.94643C6.8575 4.51488 6.77973 3.9916 6.77973 3.54774C6.77973 2.32044 7.77465 1.32552 9.00195 1.32552"
+            stroke="#101828" stroke-linecap="round" stroke-linejoin="round" />
+          <path
+            d="M2.33398 14.6641V12.6641M2.33398 12.6641V11.4641C2.33398 11.0869 2.33398 10.8984 2.45114 10.7812C2.5683 10.6641 2.75686 10.6641 3.13398 10.6641H3.66732C4.2196 10.6641 4.66732 11.1118 4.66732 11.6641C4.66732 12.2163 4.2196 12.6641 3.66732 12.6641H2.33398ZM13.6673 10.6641H12.6673C12.0388 10.6641 11.7245 10.6641 11.5292 10.8593C11.334 11.0546 11.334 11.3689 11.334 11.9974V12.6641M11.334 14.6641V12.6641M11.334 12.6641H13.0007M9.33398 12.6641C9.33398 13.7686 8.43855 14.6641 7.33398 14.6641C7.08475 14.6641 6.96014 14.6641 6.86732 14.6105C6.64508 14.4822 6.66732 14.2224 6.66732 13.9974V11.3307C6.66732 11.1057 6.64508 10.846 6.86732 10.7177C6.96014 10.6641 7.08475 10.6641 7.33398 10.6641C8.43855 10.6641 9.33398 11.5595 9.33398 12.6641Z"
+            stroke="#101828" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        Export PDF
+      </button>
+    </div>
+
+  </div>
+  <p-table #dt class="mt-8" [value]="station" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5,10,20]"
+    styleClass="p-datatable-sm">
+
+    <!-- Header -->
+    <ng-template pTemplate="header">
+      <tr class="bg-gray-50 text-gray-500 text-sm">
+        <th class="px-4 py-3 text-left">Station</th>
+        <th>Zone</th>
+        <th>Compressors</th>
+        <th>Dispensers</th>
+        <th>Status</th>
+        <th>Change By</th>
+        <th>Last update</th>
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <!-- Body -->
+    <ng-template pTemplate="body" let-station>
+      <tr class="text-sm hover:bg-gray-50 transition">
+
+        <!-- Station -->
+        <td class="px-4 py-4">
+          <div class="font-medium text-gray-800">
+            {{ station.Station }}
+          </div>
+          <div class="text-xs text-gray-400">
+            ID: {{ station.Id }}
+          </div>
+        </td>
+
+        <!-- Zone -->
+        <td class="text-gray-600">
+          {{ station.Zone }}
+        </td>
+
+        <!-- Compressors -->
+        <td>{{ station.Compressors }}</td>
+
+        <!-- Dispensers -->
+        <td>{{ station.Dispensers }}</td>
+
+        <!-- Status Badge -->
+        <td>
+          <span class="px-3 py-1 text-xs rounded-full font-medium" [ngClass]="{
+            'bg-green-100 text-green-700': station.Status === 'online',
+            'bg-red-100 text-red-600': station.Status === 'offline'
+          }">
+            {{ station.Status }}
+          </span>
+        </td>
+
+        <!-- Change By -->
+        <td>
+          <div class="flex items-center gap-2">
+            <div
+              class="w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center text-xs font-medium text-gray-600">
+              {{ station.ChangeBy?.charAt(0) }}
+            </div>
+            <span class="text-gray-600 text-sm">
+              {{ station.ChangeBy }}
+            </span>
+          </div>
+        </td>
+
+        <!-- Last Update -->
+        <td class="text-gray-500 text-sm">
+          {{ station.lastUpdate }}
+        </td>
+
+        <!-- Action -->
+        <td>
+          <button (click)="openDetails()"
+            class="cursor-pointer w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-500 transition">
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M2 8C2 8 6.47715 3 12 3C17.5228 3 22 8 22 8" stroke="#141B34" stroke-width="1.5"
+                stroke-linecap="round" />
+              <path
+                d="M21.544 13.045C21.848 13.4713 22 13.6845 22 14C22 14.3155 21.848 14.5287 21.544 14.955C20.1779 16.8706 16.6892 21 12 21C7.31078 21 3.8221 16.8706 2.45604 14.955C2.15201 14.5287 2 14.3155 2 14C2 13.6845 2.15201 13.4713 2.45604 13.045C3.8221 11.1294 7.31078 7 12 7C16.6892 7 20.1779 11.1294 21.544 13.045Z"
+                stroke="#141B34" stroke-width="1.5" />
+              <path
+                d="M15 14C15 12.3431 13.6569 11 12 11C10.3431 11 9 12.3431 9 14C9 15.6569 10.3431 17 12 17C13.6569 17 15 15.6569 15 14Z"
+                stroke="#141B34" stroke-width="1.5" />
+            </svg>
+
+          </button>
+        </td>
 
       </tr>
     </ng-template>
-    <ng-template #body let-ticket>
-      <tr>
-        <td>{{ ticket.Ticket_ID }}</td>
-        <td>{{ ticket.Station }}</td>
-        <td>{{ ticket.Date }}</td>
-        <td>{{ ticket.Throughput }}</td>
-        <td>{{ ticket.status }}</td>
-        <td><button class="font-bold text-gray-400 px-2 py-1 rounded">delete</button>
-          <button class="font-bold text-indigo-700 px-2 py-1 rounded">Edit</button>
-        </td>
-      </tr>
-    </ng-template>
+
   </p-table>
 </div>
