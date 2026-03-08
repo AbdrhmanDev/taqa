@@ -178,6 +178,14 @@ export const routes: Routes = [
         title: 'Profile',
       },
       {
+        path: 'comproser-details',
+        loadComponent: () =>
+          import('./features/stations/components/comprossers/comproser-details/comproser-details').then(
+            (m) => m.ComproserDetails,
+          ),
+        title: 'Comproser Details',
+      },
+      {
         path: 'logs',
         loadComponent: () =>
           import('./features/setting/components/logs-user/logs-user').then((m) => m.LogsUser),

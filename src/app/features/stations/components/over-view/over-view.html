@@ -159,4 +159,111 @@
     </div>
 
   </div>
-</div>
+  <div class="mt-6 bg-white rounded-2xl shadow-sm p-4">
+
+    <!-- Header -->
+    <div class="mt-6 p-6">
+
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6">
+
+        <h3 class="text-lg font-semibold text-gray-800">
+          Gas consumption
+        </h3>
+
+        <!-- PrimeNG Select -->
+        <p-select [options]="timeOptions" [(ngModel)]="selectedTime" optionLabel="label" placeholder="Time"
+          class="w-40">
+        </p-select>
+
+      </div>
+
+      <!-- Chart -->
+      <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
+        [dataLabels]="chartOptions.dataLabels" [grid]="chartOptions.grid" [stroke]="chartOptions.stroke">
+      </apx-chart>
+
+    </div>
+  </div>
+  <div class="mt-6 bg-white rounded-2xl shadow-sm p-6">
+
+    <!-- Header -->
+    <div class="mb-4">
+      <h3 class="text-lg font-semibold text-gray-800">Compressor</h3>
+      <p class="text-xs text-gray-400">total 4 Compressor</p>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+
+        <!-- Table Head -->
+        <thead class="text-left text-gray-400 ">
+          <tr>
+            <th class="py-3">Compressor</th>
+            <th class="py-3">Model</th>
+            <th class="py-3">Dispenser</th>
+            <th class="py-3">Status</th>
+            <th class="py-3"></th>
+          </tr>
+        </thead>
+
+        <!-- Table Body -->
+        <tbody class="text-gray-700">
+
+          <!-- Row -->
+          <tr class="">
+            <td class="py-4">
+              <div class="font-medium">Alpha_1</div>
+              <div class="text-xs text-gray-400">ID-S-78</div>
+            </td>
+
+            <td>SR-31314</td>
+
+            <td>3</td>
+
+            <td>
+              <span class="bg-green-100 text-green-600 text-xs px-3 py-1 rounded-full">
+                Active
+              </span>
+            </td>
+
+            <td class="text-right">
+              <div class="flex justify-end gap-4 text-gray-400">
+
+                <!-- arrow -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M19 12L4 12" stroke="#2D31A6" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                  <path
+                    d="M15 7L19.2929 11.2929C19.6262 11.6262 19.7929 11.7929 19.7929 12C19.7929 12.2071 19.6262 12.3738 19.2929 12.7071L15 17"
+                    stroke="#2D31A6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <!-- settings -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M10 13.229C10.1416 13.4609 10.3097 13.6804 10.5042 13.8828C11.7117 15.1395 13.5522 15.336 14.9576 14.4722C15.218 14.3121 15.4634 14.1157 15.6872 13.8828L18.9266 10.5114C20.3578 9.02184 20.3578 6.60676 18.9266 5.11718C17.4953 3.6276 15.1748 3.62761 13.7435 5.11718L13.03 5.85978"
+                    stroke="#D92D20" stroke-width="1.5" stroke-linecap="round" />
+                  <path
+                    d="M10.9703 18.14L10.2565 18.8828C8.82526 20.3724 6.50471 20.3724 5.07345 18.8828C3.64218 17.3932 3.64218 14.9782 5.07345 13.4886L8.31287 10.1172C9.74413 8.62761 12.0647 8.6276 13.4959 10.1172C13.6904 10.3195 13.8584 10.539 14 10.7708"
+                    stroke="#D92D20" stroke-width="1.5" stroke-linecap="round" />
+                  <path d="M21 16H18.9211M16 21L16 18.9211" stroke="#D92D20" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                  <path d="M3 8H5.07889M8 3L8 5.07889" stroke="#D92D20" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+
+              </div>
+            </td>
+
+          </tr>
+
+
+
+        </tbody>
+
+      </table>
+    </div>
+
+
+  </div>
