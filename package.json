@@ -38,6 +38,8 @@
     "flowbite-angular": "^21.0.0",
     "highcharts": "^10.3.3",
     "highcharts-angular": "^3.1.2",
+    "jspdf": "^4.2.0",
+    "jspdf-autotable": "^5.0.7",
     "ng-apexcharts": "^2.0.4",
     "ng-primitives": "^0.90.0",
     "primeng": "^21.0.4",
