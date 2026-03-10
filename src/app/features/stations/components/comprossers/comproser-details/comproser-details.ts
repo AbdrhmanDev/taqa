@@ -30,6 +30,7 @@ export type ChartOptions = {
 export class ComproserDetails implements OnInit {
   @ViewChild('chart') chart: ChartComponent | any;
   public chartOptions: Partial<ChartOptions> | any;
+  timelineChartOptions: any;
   selectedTime: any;
   timeOptions = [
     { label: 'Last Hour', value: 'hour' },
@@ -47,7 +48,7 @@ export class ComproserDetails implements OnInit {
         },
       ],
       chart: {
-        height: 350,
+        height: 300,
         type: 'line',
         zoom: {
           enabled: false,
@@ -68,6 +69,33 @@ export class ComproserDetails implements OnInit {
       },
       xaxis: {
         categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+      },
+    };
+    this.timelineChartOptions = {
+      series: [
+        {
+          name: 'Comproser Details',
+          data: [
+            {
+              x: 'President',
+              y: [new Date(1789, 3, 30).getTime(), new Date(1797, 2, 4).getTime()],
+            },
+          ],
+        },
+      ],
+      chart: {
+        height: 300,
+        type: 'rangeBar',
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true,
+          barHeight: '50%',
+          rangeBarGroupRows: true,
+        },
+      },
+      xaxis: {
+        type: 'datetime',
       },
     };
   }

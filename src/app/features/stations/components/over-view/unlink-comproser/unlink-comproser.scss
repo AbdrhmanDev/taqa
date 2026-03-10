@@ -1,0 +1,126 @@
+/* Custom Header */
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.2rem 0.5rem;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.warning-icon {
+  font-size: 1.1rem;
+  color: #ef4444;
+}
+
+.header-text {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 0 0 1rem;
+}
+
+/* Red Info Card */
+.unlink-info-card {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+}
+
+.unlink-warning-text {
+  color: #ef4444;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.dispenser-name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0.2rem 0;
+}
+
+.dispenser-meta {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin: 0.1rem 0;
+}
+
+/* Yellow Warning Banner */
+.warning-banner {
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  color: #92400e;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.warning-banner-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* Reason */
+.reason-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.required-star {
+  color: #ef4444;
+}
+
+.reason-textarea {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.9rem;
+  resize: none;
+  color: #9ca3af;
+}
+
+/* Buttons */
+.cancel-btn {
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  color: #374151;
+  border-radius: 8px;
+  padding: 0.6rem 1.4rem;
+  cursor: pointer;
+}
+
+.unlink-btn {
+  background: #b91c1c;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  padding: 0.6rem 1.4rem;
+  font-weight: 500;
+  cursor: pointer;
+}

@@ -90,7 +90,7 @@ export const routes: Routes = [
         title: 'Stations',
       },
       {
-        path: 'station-details',
+        path: 'station-details/:id',
         loadComponent: () =>
           import('./features/stations/components/station-detatils/station-detatils').then(
             (m) => m.StationDetatils,

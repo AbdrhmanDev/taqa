@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2 mt-4 ms-3 me-3 justify-between">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 p-2 mt-4 ms-3 me-3 justify-between">
 
   <!-- Card 1: Total Revenue -->
   <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all">
@@ -19,9 +19,9 @@
     </div>
     <div class="flex items-baseline space-x-2">
 
-      <p class="text-3xl m-3 pt-3 font-bold">40</p>
+      <p class="text-3xl m-3 pt-3 font-bold">{{stationSummary.totalStations}}</p>
 
-      <span class="text-lg text-gray-400">38 online, 2 offline</span>
+      <!-- <span class="text-lg text-gray-400">38 online, 2 offline</span> -->
       <div class="mt-4  inline-flex items-end px-3 py-1 rounded-full text-green-600">
         <!-- <svg class="w-6 h-6 mr-1 ms-5" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd"
@@ -37,9 +37,9 @@
 
 
   <!-- Card 2: 1244 L -->
-  <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all">
+  <!-- <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all">
     <div class="flex items-center justify-between">
-      <!-- Icon + Title -->
+
       <div class="flex items-center space-x-3">
         <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
           <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none">
@@ -67,24 +67,19 @@
         <h5 class="text-lg font-medium text-gray-500">Total Compressors</h5>
       </div>
 
-      <!-- Value -->
+
 
     </div>
     <div class="flex items-baseline space-x-2">
       <p class="text-3xl m-3 pt-3 font-bold">980</p>
       <span class="text-lg text-gray-400">L</span>
       <div class="mt-4  inline-flex items-end px-3 py-1 rounded-full text-red-600">
-        <!-- <svg class="w-6 h-6 mr-1 ms-5" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd"
-            d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"
-            clip-rule="evenodd" />
-        </svg>
-        <span class="text-red-600 font-bold">100%</span> -->
+
       </div>
     </div>
-    <!-- Percentage Badge -->
 
-  </div>
+
+  </div> -->
 
   <!-- Card 3: 2,000 Cars -->
   <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all">
@@ -113,7 +108,7 @@
 
     </div>
     <div class="flex items-baseline space-x-2">
-      <p class="text-3xl m-3 pt-3 font-bold">245</p>
+      <p class="text-3xl m-3 pt-3 font-bold">{{stationSummary.totalDispensers}}</p>
       <span class="text-lg text-gray-400">L</span>
       <div class="mt-4  inline-flex items-end px-3 py-1 rounded-full text-green-600">
         <!-- <svg class="w-6 h-6 mr-1 ms-5" fill="currentColor" viewBox="0 0 20 20">
@@ -148,7 +143,7 @@
 
     </div>
     <div class="flex items-baseline space-x-2">
-      <p class="text-3xl m-3 pt-3 font-bold">86.4</p>
+      <p class="text-3xl m-3 pt-3 font-bold">{{stationSummary.operationalRate}}</p>
       <span class="text-lg text-gray-400">%</span>
 
     </div>
@@ -187,7 +182,9 @@
           All Zones
         </label>
 
-        <p-select optionLabel="label" optionValue="value" placeholder="All" class="w-full">
+        <p-select [options]="zone" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedZoneId"
+          (onChange)="filterZone($event.value)" optionLabel="name" optionValue="zoneId" placeholder="All"
+          class="w-full">
         </p-select>
       </div>
 
@@ -197,7 +194,8 @@
           Status
         </label>
 
-        <p-select optionLabel="label" optionValue="value" placeholder="All" class="w-full">
+        <p-select [options]="status" (onChange)="filterStatus($event.value)" optionLabel="label" optionValue="value"
+          placeholder="All" class="w-full">
         </p-select>
       </div>
 
@@ -242,7 +240,7 @@
     </div>
 
   </div>
-  <p-table #dt class="mt-8" [value]="station" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5,10,20]"
+  <p-table #dt class="mt-8" [value]="allSation" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5,10,20]"
     styleClass="p-datatable-sm">
 
     <!-- Header -->
@@ -250,71 +248,55 @@
       <tr class="bg-gray-50 text-gray-500 text-sm">
         <th class="px-4 py-3 text-left">Station</th>
         <th>Zone</th>
-        <th>Compressors</th>
+
         <th>Dispensers</th>
         <th>Status</th>
-        <th>Change By</th>
+
         <th>Last update</th>
         <th></th>
       </tr>
     </ng-template>
 
     <!-- Body -->
-    <ng-template pTemplate="body" let-station>
+    <ng-template pTemplate="body" let-allSation>
       <tr class="text-sm hover:bg-gray-50 transition">
 
         <!-- Station -->
         <td class="px-4 py-4">
           <div class="font-medium text-gray-800">
-            {{ station.Station }}
+            {{ allSation.stationName }}
           </div>
-          <div class="text-xs text-gray-400">
-            ID: {{ station.Id }}
-          </div>
+
         </td>
 
         <!-- Zone -->
         <td class="text-gray-600">
-          {{ station.Zone }}
+          {{ allSation.zoneName }}
         </td>
 
-        <!-- Compressors -->
-        <td>{{ station.Compressors }}</td>
 
-        <!-- Dispensers -->
-        <td>{{ station.Dispensers }}</td>
+        <td>{{ allSation.dispensersTotal }}</td>
 
-        <!-- Status Badge -->
+
         <td>
           <span class="px-3 py-1 text-xs rounded-full font-medium" [ngClass]="{
-            'bg-green-100 text-green-700': station.Status === 'online',
-            'bg-red-100 text-red-600': station.Status === 'offline'
+            'bg-green-100 text-green-700': allSation.status === 'online',
+            'bg-red-100 text-red-600': allSation.status === 'offline'
           }">
-            {{ station.Status }}
+            {{ allSation.status }}
           </span>
         </td>
 
-        <!-- Change By -->
-        <td>
-          <div class="flex items-center gap-2">
-            <div
-              class="w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center text-xs font-medium text-gray-600">
-              {{ station.ChangeBy?.charAt(0) }}
-            </div>
-            <span class="text-gray-600 text-sm">
-              {{ station.ChangeBy }}
-            </span>
-          </div>
-        </td>
 
-        <!-- Last Update -->
+
+
         <td class="text-gray-500 text-sm">
-          {{ station.lastUpdate }}
+          {{ allSation.lastUpdate | date: 'short' }}
         </td>
 
-        <!-- Action -->
+
         <td>
-          <button (click)="openDetails()"
+          <button (click)="openDetails(allSation)"
             class="cursor-pointer w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-500 transition">
 
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">

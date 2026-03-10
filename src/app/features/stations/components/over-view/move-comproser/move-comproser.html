@@ -1,0 +1,56 @@
+<div class="card ">
+  <button (click)="showDialog()" label="Show"></button>
+
+  <p-dialog (onHide)="visibleChange.emit(false)" header="Move Compressor to Another Station" [modal]="true"
+    [(visible)]="visible" [style]="{ width: '35rem' }">
+
+    <!-- Compressor Info Card -->
+    <div class="compressor-info-card mb-6">
+      <span class="moving-label">Moving :</span>
+      <h2 class="compressor-name">Compressor Alpha-1</h2>
+      <p class="compressor-meta">model: At les Co923</p>
+      <p class="compressor-meta">Linked Dispensers: 3</p>
+    </div>
+
+    <!-- From → To Section -->
+    <div class="station-transfer-row mb-4">
+      <div class="station-field">
+        <label class="station-label">From</label>
+        <input pInputText value="old station name" disabled class="station-input disabled-input" />
+      </div>
+
+      <span class="transfer-arrow">→</span>
+
+      <div class="station-field">
+        <label class="station-label">To</label>
+        <p-select [options]="stations" [(ngModel)]="selectedStation" placeholder="Select new station"
+          class="station-dropdown">
+        </p-select>
+      </div>
+    </div>
+
+    <!-- Note Banner -->
+    <div class="note-banner mb-6">
+      <span>Note: This compressor has 3 linked dispenser(s) that will move with it.</span>
+    </div>
+
+    <!-- Reason for Move -->
+    <div class="reason-section mb-6">
+      <label class="reason-label">
+        Reason for move <span class="required-star">✳</span>
+      </label>
+      <textarea pInputTextarea placeholder="Enter reason for this configuration change" rows="4"
+        class="reason-textarea">
+      </textarea>
+    </div>
+
+    <!-- Footer Buttons -->
+    <div class="flex justify-end gap-3">
+      <button severity="secondary" (click)="visibleChange.emit(false)" class="cancel-btn">Cancel
+      </button>
+      <button (click)="moveCompressor()" class="move-btn">Move
+      </button>
+    </div>
+
+  </p-dialog>
+</div>

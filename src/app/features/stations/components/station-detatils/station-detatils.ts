@@ -6,6 +6,11 @@ import { Dispensers } from '../dispensers/dispensers';
 import { StationAlarm } from '../station-alarm/station-alarm';
 import { StationTickets } from '../station-tickets/station-tickets';
 import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { StationDetails } from '../../service/station-details';
+import { IStationDetails } from '../../model/station-details';
+import { ChangeDetectorRef } from '@angular/core';
+
 @Component({
   selector: 'app-station-detatils',
   imports: [TabsModule, OverView, Comprossers, Dispensers, StationAlarm, StationTickets],
@@ -13,9 +18,36 @@ import { Router } from '@angular/router';
   styleUrl: './station-detatils.scss',
 })
 export class StationDetatils implements OnInit {
-  constructor(private _Router: Router) {}
+  stationId!: number;
+  allStationDetails!: IStationDetails;
+
+  constructor(
+    private _Router: Router,
+    private activateRoute: ActivatedRoute,
+    private stationDetails: StationDetails,
+    private cdr: ChangeDetectorRef,
+  ) {}
   goBack() {
     this._Router.navigate(['/dashboard/station']);
   }
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.activateRoute.paramMap.subscribe((params) => {
+      // show anything in url
+      this.stationId = Number(params.get('id'));
+    });
+    this.onGetStationDetails();
+  }
+  onGetStationDetails() {
+    this.stationDetails.getStationById(this.stationId).subscribe({
+      next: (res) => {
+        this.allStationDetails = res;
+        console.log('stationID', this.stationId);
+        console.log(res);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
 }

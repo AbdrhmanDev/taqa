@@ -1,0 +1,49 @@
+<div class="card">
+  <button (click)="showDialog()"></button>
+
+  <p-dialog (onHide)="visibleChange.emit(false)" [modal]="true" [(visible)]="visible" [style]="{ width: '35rem' }"
+    [showHeader]="false">
+
+    <!-- Custom Header -->
+    <div class="dialog-header">
+      <div class="header-title">
+        <span class="warning-icon">⚠️</span>
+        <span class="header-text">Confirm Unlink</span>
+      </div>
+      <button class="close-btn" (click)="visibleChange.emit(false)">✕</button>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Red Info Card -->
+    <div class="unlink-info-card mb-4">
+      <p class="unlink-warning-text">You are about to unlink this compressor.</p>
+      <h2 class="dispenser-name">Dispenser Alpha-1</h2>
+      <p class="dispenser-meta">model: At les Co923</p>
+      <p class="dispenser-meta">Linked with compressor-id</p>
+    </div>
+
+    <!-- Yellow Warning Banner -->
+    <div class="warning-banner mb-6">
+      <span class="warning-banner-icon">⚠️</span>
+      <span>After unlinking , this Dispenser will be moved to inventory and become available for reassignment</span>
+    </div>
+
+    <!-- Reason for Unlinking -->
+    <div class="reason-section mb-6">
+      <label class="reason-label">
+        Reason for Unlinking <span class="required-star">✳</span>
+      </label>
+      <textarea pInputTextarea placeholder="Enter reason for this configuration change" rows="4"
+        class="reason-textarea">
+      </textarea>
+    </div>
+
+    <!-- Footer Buttons -->
+    <div class="flex justify-end gap-3">
+      <button (click)="visibleChange.emit(false)" class="cancel-btn">Cancel</button>
+      <button (click)="confirmUnlink()" class="unlink-btn">Confirm Unlink</button>
+    </div>
+
+  </p-dialog>
+</div>

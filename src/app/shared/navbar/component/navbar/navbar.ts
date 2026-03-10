@@ -24,6 +24,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 })
 export class Navbar implements OnInit {
   pageTitle = '';
+  isDashboardPage = false;
   constructor(
     private router: Router,
     private dashboardService: dashboardService,
@@ -31,6 +32,7 @@ export class Navbar implements OnInit {
   ) {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       this.pageTitle = this.getRouteTitle();
+      this.isDashboardPage = this.router.url.includes('homeDashboard');
     });
   }
   ngOnInit(): void {
