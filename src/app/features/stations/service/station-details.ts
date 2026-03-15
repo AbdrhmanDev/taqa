@@ -14,4 +14,7 @@ export class StationDetails {
   getComproserById(id: number): Observable<any> {
     return this.http.get(`${environment.url}Stations/${id}/compressors`);
   }
+  getGasById(id: number, duration: number): Observable<any> {
+    return this.http.get(`${environment.url}Stations/${id}/gas-consumption?duration=${duration}`);
+  }
 }

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
 import { DialogModule } from 'primeng/dialog';
-
+import { DatePickerModule } from 'primeng/datepicker';
 import { RealtimeStationDetails } from '../../service/realtime-station-details';
 import {
   ChartComponent,
@@ -22,6 +22,7 @@ import { StationDetails } from '../../service/station-details';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AllStation } from '../../service/all-station';
+import { AlarmsStationDetails } from '../../service/alarms-station-details';
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -41,6 +42,7 @@ export type ChartOptions = {
     MoveComproser,
     UnlinkComproser,
     CommonModule,
+    DatePickerModule,
   ],
   templateUrl: './over-view.html',
   styleUrl: './over-view.scss',
@@ -48,19 +50,28 @@ export type ChartOptions = {
 export class OverView {
   @ViewChild('chart') chart: ChartComponent | any;
   public chartOptions: Partial<ChartOptions> | any;
-  selectedTime: any;
+  selectedTime: number = 0;
   stationId!: number;
+  duration!: number;
   moveDialogVisible = false;
   unlinkDialogVisible = false;
   comproserTableData: any[] = [];
   private subscription!: Subscription;
   stationDetailsData!: any;
+  allGasData: any[] = [];
+
+  stationDetailsDataAlarm: any[] = []; //convert alarms from object to array
   allSation: any[] = [];
+  fromDate!: string;
+  toDate!: string;
+  dateRange: Date[] = [];
   timeOptions = [
-    { label: 'Last Hour', value: 'hour' },
-    { label: 'Today', value: 'today' },
-    { label: 'This Week', value: 'week' },
-    { label: 'This Month', value: 'month' },
+    { label: 'Current', value: 0 },
+    { label: 'Last Shift', value: 1 },
+    { label: 'Last Day', value: 2 },
+    { label: 'Last Week', value: 3 },
+    { label: 'Last Month', value: 4 },
+    { label: 'Custom', value: 5 },
   ];
   statusEnum: { [key: number]: string } = {
     0: 'OffLine',
@@ -74,16 +85,16 @@ export class OverView {
     8: 'Lockout',
   };
 
-  statusColors: { [key: number]: string } = {
-    0: 'bg-gray-100 text-gray-600',
-    1: 'bg-blue-100 text-blue-600',
-    2: 'bg-yellow-100 text-yellow-600',
-    3: 'bg-green-100 text-green-600',
-    4: 'bg-indigo-100 text-indigo-600',
-    5: 'bg-red-100 text-red-600',
-    6: 'bg-purple-100 text-purple-600',
-    7: 'bg-pink-100 text-pink-600',
-    8: 'bg-black text-white',
+  statusColors: { [key: string]: string } = {
+    OffLine: 'bg-gray-100 text-gray-600',
+    Idle: 'bg-blue-100 text-blue-600',
+    Starting: 'bg-yellow-100 text-yellow-600',
+    Compression: 'bg-green-100 text-green-600',
+    Recirculating: 'bg-indigo-100 text-indigo-600',
+    Alarm: 'bg-red-100 text-red-600',
+    'Start delay': 'bg-purple-100 text-purple-600',
+    Force: 'bg-pink-100 text-pink-600',
+    Lockout: 'bg-black text-white',
   };
   constructor(
     private stationDetails: StationDetails,
@@ -92,39 +103,8 @@ export class OverView {
     private realTime: RealtimeStationDetails,
     private Station: AllStation,
     private changeDetectorRef: ChangeDetectorRef,
-  ) {
-    this.chartOptions = {
-      series: [
-        {
-          name: 'Gas consumption',
-          data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
-        },
-      ],
-      chart: {
-        height: 350,
-        type: 'line',
-        zoom: {
-          enabled: false,
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        curve: 'smooth',
-        colors: ['#EF7B7B'],
-      },
-      grid: {
-        row: {
-          colors: ['#f9fafb', 'transparent'],
-          opacity: 0.5,
-        },
-      },
-      xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
-      },
-    };
-  }
+    private realtimeAlarmDetails: AlarmsStationDetails,
+  ) {}
   ngOnInit(): void {
     this.activateRoute.paramMap.subscribe((params) => {
       // show anything in url
@@ -133,7 +113,10 @@ export class OverView {
     this.onGetComproser();
     this.onStartConnection();
     this.onGetAllStation();
+    this.onGetAllGasConsumption();
+    this.onStartConnectionAlarms();
   }
+
   openMoveDialog() {
     this.moveDialogVisible = true;
   }
@@ -171,21 +154,82 @@ export class OverView {
   async onStartConnection() {
     try {
       await this.realTime.startConnection();
-      await this.realTime.joinStation(this.stationId);
+
       this.subscription = this.realTime.getStationDetails().subscribe({
         next: (data) => {
+          console.log('Received station  data:', data);
           this.stationDetailsData = data;
-          console.log('Received station data:', data);
           this.cdr.detectChanges();
         },
         error: (err) => console.error(err),
       });
+
+      await this.realTime.joinStation(this.stationId);
     } catch (error) {
       console.error('Error starting connection:', error);
     }
   }
+  async onStartConnectionAlarms() {
+    try {
+      await this.realtimeAlarmDetails.startConnection();
+
+      this.subscription = this.realtimeAlarmDetails.getStationDetails().subscribe({
+        next: (data) => {
+          console.log('Received station Alarm data:', data);
+          data.className = data.className?.trim(); //remove r/n/
+
+          this.stationDetailsDataAlarm.unshift(data); // add every alarm on array
+          this.cdr.detectChanges();
+        },
+        error: (err) => console.error(err),
+      });
+
+      await this.realtimeAlarmDetails.joinStation(this.stationId);
+    } catch (error) {
+      console.error('Error starting connection:', error);
+    }
+  }
+  onGetAllGasConsumption() {
+    this.stationDetails.getGasById(this.stationId, this.selectedTime).subscribe({
+      next: (res) => {
+        this.allGasData = res;
+
+        this.chartOptions = {
+          series: [
+            {
+              name: 'Gas consumption',
+              data: res.map((item: { gasVolumeSold: number }) => item.gasVolumeSold),
+            },
+          ],
+          chart: {
+            height: 350,
+            type: 'line',
+            zoom: { enabled: false },
+          },
+          dataLabels: { enabled: false },
+          stroke: {
+            curve: 'smooth',
+            colors: ['#EF7B7B'],
+          },
+          grid: {
+            row: {
+              colors: ['#f9fafb', 'transparent'],
+              opacity: 0.5,
+            },
+          },
+          xaxis: {
+            categories: res.map((item: { bucket: string }) => item.bucket.split('T')[0]),
+          },
+        };
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.realTime.stopConnection();
+    this.realtimeAlarmDetails.stopConnection();
   }
 }

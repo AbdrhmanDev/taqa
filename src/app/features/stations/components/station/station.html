@@ -280,8 +280,8 @@
 
         <td>
           <span class="px-3 py-1 text-xs rounded-full font-medium" [ngClass]="{
-            'bg-green-100 text-green-700': allSation.status === 'online',
-            'bg-red-100 text-red-600': allSation.status === 'offline'
+            'bg-green-100 text-green-700': allSation.status === 'Active',
+            'bg-red-100 text-red-600': allSation.status === 'Inactive'
           }">
             {{ allSation.status }}
           </span>

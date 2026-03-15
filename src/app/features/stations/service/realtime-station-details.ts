@@ -8,7 +8,6 @@ import * as signalR from '@microsoft/signalr';
 export class RealtimeStationDetails {
   private hubConnection!: signalR.HubConnection;
 
-  // بدء الاتصال
   startConnection(): Promise<void> {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl('http://10.11.140.37/Taqa_Back_2026/hubs/station-kpis')
