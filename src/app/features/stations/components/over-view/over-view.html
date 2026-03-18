@@ -135,45 +135,36 @@
 
     <!-- Header -->
     <div class="mt-6 p-6">
-
-      <!-- Header -->
-      <!-- Header -->
       <div class="flex items-center justify-between mb-6">
-
-        <div>
-          <h3 class="text-lg font-semibold text-gray-800">
-            Gas consumption
-          </h3>
-        </div>
-
-
+        <h3 class="text-lg font-semibold text-gray-800">Gas consumption</h3>
         <div class="flex items-center gap-4">
-          <!-- PrimeNG Select -->
-          <p-select [options]="timeOptions" [(ngModel)]="selectedTime" (onChange)="onGetAllGasConsumption()"
-            optionLabel="label" optionValue="value" class="w-40">
+          <p-select [options]="timeOptions" [(ngModel)]="selectedTime" (onChange)="onTimeChange()" optionLabel="label"
+            optionValue="value" class="w-40">
           </p-select>
-          @if(selectedTime === 5){
-          <div class="flex items-center gap-3">
-            <p-datepicker [(ngModel)]="dateRange" selectionMode="range" dateFormat="yy-mm-dd"
-              placeholder="Select Date Range">
-            </p-datepicker>
 
+          <div *ngIf="selectedTime === 5" class="flex items-center gap-3">
+            <p-datepicker [(ngModel)]="dateRange" selectionMode="range" dateFormat="yy-mm-dd"
+              placeholder="Select Date Range"></p-datepicker>
             <button (click)="onGetAllGasConsumption()"
               class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-white rounded-lg text-blue-500 border-blue-500 border-1">
               Apply
             </button>
           </div>
-          }
-
-
         </div>
       </div>
 
+      <!-- Loading indicator -->
+      <div *ngIf="isLoading" class="text-center py-16 text-gray-500">
+        Loading chart data...
+      </div>
+      <div *ngIf="!isLoading && noGasData" class="text-center py-20 text-gray-500">
+        No Data
+      </div>
       <!-- Chart -->
-      <apx-chart [series]="chartOptions?.series" [chart]="chartOptions?.chart" [xaxis]="chartOptions?.xaxis"
-        [dataLabels]="chartOptions?.dataLabels" [grid]="chartOptions?.grid" [stroke]="chartOptions?.stroke">
+      <apx-chart *ngIf="!isLoading" [series]="chartOptions?.series" [chart]="chartOptions?.chart"
+        [xaxis]="chartOptions?.xaxis" [dataLabels]="chartOptions?.dataLabels" [grid]="chartOptions?.grid"
+        [stroke]="chartOptions?.stroke">
       </apx-chart>
-
     </div>
   </div>
   <div class="mt-6 bg-white rounded-2xl shadow-sm p-6">

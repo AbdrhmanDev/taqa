@@ -10,8 +10,11 @@ export class AllStation {
   getStationSummary(): Observable<any> {
     return this.http.get(environment.url + 'Stations/cards-summary');
   }
-  getAllStations(): Observable<any> {
-    return this.http.get(environment.url + 'Stations/All-Stations');
+  getAllStations(page: number, pageSize: number, search?: string): Observable<any> {
+    return this.http.get(
+      environment.url +
+        `Stations/All-Stations?page=${page}&pageSize=${pageSize}&search=${search ?? ''}`,
+    );
   }
   getAllZones(): Observable<any> {
     return this.http.get(environment.url + 'Zone/GetAllZones');

@@ -171,7 +171,8 @@
             </svg>
           </div>
 
-          <input type="text" placeholder="Search stations..." class="w-full pl-10 pr-4 py-2 text-sm text-gray-300 border border-gray-300 rounded-lg bg-white
+          <input name="searchTerm" [(ngModel)]="searchTerm" (input)="onSearch()" type="text"
+            placeholder="Search stations..." class="w-full pl-10 pr-4 py-2 text-sm text-gray-300 border border-gray-300 rounded-lg bg-white
                focus:ring-1 focus:ring-green-300 focus:border-green-700 outline-none transition-all" />
         </div>
       </div>
@@ -206,7 +207,7 @@
     <div></div>
 
     <div class="flex gap-3">
-      <button (click)="exportCSV()"
+      <button [disabled]="!allSation" (click)="exportCSV()"
         class="flex items-center  gap-2 px-4 py-2 text-sm  bg-gray-200 rounded-lg hover:bg-gray-50 transition">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path
@@ -240,8 +241,9 @@
     </div>
 
   </div>
-  <p-table #dt class="mt-8" [value]="allSation" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5,10,20]"
-    styleClass="p-datatable-sm">
+  <!-- [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5,10,20] -->
+  <p-table #dt class="mt-8" [value]="allSation" styleClass="p-datatable-sm" [paginator]="true" [rows]="pageSize"
+    [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadStations($event)">
 
     <!-- Header -->
     <ng-template pTemplate="header">

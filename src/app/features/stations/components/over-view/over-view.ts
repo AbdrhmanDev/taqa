@@ -50,6 +50,8 @@ export type ChartOptions = {
 export class OverView {
   @ViewChild('chart') chart: ChartComponent | any;
   public chartOptions: Partial<ChartOptions> | any;
+  isLoading: boolean = false;
+  noGasData: boolean = false;
   selectedTime: number = 0;
   stationId!: number;
   duration!: number;
@@ -59,7 +61,9 @@ export class OverView {
   private subscription!: Subscription;
   stationDetailsData!: any;
   allGasData: any[] = [];
-
+  page = 1;
+  pageSize = 10;
+  totalRecords = 0;
   stationDetailsDataAlarm: any[] = []; //convert alarms from object to array
   allSation: any[] = [];
   fromDate!: string;
@@ -136,7 +140,7 @@ export class OverView {
     });
   }
   onGetAllStation() {
-    this.Station.getAllStations().subscribe({
+    this.Station.getAllStations(this.page, this.pageSize).subscribe({
       next: (res) => {
         this.allSation = res.items;
 
@@ -189,10 +193,45 @@ export class OverView {
       console.error('Error starting connection:', error);
     }
   }
+
   onGetAllGasConsumption() {
-    this.stationDetails.getGasById(this.stationId, this.selectedTime).subscribe({
+    let fromDate: string | undefined;
+    let toDate: string | undefined;
+
+    this.isLoading = true;
+    this.noGasData = false;
+
+    if (this.selectedTime === 5) {
+      if (!this.dateRange || this.dateRange.length < 2) {
+        alert('Please select date range');
+        this.isLoading = false;
+        return;
+      }
+
+      const startDate = this.dateRange[0];
+      const endDate = this.dateRange[1];
+
+      fromDate = `${startDate.getFullYear()}-${(startDate.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}-${startDate.getDate().toString().padStart(2, '0')}`;
+      toDate = `${endDate.getFullYear()}-${(endDate.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}-${endDate.getDate().toString().padStart(2, '0')}`;
+    }
+
+    this.stationDetails.getGasById(this.stationId, this.selectedTime, fromDate, toDate).subscribe({
       next: (res) => {
+        this.isLoading = false;
+
+        if (!res || res.length === 0) {
+          this.allGasData = [];
+          this.chartOptions = undefined;
+          this.noGasData = true; // Trigger "No data" message
+          return;
+        }
+
         this.allGasData = res;
+        this.noGasData = false;
 
         this.chartOptions = {
           series: [
@@ -224,8 +263,15 @@ export class OverView {
       },
       error: (err) => {
         console.log(err);
+        this.isLoading = false;
+        this.noGasData = true;
       },
     });
+  }
+  onTimeChange() {
+    if (this.selectedTime !== 5) {
+      this.onGetAllGasConsumption();
+    }
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();

@@ -26,14 +26,19 @@ export class Station implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
   ) {}
   @ViewChild('dt', { static: false }) dt!: Table;
+
   date: Date | any;
   stationSummary: any = {};
   allSation: any[] = [];
   allStationsCopy: any[] = [];
+  page = 1;
+  pageSize = 10;
+  totalRecords = 0;
   zone: IZone[] = [];
   filteredStations: any[] = [];
   selectedZoneId: number | null = null;
   status: any[] = [];
+  searchTerm: string = '';
   ngOnInit(): void {
     this.onGetSummaryStation();
     this.onGetAllStation();
@@ -58,11 +63,26 @@ export class Station implements OnInit {
     doc.save('stations.pdf');
   }
   exportCSV() {
-    if (this.dt && this.dt.value?.length) {
-      this.dt.exportCSV();
-    } else {
-      console.warn('Table not ready or no data to export');
-    }
+    if (!this.allSation?.length) return;
+
+    const headers = ['Station', 'Zone', 'Dispensers', 'Status', 'Last Update'];
+
+    const rows = this.allSation.map((s) => [
+      s.stationName,
+      s.zoneName,
+      s.dispensersTotal,
+      s.status,
+      s.lastUpdate,
+    ]);
+
+    let csvContent = headers.join(',') + '\n' + rows.map((e) => e.join(',')).join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'stations.csv';
+    link.click();
   }
   openDetails(station: any) {
     this.router.navigate(['/dashboard/station-details', station.id]);
@@ -79,12 +99,19 @@ export class Station implements OnInit {
       },
     });
   }
+  loadStations(event: any) {
+    this.pageSize = event.rows;
+    this.page = event.first / event.rows + 1;
+
+    this.onGetAllStation();
+  }
   onGetAllStation() {
-    this.Station.getAllStations().subscribe({
+    this.Station.getAllStations(this.page, this.pageSize, this.searchTerm).subscribe({
       next: (res) => {
         this.allSation = res.items;
         this.allStationsCopy = res.items;
         this.filteredStations = res.items;
+        this.totalRecords = res.totalCount;
         // use set for remove dublicate and use (...) to convert object to array
         const uniqueStatus = [...new Set(res.items.map((s: any) => s.status))];
         this.status = uniqueStatus.map((s: any) => ({
@@ -124,5 +151,9 @@ export class Station implements OnInit {
     }
 
     this.filteredStations = this.allSation.filter((s) => s.zoneId === zoneId);
+  }
+  onSearch() {
+    this.page = 1;
+    this.onGetAllStation();
   }
 }

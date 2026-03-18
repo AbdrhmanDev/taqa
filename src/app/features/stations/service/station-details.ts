@@ -14,7 +14,16 @@ export class StationDetails {
   getComproserById(id: number): Observable<any> {
     return this.http.get(`${environment.url}Stations/${id}/compressors`);
   }
-  getGasById(id: number, duration: number): Observable<any> {
-    return this.http.get(`${environment.url}Stations/${id}/gas-consumption?duration=${duration}`);
+  getGasById(id: number, duration: number, from?: string, to?: string): Observable<any> {
+    const params: any = {
+      duration: duration,
+    };
+
+    if (duration === 5 && from && to) {
+      params.durationStartTime = from;
+      params.durationEndTime = to;
+    }
+
+    return this.http.get(`${environment.url}Stations/${id}/gas-consumption`, { params });
   }
 }
