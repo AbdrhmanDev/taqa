@@ -1,0 +1,41 @@
+<div class="bg-white p-4 shadow-sm rounded-2xl">
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">{{ station?.stationName }}</h1>
+    <p class="text-sm text-gray-500">Pressure Readings · 6 stages</p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div *ngFor="let sensor of stages" class="bg-white rounded-xl shadow p-5 flex flex-col items-center">
+      <p class="text-sm font-semibold text-gray-600 mb-2">{{ sensor.label }}</p>
+
+      <svg viewBox="0 0 160 100" class="w-48 h-32">
+
+        <path d="M 20 80 A 60 60 0 0 1 140 80" fill="none" stroke="#e2e8f0" stroke-width="14" stroke-linecap="round" />
+
+
+        <path *ngIf="!isInvalidValue(sensor.value)" [attr.d]="getArcPath(sensor.value)" fill="none"
+          [attr.stroke]="getColor(sensor.value)" stroke-width="14" stroke-linecap="round" />
+
+        <g
+          [attr.transform]="'rotate(' + (isInvalidValue(sensor.value) ? -90 : getNeedleRotation(sensor.value)) + ', 80, 80)'">
+          <line x1="80" y1="80" x2="80" y2="28" stroke="#1e293b" stroke-width="2.5" stroke-linecap="round" />
+          <circle cx="80" cy="80" r="5" fill="#1e293b" />
+        </g>
+
+        <!-- Min / Max labels -->
+        <text x="16" y="96" font-size="9" fill="#94a3b8" text-anchor="middle">
+          {{ minPressure }}
+        </text>
+        <text x="144" y="96" font-size="9" fill="#94a3b8" text-anchor="middle">
+          {{ maxPressure }}
+        </text>
+      </svg>
+
+
+      <p class="text-2xl font-bold -mt-2" [style.color]="getColor(sensor.value)">
+        {{ isInvalidValue(sensor.value) ? 'N/A' : sensor.value }}
+      </p>
+      <p class="text-xs text-gray-400 mt-1">bar</p>
+    </div>
+  </div>
+</div>

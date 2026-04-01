@@ -63,7 +63,24 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/dashboard/component/tech-ops/tech-ops').then((m) => m.TechOps),
         title: 'Tech Ops',
+        children: [
+          {
+            path: 'tempreture',
+            loadComponent: () =>
+              import('./features/dashboard/component/tech-ops/tempreture/tempreture').then(
+                (m) => m.Tempreture,
+              ),
+          },
+          {
+            path: 'pressure',
+            loadComponent: () =>
+              import('./features/dashboard/component/tech-ops/pressure/pressure').then(
+                (m) => m.Pressure,
+              ),
+          },
+        ],
       },
+
       {
         path: 'users',
         loadComponent: () =>

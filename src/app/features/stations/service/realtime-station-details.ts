@@ -6,55 +6,109 @@ import * as signalR from '@microsoft/signalr';
   providedIn: 'root',
 })
 export class RealtimeStationDetails {
-  private hubConnection!: signalR.HubConnection;
+  private stationKpisConnection!: signalR.HubConnection;
+  private dispenserConnection!: signalR.HubConnection;
+  private compressorConnection!: signalR.HubConnection;
 
+  // ============ Station KPIs ============
   startConnection(): Promise<void> {
-    this.hubConnection = new signalR.HubConnectionBuilder()
+    this.stationKpisConnection = new signalR.HubConnectionBuilder()
       .withUrl('http://10.11.140.37/Taqa_Back_2026/hubs/station-kpis')
       .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
-    return this.hubConnection
+    return this.stationKpisConnection
       .start()
-      .then(() => console.log('SignalR Connected'))
-      .catch((err) => console.log('Error while starting connection: ' + err));
+      .then(() => console.log('Station KPIs Connected'))
+      .catch((err) => console.log('Error: ' + err));
   }
 
   joinStation(stationId: number): Promise<void> {
-    if (!this.hubConnection) {
-      return Promise.reject('No active connection');
-    }
-
-    return this.hubConnection
+    return this.stationKpisConnection
       .invoke('JoinStationGroup', stationId)
       .then(() => console.log(`Joined station group ${stationId}`))
-      .catch((err) => console.error('Error joining station group:', err));
+      .catch((err) => console.error(err));
   }
 
   getStationDetails(): Observable<any> {
     return new Observable((subscriber) => {
-      if (!this.hubConnection) {
-        subscriber.error('No active connection');
-        return;
-      }
-
-      this.hubConnection.on('ReceiveStationKpis', (data) => {
+      this.stationKpisConnection.on('ReceiveStationKpis', (data) => {
         subscriber.next(data);
       });
-
-      return () => {
-        this.hubConnection.off('ReceiveStationKpis');
-      };
+      return () => this.stationKpisConnection.off('ReceiveStationKpis');
     });
   }
 
   stopConnection() {
-    if (this.hubConnection) {
-      this.hubConnection
-        .stop()
-        .then(() => console.log('SignalR connection stopped'))
-        .catch((err) => console.log('Error while stopping SignalR connection: ', err));
-    }
+    this.stationKpisConnection?.stop();
+  }
+
+  // ============ Dispenser ============
+  startConnectionDispenser(): Promise<void> {
+    this.dispenserConnection = new signalR.HubConnectionBuilder()
+      .withUrl('http://10.11.140.37/Taqa_Back_2026/hubs/dispensers')
+      .withAutomaticReconnect()
+      .configureLogging(signalR.LogLevel.Information)
+      .build();
+
+    return this.dispenserConnection
+      .start()
+      .then(() => console.log('Dispenser Connected'))
+      .catch((err) => console.error('Error: ' + err));
+  }
+
+  joinDispenser(stationId: number): Promise<void> {
+    return this.dispenserConnection
+      .invoke('JoinStationGroup', stationId)
+      .then(() => console.log(`Joined dispenser group ${stationId}`))
+      .catch((err) => console.error(err));
+  }
+
+  getDispenserDetails(): Observable<any> {
+    return new Observable((subscriber) => {
+      this.dispenserConnection.on('ReceiveStationDispensers', (data) => {
+        subscriber.next(data);
+      });
+      return () => this.dispenserConnection.off('ReceiveStationDispensers');
+    });
+  }
+
+  stopConnectionDispenser(): Promise<void> {
+    return this.dispenserConnection?.stop();
+  }
+
+  // ============ Compressor ============
+  startConnectionCompressor(): Promise<void> {
+    this.compressorConnection = new signalR.HubConnectionBuilder()
+      .withUrl('http://10.11.140.37/Taqa_Back_2026/monitoringHub')
+      .withAutomaticReconnect()
+      .configureLogging(signalR.LogLevel.Information)
+      .build();
+
+    return this.compressorConnection
+      .start()
+      .then(() => console.log('Compressor Connected '))
+      .catch((err) => console.log('Error: ' + err));
+  }
+
+  joinCompressor(stationId: number): Promise<void> {
+    return this.compressorConnection
+      .invoke('JoinStation', stationId)
+      .then(() => console.log(`Joined compressor station_${stationId} `))
+      .catch((err) => console.error(err));
+  }
+
+  getCompressorDetails(): Observable<any> {
+    return new Observable((subscriber) => {
+      this.compressorConnection.on('ReceiveDashboard', (data) => {
+        subscriber.next(data);
+      });
+      return () => this.compressorConnection.off('ReceiveDashboard');
+    });
+  }
+
+  stopConnectionCompressor(): Promise<void> {
+    return this.compressorConnection?.stop();
   }
 }

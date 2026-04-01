@@ -5,19 +5,37 @@ import { TechOpsRealtime } from '../../service/tech-ops-realtime';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
+import { DialogModule } from 'primeng/dialog';
+import { Tempreture } from './tempreture/tempreture';
+
+import { Pressure } from './pressure/pressure';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-tech-ops',
-  imports: [SelectModule, FormsModule, CommonModule],
+  imports: [
+    SelectModule,
+    FormsModule,
+    CommonModule,
+    RouterLink,
+    RouterOutlet,
+    DialogModule,
+    Pressure,
+    Tempreture,
+  ],
   templateUrl: './tech-ops.html',
   styleUrl: './tech-ops.scss',
 })
 export class TechOps implements OnInit {
   techOpsData: any[] = [];
+  selectedStationId: number | null = null;
   isLoading: boolean = true;
+  isPressureDialogOpen = false;
+  isTemperatureDialogOpen = false;
   private subscription!: Subscription;
   constructor(
     private _TechOpsRealtime: TechOpsRealtime,
     private cdr: ChangeDetectorRef,
+    private router: Router,
   ) {}
   ngOnInit(): void {
     this.onStartConection();
@@ -50,6 +68,17 @@ export class TechOps implements OnInit {
   showZoneDropdown = false;
   selectedZone = 'All Zones';
   zones = ['All Zones', 'Zone A', 'Zone B', 'Zone C', 'Zone D'];
+  get selectedStation(): any {
+    return this.techOpsData.find((s) => s.stationId === this.selectedStationId) ?? null;
+  }
+  openTemperatureDialog(station: any) {
+    this.selectedStationId = station.stationId;
+    this.isTemperatureDialogOpen = true;
+  }
+  openPressureDialog(station: any) {
+    this.selectedStationId = station.stationId;
+    this.isPressureDialogOpen = true;
+  }
   async onStartConection() {
     await this._TechOpsRealtime.startConnection();
     //because the data is coming as an array of objects, we need to subscribe to the observable and update the techOpsData variable with the received data

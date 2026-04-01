@@ -242,3 +242,150 @@
 
   </div>
 </div>
+<!-- charts -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 m-5">
+
+  <div>
+    <apx-chart [series]="chartRevenue.series" [chart]="chartRevenue.chart" [xaxis]="chartRevenue.xaxis"
+      [stroke]="chartRevenue.stroke" [dataLabels]="chartRevenue.dataLabels" [grid]="chartRevenue.grid"
+      [title]="chartRevenue.title" [colors]="chartRevenue.colors">
+    </apx-chart>
+  </div>
+
+  <div>
+    <apx-chart [series]="chartGas.series" [chart]="chartGas.chart" [xaxis]="chartGas.xaxis" [stroke]="chartGas.stroke"
+      [dataLabels]="chartGas.dataLabels" [grid]="chartGas.grid" [title]="chartGas.title" [colors]="chartGas.colors">
+    </apx-chart>
+  </div>
+  <div>
+
+    <apx-chart [series]="chartVehicles.series" [chart]="chartVehicles.chart" [xaxis]="chartVehicles.xaxis"
+      [stroke]="chartVehicles.stroke" [dataLabels]="chartVehicles.dataLabels" [grid]="chartVehicles.grid"
+      [title]="chartVehicles.title" [colors]="chartVehicles.colors">
+    </apx-chart>
+  </div>
+
+
+</div>
+<!-- highest-consumption.component.html -->
+<div class="card m-5">
+  <p class="card-title">Highest Consumption Stations</p>
+  <p class="card-subtitle">Daily Average</p>
+
+  <div class="station-list">
+    <div class="station-row" *ngFor="let station of highestConsumptionStations; let i = index">
+      <span class="rank">{{ i + 1 }}</span>
+      <span class="name">{{ station.stationName }}</span>
+      <div class="bar-track">
+        <div class="bar-fill" #barFill [attr.data-val]="station.averageDailyGasVolume"></div>
+      </div>
+      <span class="value">{{ station.averageDailyGasVolume }} L/day</span>
+
+    </div>
+  </div>
+  <!-- <div class="station-row"><span class="rank">2</span><span
+        class="name">{{highestConsumptionStations?.stationName}}</span>
+      <div class="bar-track">
+        <div class="bar-fill" data-val="3150"></div>
+      </div><span class="value">{{highestConsumptionStations?.averageDailyGasVolume}} L/day</span>
+    </div>
+    <div class="station-row"><span class="rank">3</span><span class="name">Port Said</span>
+      <div class="bar-track">
+        <div class="bar-fill" data-val="2500"></div>
+      </div><span class="value">{{highestConsumptionStations?.averageDailyGasVolume}} L/day</span>
+    </div>
+    <div class="station-row"><span class="rank">4</span><span
+        class="name">{{highestConsumptionStations?.stationName}}</span>
+      <div class="bar-track">
+        <div class="bar-fill" data-val="3020"></div>
+      </div><span class="value">{{highestConsumptionStations?.averageDailyGasVolume}} L/day</span>
+    </div>
+    <div class="station-row"><span class="rank">5</span><span
+        class="name">{{highestConsumptionStations?.stationName}}</span>
+      <div class="bar-track">
+        <div class="bar-fill" data-val="2700"></div>
+      </div><span class="value">{{highestConsumptionStations?.averageDailyGasVolume}} L/day</span>
+    </div>
+    <div class="station-row"><span class="rank">6</span><span
+        class="name">{{highestConsumptionStations?.stationName}}</span>
+      <div class="bar-track">
+        <div class="bar-fill" data-val="3400"></div>
+      </div><span class="value">{{highestConsumptionStations?.averageDailyGasVolume}} L/day</span>
+    </div> -->
+</div>
+<p-table #dt class="mt-8 m-5" styleClass="p-datatable-sm" [paginator]="true" [lazy]="true">
+
+  <!-- Header -->
+  <ng-template pTemplate="header">
+    <tr class="bg-gray-50 text-gray-500 text-sm">
+      <th class="px-4 py-3 text-left">Station</th>
+      <th>Zone</th>
+
+      <th>Dispensers</th>
+      <th>Status</th>
+
+      <th>Last update</th>
+      <th></th>
+    </tr>
+  </ng-template>
+
+  <!-- Body -->
+  <ng-template pTemplate="body" let-allSation>
+    <tr class="text-sm hover:bg-gray-50 transition">
+
+      <!-- Station -->
+      <td class="px-4 py-4">
+        <div class="font-medium text-gray-800">
+          {{ allSation.stationName }}
+        </div>
+
+      </td>
+
+      <!-- Zone -->
+      <td class="text-gray-600">
+        {{ allSation.zoneName }}
+      </td>
+
+
+      <td>{{ allSation.dispensersTotal }}</td>
+
+
+      <td>
+        <span class="px-3 py-1 text-xs rounded-full font-medium" [ngClass]="{
+            'bg-green-100 text-green-700': allSation.status === 'Active',
+            'bg-red-100 text-red-600': allSation.status === 'Inactive'
+          }">
+          {{ allSation.status }}
+        </span>
+      </td>
+
+
+
+
+      <td class="text-gray-500 text-sm">
+        {{ allSation.lastUpdate | date: 'short' }}
+      </td>
+
+
+      <td>
+        <button
+          class="cursor-pointer w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-500 transition">
+
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M2 8C2 8 6.47715 3 12 3C17.5228 3 22 8 22 8" stroke="#141B34" stroke-width="1.5"
+              stroke-linecap="round" />
+            <path
+              d="M21.544 13.045C21.848 13.4713 22 13.6845 22 14C22 14.3155 21.848 14.5287 21.544 14.955C20.1779 16.8706 16.6892 21 12 21C7.31078 21 3.8221 16.8706 2.45604 14.955C2.15201 14.5287 2 14.3155 2 14C2 13.6845 2.15201 13.4713 2.45604 13.045C3.8221 11.1294 7.31078 7 12 7C16.6892 7 20.1779 11.1294 21.544 13.045Z"
+              stroke="#141B34" stroke-width="1.5" />
+            <path
+              d="M15 14C15 12.3431 13.6569 11 12 11C10.3431 11 9 12.3431 9 14C9 15.6569 10.3431 17 12 17C13.6569 17 15 15.6569 15 14Z"
+              stroke="#141B34" stroke-width="1.5" />
+          </svg>
+
+        </button>
+      </td>
+
+    </tr>
+  </ng-template>
+
+</p-table>
