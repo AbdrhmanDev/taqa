@@ -26,4 +26,13 @@ export class StationDetails {
 
     return this.http.get(`${environment.url}Stations/${id}/gas-consumption`, { params });
   }
+  getDispenserById(id: number): Observable<any> {
+    return this.http.get(`${environment.url}Dispenser/${id}/dispensers`);
+  }
+  getCompressorById(id: number): Observable<any> {
+    return this.http.get(`${environment.url}Compressor/by-station/${id}`);
+  }
+  getTimeLineChart(id: number): Observable<any> {
+    return this.http.get(`${environment.url}Compressor/GetTimeLine?/${id}`);
+  }
 }

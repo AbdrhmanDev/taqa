@@ -12,9 +12,9 @@
   </div>
 
   <!-- Zone Select -->
-  <div class="card flex justify-center">
+  <!-- <div class="card flex justify-center">
     <p-select [options]="zones" [(ngModel)]="selectedZone" placeholder="Zones" class="w-[150px]"></p-select>
-  </div>
+  </div> -->
 </div>
 
 <!-- Loading Spinner -->
@@ -26,16 +26,16 @@
 </div>
 
 <!-- TechOps Cards -->
-<div *ngIf="!isLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 m-3 mt-4">
+<!-- <div *ngIf="!isLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 m-3 mt-4">
   <div class="bg-white rounded-2xl border border-teal-300 p-4 shadow-sm space-y-3" *ngFor="let station of techOpsData">
-    <!-- Header -->
+
     <div class="flex items-center justify-between">
       <span class="font-semibold text-gray-800">{{ station.stationName }}</span>
       <span class="text-xs font-medium text-green-600 bg-green-100 px-2 py-0.5 rounded-full">
         {{ station.status }}</span>
     </div>
 
-    <!-- Type + Dispensers -->
+
     <div class="flex items-center justify-between">
       <div class="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1">
         # Type Compressors
@@ -49,7 +49,7 @@
 
     <hr class="border-gray-100" />
 
-    <!-- Stats Grid -->
+
     <div class="grid grid-cols-2 gap-y-2 text-xs text-gray-500">
       <div> Availability <span class="text-gray-800 font-semibold">{{ station.availability }}</span></div>
       <div>Efficiency <span class="text-gray-800 font-semibold">{{ station.efficiency }}</span></div>
@@ -76,4 +76,118 @@
     <hr class="border-gray-100" />
     <p class="text-[11px] text-gray-400 text-center">{{ station.lastUpdate }}</p>
   </div>
+</div> -->
+<div *ngIf="!isLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 m-3 mt-4">
+
+  <div class="bg-[#F8F9F9] rounded-2xl border border-teal-400 p-4 shadow-sm space-y-4"
+    *ngFor="let station of techOpsData">
+
+
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+
+        <div class="bg-green-100 p-2 rounded-lg">
+          <span class="text-green-700 text-xs font-bold">GAS</span>
+        </div>
+
+        <span class="font-semibold text-gray-800">
+          {{ station.stationName }}
+        </span>
+      </div>
+
+      <span class="text-xs font-medium text-green-700 bg-green-100 px-3 py-1 rounded-full">
+        {{ station.status }}
+      </span>
+    </div>
+
+
+    <div class="grid grid-cols-2 gap-2 text-xs">
+      <div class="bg-gray-100 rounded-lg px-3 py-2 text-gray-600">
+        # manufacture
+      </div>
+      <div class="bg-gray-100 rounded-lg px-3 py-2 text-gray-600 text-right">
+        # {{ station.state }}
+      </div>
+    </div>
+
+
+    <div>
+      <div class="flex justify-between text-xs text-gray-500 mb-1">
+        <span>Beacon Availability</span>
+        <span class="text-gray-700 font-semibold">{{ station.availability }}%</span>
+      </div>
+
+      <div class="w-full bg-gray-200 rounded-full h-2">
+        <div class="h-2 rounded-full bg-gradient-to-r from-blue-500 to-green-500"
+          [style.width.%]="station.availability">
+        </div>
+      </div>
+    </div>
+
+
+    <div class="grid grid-cols-3 gap-1">
+      <div class="border rounded-xl p-3 text-center text-gray-400" (click)="openPressureDialog(station)">
+        <div class="text-lg mb-1 flex justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26" fill="none">
+            <g clip-path="url(#clip0_13912_27516)">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M12.9924 26C5.83363 26 0 20.1664 0 12.9924C0 5.83363 5.83363 0 12.9924 0C20.1664 0 26 5.83363 26 12.9924C26 20.1664 20.1664 26 12.9924 26ZM21.9789 12.5354C21.9028 11.2408 21.5677 10.007 21.0041 8.91037L19.6333 9.73286C19.1306 10.0375 18.628 9.26069 19.1611 8.95606L20.5472 8.11834C19.8465 7.05214 18.9326 6.13825 17.8664 5.45284L17.0439 6.8389C16.7393 7.35677 15.9625 6.88459 16.2671 6.36672L17.0896 4.9959C15.9777 4.43234 14.7592 4.08202 13.4493 4.02109V5.63562C13.4493 6.24487 12.5354 6.24487 12.5354 5.63562V4.02109C11.2408 4.08202 10.007 4.43234 8.91037 4.9959L9.73286 6.36672C10.0375 6.88459 9.26069 7.35677 8.95606 6.8389L8.11834 5.45284C7.05214 6.13825 6.13825 7.05214 5.45284 8.11834L6.8389 8.95606C7.35677 9.26069 6.86936 10.0375 6.36672 9.73286L4.9959 8.91037C4.43234 10.007 4.08202 11.2408 4.02109 12.5354H5.63562C6.24487 12.5354 6.24487 13.4493 5.63562 13.4493H3.54892C3.30521 13.4493 3.09197 13.2513 3.09197 12.9924C3.09197 7.50908 7.50908 3.09197 12.9924 3.09197C18.5214 3.09197 22.9537 7.60047 22.8928 13.0076L22.8776 13.1142V13.1295L22.8623 13.1599V13.1752V13.1904H22.8471L22.8319 13.2209V13.2361V13.2513L22.8014 13.2818L22.7709 13.3122C22.6796 13.4036 22.5729 13.4493 22.4359 13.4493H20.3644C19.7551 13.4493 19.7551 12.5354 20.3644 12.5354H21.9789ZM14.8202 23.761H11.0732C10.464 23.761 10.464 22.8471 11.0732 22.8471H14.8202C15.4294 22.8471 15.4294 23.761 14.8202 23.761ZM17.6227 21.522H8.22496C7.6157 21.522 7.6157 20.6081 8.22496 20.6081H17.6227C18.2168 20.6081 18.2168 21.522 17.6227 21.522ZM13.9063 16.1757C13.8149 16.1301 13.7387 16.0691 13.6778 15.9777C13.4341 15.734 12.5659 15.734 12.3222 15.9777C12.2613 16.0691 12.1851 16.1301 12.0937 16.1605C11.8653 16.389 11.7282 16.7088 11.7282 17.0592C11.7282 18.7346 14.2718 18.7346 14.2718 17.0592C14.2718 16.7088 14.1347 16.389 13.9063 16.1757ZM13.4189 14.9115L12.9924 13.0076L12.5811 14.9115C12.8553 14.8658 13.1447 14.8658 13.4189 14.9115ZM11.5302 15.4294L12.5507 10.7686C12.6573 10.2964 13.3427 10.2812 13.4493 10.7686L14.4698 15.4294C14.9115 15.8254 15.1857 16.4042 15.1857 17.0592C15.1857 18.2777 14.2261 19.2373 12.9924 19.2373C10.9361 19.2373 10.0984 16.7241 11.5302 15.4294Z"
+                fill="#939393" />
+            </g>
+            <defs>
+              <clipPath id="clip0_13912_27516">
+                <rect width="26" height="26" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+        </div>
+        <p class="text-xs">Pressure</p>
+      </div>
+      <p-dialog header="Pressure Readings" [(visible)]="isPressureDialogOpen" [modal]="true"
+        [style]="{ width: '50vw' }">
+        <app-pressure [station]="selectedStation"></app-pressure>
+      </p-dialog>
+      <div class="border rounded-xl p-3 text-center text-gray-400" (click)="openTemperatureDialog(station)">
+        <div class="text-lg flex justify-center mb-1"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+            viewBox="0 0 32 32" fill="none">
+            <path
+              d="M21.3333 18.0371V5.33331C21.3333 2.38781 18.9455 0 16 0C13.0545 0 10.6667 2.38781 10.6667 5.33331V18.037C9.03 19.5019 8 21.6307 8 24C8 28.4183 11.5817 32 16 32C20.4183 32 24 28.4183 24 24C24 21.6307 22.97 19.5019 21.3333 18.0371ZM16 29.3333C13.0545 29.3333 10.6667 26.9455 10.6667 24C10.6667 22.4602 11.3192 21.0317 12.4451 20.0241L13.3334 19.2291V5.33331C13.3334 3.86056 14.5273 2.66663 16.0001 2.66663C17.4728 2.66663 18.6667 3.8605 18.6667 5.33331V19.2291L19.555 20.0241C20.6809 21.0317 21.3334 22.4601 21.3334 24C21.3333 26.9455 18.9455 29.3333 16 29.3333Z"
+              fill="#939393" />
+            <path d="M17.3347 10.668H14.668V26.668H17.3347V10.668Z" fill="#939393" />
+            <path
+              d="M16 28C18.2091 28 20 26.2091 20 24C20 21.7909 18.2091 20 16 20C13.7909 20 12 21.7909 12 24C12 26.2091 13.7909 28 16 28Z"
+              fill="#939393" />
+          </svg></div>
+        <p class="text-xs">Temperature</p>
+      </div>
+      <p-dialog header="Temperature Readings" [(visible)]="isTemperatureDialogOpen" [modal]="true"
+        [style]="{ width: '50vw' }">
+        <app-tempreture [station]="selectedStation"></app-tempreture>
+      </p-dialog>
+    </div>
+
+
+    <div class="rounded-xl px-3 py-2 flex justify-between items-center" [ngClass]="station.dispenserActivity != null
+    ? 'border border-yellow-400 bg-yellow-50'
+    : 'border border-gray-300 bg-gray-100'">
+      <!-- Text -->
+      <span class="text-sm" [ngClass]="station.dispenserActivity != null ? 'text-gray-700' : 'text-gray-500'">
+
+        {{ station.dispenserActivity != null ? 'Active Dispensers' : 'No Active Dispenser' }}
+
+      </span>
+
+      <!-- Value -->
+      <span *ngIf="station.dispenserActivity != null" class="font-bold text-gray-800">
+        {{ station.dispenserActivity }}
+      </span>
+    </div>
+
+
+    <p class="text-[11px] text-gray-400 text-center">
+      Last update {{ station.lastUpdate }}
+    </p>
+
+  </div>
+
 </div>

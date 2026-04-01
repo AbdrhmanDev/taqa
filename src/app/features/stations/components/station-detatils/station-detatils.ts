@@ -10,10 +10,19 @@ import { ActivatedRoute } from '@angular/router';
 import { StationDetails } from '../../service/station-details';
 import { IStationDetails } from '../../model/station-details';
 import { ChangeDetectorRef } from '@angular/core';
+import { ComproserDetails } from '../comprossers/comproser-details/comproser-details';
 
 @Component({
   selector: 'app-station-detatils',
-  imports: [TabsModule, OverView, Comprossers, Dispensers, StationAlarm, StationTickets],
+  imports: [
+    TabsModule,
+    OverView,
+    Comprossers,
+    Dispensers,
+    StationAlarm,
+    StationTickets,
+    ComproserDetails,
+  ],
   templateUrl: './station-detatils.html',
   styleUrl: './station-detatils.scss',
 })

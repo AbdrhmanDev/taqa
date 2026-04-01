@@ -32,4 +32,23 @@ export class dashboardService {
     }
     return this.http.get(environment.url + 'Dashboard/gas-volume-trend', { params });
   }
+
+  dashboardHighest(): Observable<any> {
+    return this.http.get(environment.url + 'Dashboard/highest-consumption-stations');
+  }
+  hourlyRevenue(): Observable<any> {
+    return this.http.get(environment.url + 'Dashboard/hourly-revenue');
+  }
+  hourlyVehicles(): Observable<any> {
+    return this.http.get(environment.url + 'Dashboard/hourly-vehicles-charged');
+  }
+  hourlyGasSold(): Observable<any> {
+    return this.http.get(environment.url + 'Dashboard/hourly-gas-sold');
+  }
+  dashboardAlarms(): Observable<any> {
+    return this.http.get(environment.url + 'Alarms/history');
+  }
+  dashboardMap(): Observable<any> {
+    return this.http.get(environment.url + 'Dashboard/stations-map');
+  }
 }

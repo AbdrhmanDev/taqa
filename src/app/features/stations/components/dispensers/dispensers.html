@@ -1,200 +1,145 @@
 <div class="mt-8">
 
 </div>
-<div class="card">
-  <p-tabs value="0">
-    <p-tablist>
-      <p-tab value="0">
-        <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none">
-          <path
-            d="M18.3588 2.14124C19.75 3.53249 19.75 5.77166 19.75 10.25C19.75 14.7283 19.75 16.9675 18.3588 18.3588C16.9675 19.75 14.7283 19.75 10.25 19.75C5.77166 19.75 3.53249 19.75 2.14124 18.3588C0.75 16.9675 0.75 14.7283 0.75 10.25C0.75 5.77166 0.75 3.53249 2.14124 2.14124C3.53249 0.75 5.77166 0.75 10.25 0.75C14.7283 0.75 16.9675 0.75 18.3588 2.14124Z"
-            stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M19.75 10.25L0.75 10.25" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" />
-          <path d="M10.25 0.75L10.25 19.75" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" />
-        </svg>
-      </p-tab>
-      <p-tab value="1"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none">
-          <path
-            d="M2.14124 18.3588C0.75 16.9675 0.75 14.7283 0.75 10.25C0.749999 5.77166 0.749999 3.53249 2.14124 2.14124C3.53248 0.75 5.77166 0.75 10.25 0.75C14.7283 0.75 16.9675 0.75 18.3588 2.14124C19.75 3.53248 19.75 5.77166 19.75 10.25C19.75 14.7283 19.75 16.9675 18.3588 18.3588C16.9675 19.75 14.7283 19.75 10.25 19.75C5.77166 19.75 3.53249 19.75 2.14124 18.3588Z"
-            stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M0.75 7.25L19.75 7.25" stroke="#141B34" stroke-width="1.5" />
-          <path d="M14.25 19.75L14.25 0.749998" stroke="#141B34" stroke-width="1.5" />
-          <path d="M6.25 19.75L6.25 0.75" stroke="#141B34" stroke-width="1.5" />
-        </svg></p-tab>
+<div class="">
 
-    </p-tablist>
-    <p-tabpanels>
-      <p-tabpanel value="0">
-        <!-- Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div *ngIf="isLoading" class="m-3 flex justify-center items-center min-h-40">
+    <div class="flex flex-col items-center gap-3">
+      <div class="w-10 h-10 border-4 border-gray-200 border-t-blue-900 rounded-full animate-spin"></div>
+      <p class="text-gray-400 text-sm">Loading Dispensers...</p>
+    </div>
+  </div>
 
-          <!-- Card -->
-          <div class="bg-white shadow-lg border border-gray-200 rounded-2xl p-4">
 
-            <!-- Header -->
-            <div class="flex justify-between items-start mb-4">
-              <div>
+  <!-- Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-                <h3 class="font-semibold text-gray-800">Dispenser</h3>
-                <p class="text-sm text-gray-500">D-47</p>
-                <p class="text-xs text-gray-400">Compressor_1</p>
-              </div>
+    <!-- Card -->
+    <div class="bg-white  border border-gray-200 rounded-2xl p-4" *ngFor="let dispenser of DispenserDetails">
 
-              <span class="px-3 py-1 text-xs rounded-full bg-orange-100 text-orange-600">
-                Warning
-              </span>
-            </div>
+      <!-- Header -->
+      <div class="flex justify-between items-start mb-4">
+        <div>
 
-            <!-- Content -->
-            <div class="grid grid-cols-2 gap-6 text-sm">
+          <h3 class="font-semibold text-gray-800">{{ dispenser.dispenserName }}</h3>
 
-              <!-- Left -->
-              <div class="space-y-3">
-                <h1>Left Dispenser</h1>
-                <div class="flex justify-between">
-
-                  <span class="text-gray-500">Charge(Volum)</span>
-                  <span class="font-medium">145.5 m³</span>
-                </div>
-
-                <div class="flex justify-between">
-                  <span class="text-gray-500">Charging Time</span>
-                  <span class="font-medium">4.2 min</span>
-                </div>
-
-                <div class="flex justify-between">
-                  <span class="text-gray-500">Throughput</span>
-                  <span class="font-medium">34.6 m³/min</span>
-                </div>
-
-                <div class="flex justify-between">
-                  <span class="text-gray-500">Waiting Time</span>
-                  <span class="font-medium">2.5 min</span>
-                </div>
-              </div>
-
-              <!-- Right -->
-              <div class="space-y-3">
-                <h1>Right Dispenser</h1>
-                <div class="flex justify-between">
-
-                  <span class="text-gray-500">Charge(Volum)</span>
-                  <span class="font-medium">145.5 m³</span>
-                </div>
-
-                <div class="flex justify-between">
-                  <span class="text-gray-500">Charging Time</span>
-                  <span class="font-medium">4.2 min</span>
-                </div>
-
-                <div class="flex justify-between">
-                  <span class="text-gray-500">Throughput</span>
-                  <span class="font-medium">34.6 m³/min</span>
-                </div>
-
-                <div class="flex justify-between">
-                  <span class="text-gray-500">Waiting Time</span>
-                  <span class="font-medium">2.5 min</span>
-                </div>
-              </div>
-
-            </div>
-
-            <!-- Footer -->
-            <div class="border-t mt-5 pt-3 text-xs text-gray-400">
-              09:29:30 2025-06-01
-            </div>
-
-          </div>
-
+          <p class="text-xs text-gray-400">{{dispenser.compressorName}}</p>
         </div>
 
-      </p-tabpanel>
-      <p-tabpanel value="1">
-        <div class="bg-white rounded-xl shadow-sm p-6 ms-3 me-3 mt-8">
+        <!-- <span class="px-3 py-1 text-xs rounded-full bg-orange-100 text-orange-600">
+          Warning
+        </span> -->
+      </div>
 
-          <div class="flex justify-between items-center mt-6">
+      <!-- Content -->
+      <div class="grid grid-cols-2 gap-6 text-sm">
 
-            <div></div>
+        <!-- Left -->
+        <div class="space-y-3">
+          <h1>Left Dispenser</h1>
+          <div class="flex justify-between">
 
-            <div class="flex gap-3">
-
-            </div>
-
+            <span class="text-gray-500">Name</span>
+            <span class="font-medium">{{ dispenser.left.name }}</span>
           </div>
-          <p-table #dt class="mt-8" [value]="dispenser" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5,10,20]"
-            styleClass="p-datatable-sm">
+          <div class="flex justify-between">
 
-            <!-- Header -->
-            <ng-template pTemplate="header">
-              <tr class="bg-gray-50 text-gray-500 text-sm">
-                <th class="px-4 py-3 text-left">Dispenser</th>
-                <th>Status</th>
-                <th>Compressors</th>
-                <th>Volum(L)</th>
-                <th>Charging Time</th>
-                <th>Throughput</th>
-                <th>Waiting Time</th>
-                <th></th>
-              </tr>
-            </ng-template>
+            <span class="text-gray-500">Charge(Volum)</span>
+            <span class="font-medium">{{ dispenser.left.chargeVolume }} m³</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-500">Charging Time</span>
+            <span class="font-medium">{{
+              dispenser.left.chargingTime}}min</span>
+          </div>
 
-            <!-- Body -->
-            <ng-template pTemplate="body" let-dispenser>
-              <tr class="text-sm hover:bg-gray-50 transition">
+          <div class="flex justify-between">
+            <span class="text-gray-500">Throughput</span>
+            <span class="font-medium">{{ dispenser.left.throughput }}min</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-500">Status</span>
+            <span class="inline-block px-2 py-1 text-xs rounded-2xl" [ngClass]="{
+    'bg-[#FEE4E2] text-[#B42318] rounded-2xl': dispenser.left?.connectionStatus === 'Offline',
+    'bg-[#DCFAE6] text-[#085D3A] rounded-2xl': dispenser.left?.connectionStatus === 'Online',
+    'bg-[#FCD34D] text-[#F79009] rounded-2xl': dispenser.left?.connectionStatus === 'Warning'
+  }">
+              {{ dispenser.left.connectionStatus }}
+            </span>
+          </div>
 
-                <!-- Station -->
-                <td class="px-4 py-4">
-                  <div class="font-medium text-gray-800">
-                    {{ dispenser.Station }}
-                  </div>
-                  <div class="text-xs text-gray-400">
-                    ID: {{ dispenser.Id }}
-                  </div>
-                </td>
-
-                <!-- Zone -->
-                <td class="text-gray-600">
-                  {{ dispenser.Zone }}
-                </td>
-
-                <!-- Compressors -->
-                <td>{{ dispenser.Compressors }}</td>
-
-                <!-- Dispensers -->
-                <td>{{ dispenser.Dispensers }}</td>
-
-                <!-- Status Badge -->
-                <td>
-                  <span class="px-3 py-1 text-xs rounded-full font-medium" [ngClass]="{
-            'bg-green-100 text-green-700': dispenser.Status === 'online',
-            'bg-red-100 text-red-600': dispenser.Status === 'offline'
-          }">
-                    {{ dispenser.Status }}
-                  </span>
-                </td>
-
-                <!-- Change By -->
-                <td>
-                  {{ dispenser.ChangeBy }}
-                </td>
-
-                <!-- Last Update -->
-                <td class="text-gray-500 text-sm">
-                  {{ dispenser.waiting }}
-                </td>
-
-
-
-              </tr>
-            </ng-template>
-
-          </p-table>
+          <div class="flex justify-between">
+            <span class="text-gray-500">Waiting Time</span>
+            <span class="font-medium">{{ dispenser.left.waitingTime }} min</span>
+          </div>
         </div>
-      </p-tabpanel>
+
+        <!-- Right -->
+        <div class="space-y-3">
+          <h1>Right Dispenser</h1>
+          <div class="flex justify-between">
+
+            <span class="text-gray-500">Name</span>
+            <span class="font-medium">{{ dispenser.right.name }}</span>
+          </div>
+          <div class="flex justify-between">
+
+            <span class="text-gray-500">Charge(Volum)</span>
+            <span class="font-medium">{{ dispenser.right.chargeVolume }} m³</span>
+          </div>
+
+          <div class="flex justify-between">
+            <span class="text-gray-500">Charging Time</span>
+            <span class="font-medium">{{ dispenser.right.chargingTime }} min</span>
+          </div>
+
+          <div class="flex justify-between">
+            <span class="text-gray-500">Throughput</span>
+            <span class="font-medium">{{ dispenser.right.throughput }} m³/min</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-500">Status</span>
+            <span class="inline-block px-2 py-1 text-xs rounded-2xl" [ngClass]="{
+    'bg-[#FEE4E2] text-[#B42318] rounded-2xl': dispenser.status === 'Offline',
+    'bg-[#DCFAE6] text-[#085D3A] rounded-2xl': dispenser.status === 'Online',
+    'bg-[#FCD34D] text-[#F79009] rounded-2xl': dispenser.status === 'Warning'
+  }">
+              {{ dispenser.right?.connectionStatus }}
+            </span>
+          </div>
+
+          <div class="flex justify-between">
+            <span class="text-gray-500">Waiting Time</span>
+            <span class="font-medium">{{ dispenser.right.waitingTime }} min</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="border-t mt-5 pt-3 text-xs text-gray-400">
+        <div class="flex justify-between">
+          <span>{{ dispenser.lastTimeStamp | date:'short' }}</span>
+          <span class="inline-block px-2 py-1 text-xs rounded-2xl" [ngClass]="{
+    'bg-[#FEE4E2] text-[#B42318] rounded-2xl': dispenser.status === 'Offline',
+    'bg-[#DCFAE6] text-[#085D3A] rounded-2xl': dispenser.status === 'Online',
+    'bg-[#FCD34D] text-[#F79009] rounded-2xl': dispenser.status === 'Warning'
+  }">
+            {{ dispenser.status }}
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
 
 
 
-    </p-tabpanels>
-  </p-tabs>
+
+
+
+
+
+
 </div>

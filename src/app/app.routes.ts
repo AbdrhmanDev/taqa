@@ -59,11 +59,33 @@ export const routes: Routes = [
         title: 'Dashboard',
       },
       {
+        path: 'more-alarms',
+        loadComponent: () =>
+          import('./features/dashboard/component/more-alarm/more-alarm').then((m) => m.MoreAlarm),
+      },
+      {
         path: 'tech-ops',
         loadComponent: () =>
           import('./features/dashboard/component/tech-ops/tech-ops').then((m) => m.TechOps),
         title: 'Tech Ops',
+        children: [
+          {
+            path: 'tempreture',
+            loadComponent: () =>
+              import('./features/dashboard/component/tech-ops/tempreture/tempreture').then(
+                (m) => m.Tempreture,
+              ),
+          },
+          {
+            path: 'pressure',
+            loadComponent: () =>
+              import('./features/dashboard/component/tech-ops/pressure/pressure').then(
+                (m) => m.Pressure,
+              ),
+          },
+        ],
       },
+
       {
         path: 'users',
         loadComponent: () =>
