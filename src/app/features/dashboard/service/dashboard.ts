@@ -45,10 +45,13 @@ export class dashboardService {
   hourlyGasSold(): Observable<any> {
     return this.http.get(environment.url + 'Dashboard/hourly-gas-sold');
   }
+<<<<<<< HEAD
   dashboardAlarms(): Observable<any> {
     return this.http.get(environment.url + 'Alarms/history');
   }
   dashboardMap(): Observable<any> {
     return this.http.get(environment.url + 'Dashboard/stations-map');
   }
+=======
+>>>>>>> d04f5a8ca041d97a62d1a2eb8ece76ac41963bd9
 }

@@ -32,7 +32,10 @@ export class StationDetails {
   getCompressorById(id: number): Observable<any> {
     return this.http.get(`${environment.url}Compressor/by-station/${id}`);
   }
+<<<<<<< HEAD
   getTimeLineChart(id: number): Observable<any> {
     return this.http.get(`${environment.url}Compressor/GetTimeLine?/${id}`);
   }
+=======
+>>>>>>> d04f5a8ca041d97a62d1a2eb8ece76ac41963bd9
 }

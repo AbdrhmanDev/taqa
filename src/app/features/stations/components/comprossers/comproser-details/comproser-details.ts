@@ -65,6 +65,7 @@ export class ComproserDetails implements OnInit {
     private realTime: RealtimeStationDetails,
     private stationDetails: StationDetails,
     private activateRoute: ActivatedRoute,
+<<<<<<< HEAD
   ) {}
 
   ngOnInit(): void {
@@ -85,6 +86,45 @@ export class ComproserDetails implements OnInit {
         console.log('timeline', this.timeLineChart);
         this.timelineChartOptions = {
           series: [
+=======
+  ) {
+    this.chartOptions = {
+      series: [
+        {
+          name: 'Gas consumption',
+          data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
+        },
+      ],
+      chart: {
+        height: 300,
+        type: 'line',
+        zoom: {
+          enabled: false,
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: 'smooth',
+        colors: ['#1ED6FF'],
+      },
+      grid: {
+        row: {
+          colors: ['#f9fafb', 'transparent'],
+          opacity: 0.5,
+        },
+      },
+      xaxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+      },
+    };
+    this.timelineChartOptions = {
+      series: [
+        {
+          name: 'Comproser Details',
+          data: [
+>>>>>>> d04f5a8ca041d97a62d1a2eb8ece76ac41963bd9
             {
               name: 'Comproser Details',
               data: [
@@ -116,6 +156,19 @@ export class ComproserDetails implements OnInit {
       },
     });
   }
+<<<<<<< HEAD
+=======
+  ngOnInit(): void {
+    this.activateRoute.paramMap.subscribe((params) => {
+      this.stationId = Number(params.get('id'));
+
+      if (this.stationId) {
+        this.onStartConnection();
+      }
+      this.onGetCompressorData();
+    });
+  }
+>>>>>>> d04f5a8ca041d97a62d1a2eb8ece76ac41963bd9
   backComproser() {
     this.Router.navigate(['/dashboard/station']);
   }
