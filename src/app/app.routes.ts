@@ -286,6 +286,18 @@ export const routes: Routes = [
           ),
         title: 'Alarm & Alert Management',
       },
+      {
+        path: 'zones',
+        loadComponent: () =>
+          import('./features/zone/components/zones/zones').then((m) => m.ZonesComponent),
+        title: 'Zones Management',
+      },
+      {
+        path: 'areas',
+        loadComponent: () =>
+          import('./features/area/components/areas/areas').then((m) => m.AreasComponent),
+        title: 'Areas Management',
+      },
     ],
   },
 
