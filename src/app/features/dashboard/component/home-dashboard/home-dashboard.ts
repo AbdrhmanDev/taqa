@@ -1,7 +1,6 @@
-import { dashboardService } from './../../service/dashboard';
 import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { dashboardService } from './../../service/dashboard';
-import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+
 import { Sidebar } from '../../../../shared/sidebar/component/sidebar/sidebar';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -70,16 +69,7 @@ export class HomeDashboard implements OnInit {
   public chartGas!: chartGas;
   public chartRevenue!: chartGas;
   public chartVehicles!: chartGas;
-  public colors!: string[];
-  gasSoldCahrt: any[] = [];
-  gasVehiclesChart: any[] = [];
-  revenueChart: any[] = [];
-  highestConsumptionStations: any[] = [];
-  @ViewChild('chart') chart: ChartComponent | any;
-  public chartGas!: chartGas;
-  public chartRevenue!: chartGas;
-  public chartVehicles!: chartGas;
-  public colors!: string[];
+
   constructor(
     private sharedData: SharedData,
     private realTime: RealtimeAlarmsDashboard,
