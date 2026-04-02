@@ -66,6 +66,13 @@ export class Sidebar {
         { name: 'Settings', icon: 'settings', route: '/dashboard/profile-user' },
       ],
     },
+    {
+      title: 'Location',
+      items: [
+        { name: 'Zone', icon: 'location', route: '/dashboard/zones' },
+        { name: 'Area', icon: 'map', route: '/dashboard/areas' },
+      ],
+    },
   ];
   logout() {
     this._Authen.logout();

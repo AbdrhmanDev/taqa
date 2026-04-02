@@ -57,7 +57,11 @@ export class OverView {
   duration!: number;
   moveDialogVisible = false;
   unlinkDialogVisible = false;
+  selectedCompressorToMove: any = null;
+  selectedCompressorToUnlink: any = null;
   comproserTableData: any[] = [];
+  availableAssets: any[] = [];
+  assetId!: number;
   private subscription!: Subscription;
   stationDetailsData!: any;
   allGasData: any[] = [];
@@ -113,6 +117,7 @@ export class OverView {
     this.activateRoute.paramMap.subscribe((params) => {
       // show anything in url
       this.stationId = Number(params.get('id'));
+      this.onGetStationDetails();
     });
     this.onGetComproser();
     this.onStartConnection();
@@ -121,11 +126,53 @@ export class OverView {
     this.onStartConnectionAlarms();
   }
 
-  openMoveDialog() {
-    this.moveDialogVisible = true;
+  onGetStationDetails() {
+    this.stationDetails.getStationById(this.stationId).subscribe({
+      next: (res) => {
+        this.assetId = res.assetId;
+      },
+      error: (err) => console.log(err)
+    });
   }
-  openUnlinkDialog() {
+
+  openMoveDialog(compressor: any) {
+    this.selectedCompressorToMove = compressor;
+    this.stationDetails.getAvailableAssets().subscribe({
+      next: (assets) => {
+        this.availableAssets = assets;
+        this.moveDialogVisible = true;
+      },
+      error: (err) => console.log(err)
+    });
+  }
+  openUnlinkDialog(compressor: any) {
+    this.selectedCompressorToUnlink = compressor;
     this.unlinkDialogVisible = true;
+  }
+
+  handleUnlink(compressor: any) {
+    const compId = compressor.id || compressor.compressorId;
+    this.stationDetails.unlinkCompressor(compId).subscribe({
+      next: () => this.onGetComproser(),
+      error: (err) => console.log(err)
+    });
+  }
+
+  handleMove(payload: any) {
+    const { compressor, targetAsset } = payload;
+    const compId = compressor.id || compressor.compressorId;
+    
+    // 1. Unlink from current station
+    this.stationDetails.unlinkCompressor(compId).subscribe({
+      next: () => {
+        // 2. Link to target asset
+        this.stationDetails.linkCompressor(compId, targetAsset.id).subscribe({
+           next: () => this.onGetComproser(),
+           error: (err) => console.log('Link err', err)
+        });
+      },
+      error: (err) => console.log('Unlink err', err)
+    });
   }
   onGetComproser() {
     this.stationDetails.getComproserById(this.stationId).subscribe({

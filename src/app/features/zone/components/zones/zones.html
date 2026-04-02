@@ -1,0 +1,146 @@
+<div class="p-4 bg-gray-50 min-h-[calc(100vh-100px)]">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Zones Management</h2>
+    <p-button (onClick)="openAdd()" styleClass="p-button-primary shadow-sm flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 5v10m-5-5h10"/>
+      </svg>
+      Add Zone
+    </p-button>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <p-table [value]="zones" [paginator]="true" [rows]="10" styleClass="p-datatable-sm p-datatable-striped" responsiveLayout="scroll">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="font-semibold text-gray-700 bg-gray-50">ID</th>
+          <th class="font-semibold text-gray-700 bg-gray-50">Name</th>
+          <th class="font-semibold text-gray-700 bg-gray-50">Linked Areas Count</th>
+          <th class="text-right font-semibold text-gray-700 bg-gray-50">Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-zone>
+        <tr class="hover:bg-blue-50/50 transition-colors">
+          <td class="text-gray-600">{{zone.zoneId}}</td>
+          <td class="font-semibold text-gray-800">{{zone.name}}</td>
+          <td>
+            <span class="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-xs font-bold border border-indigo-100">
+              {{zone.areas ? zone.areas.length : 0}}
+            </span>
+          </td>
+          <td class="text-right">
+            <button class="p-2 cursor-pointer hover:bg-blue-100 rounded-full transition text-blue-600" (click)="openEdit(zone)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M2.37265 14.9393C2.41054 14.5982 2.42949 14.4277 2.48108 14.2683C2.52686 14.1269 2.59154 13.9924 2.67336 13.8683C2.76558 13.7284 2.8869 13.6071 3.12953 13.3645L14.0217 2.47232C14.9327 1.56131 16.4098 1.56131 17.3208 2.47233C18.2318 3.38334 18.2318 4.8604 17.3208 5.77141L6.42862 16.6636C6.18598 16.9062 6.06467 17.0275 5.92481 17.1197C5.80073 17.2016 5.66617 17.2662 5.52476 17.312C5.36538 17.3636 5.19487 17.3826 4.85383 17.4205L2.0625 17.7306L2.37265 14.9393Z" stroke="currentColor" stroke-width="1.64954" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <button class="p-2 cursor-pointer hover:bg-red-100 rounded-full transition text-red-600 ml-2" (click)="openDelete(zone)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M13.1966 4.94752V4.28771C13.1966 3.36388 13.1966 2.90196 13.0169 2.5491C12.8587 2.23872 12.6064 1.98637 12.296 1.82823C11.9431 1.64844 11.4812 1.64844 10.5574 1.64844H9.23774C8.31391 1.64844 7.85199 1.64844 7.49913 1.82823C7.18875 1.98637 6.9364 2.23872 6.77826 2.5491C6.59847 2.90196 6.59847 3.36388 6.59847 4.28771V4.94752M8.24801 9.48377V13.6076M11.5471 9.48377V13.6076M2.47461 4.94752H17.3205M15.671 4.94752V14.185C15.671 15.5707 15.671 16.2636 15.4013 16.7929C15.1641 17.2584 14.7855 17.637 14.32 17.8742C13.7907 18.1439 13.0978 18.1439 11.7121 18.1439H8.08306C6.69731 18.1439 6.00444 18.1439 5.47515 17.8742C5.00958 17.637 4.63106 17.2584 4.39384 16.7929C4.12415 16.2636 4.12415 15.5707 4.12415 14.185V4.94752" stroke="currentColor" stroke-width="1.64954" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4" class="text-center p-8 text-gray-500">
+            <div class="flex flex-col items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-3 text-gray-300">
+                <path d="M21 8v13H3V8"></path>
+                <path d="M1 3h22v5H1z"></path>
+                <path d="M10 12h4v4h-4z"></path>
+              </svg>
+              <span class="font-medium">No zones found.</span>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <!-- Add Dialog -->
+  <p-dialog header="Add New Zone" [(visible)]="showAddPopup" [modal]="true" [style]="{width: '450px'}" [draggable]="false" [resizable]="false" styleClass="p-fluid">
+    <div class="flex flex-col gap-5 py-4">
+      <div class="flex flex-col gap-2">
+        <label for="name" class="font-semibold text-gray-700 text-sm">Zone Name <span class="text-red-500">*</span></label>
+        <input pInputText id="name" [(ngModel)]="newZoneName" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. Cairo" />
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <div class="flex justify-end gap-2 mt-4">
+        <p-button (onClick)="showAddPopup = false" styleClass="p-button-text p-button-secondary font-medium flex gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 5-10 10M5 5l10 10"/>
+          </svg>
+          Cancel
+        </p-button>
+        <p-button (onClick)="saveAdd()" [disabled]="!newZoneName" styleClass="p-button-primary font-medium flex gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 10 3 3 7-7"/>
+          </svg>
+          Save Zone
+        </p-button>
+      </div>
+    </ng-template>
+  </p-dialog>
+
+  <!-- Edit Dialog -->
+  <p-dialog header="Edit Zone" [(visible)]="showEditPopup" [modal]="true" [style]="{width: '450px'}" [draggable]="false" [resizable]="false" styleClass="p-fluid">
+    <div class="flex flex-col gap-5 py-4">
+      <div class="flex flex-col gap-2">
+        <label for="editName" class="font-semibold text-gray-700 text-sm">Zone Name <span class="text-red-500">*</span></label>
+        <input pInputText id="editName" [(ngModel)]="editZoneName" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. Cairo" />
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <div class="flex justify-end gap-2 mt-4">
+        <p-button (onClick)="showEditPopup = false" styleClass="p-button-text p-button-secondary font-medium flex gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 5-10 10M5 5l10 10"/>
+          </svg>
+          Cancel
+        </p-button>
+        <p-button (onClick)="saveEdit()" [disabled]="!editZoneName" styleClass="p-button-primary font-medium flex gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 10 3 3 7-7"/>
+          </svg>
+          Update Zone
+        </p-button>
+      </div>
+    </ng-template>
+  </p-dialog>
+
+  <!-- Delete Dialog -->
+  <p-dialog header="Confirm Deletion" [(visible)]="showDeletePopup" [modal]="true" [style]="{width: '450px'}" [draggable]="false" [resizable]="false">
+    <div class="flex items-start gap-4 py-4">
+      <div class="bg-red-50 p-3 rounded-full flex-shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-500">
+          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+      </div>
+      <div>
+        <h3 class="text-lg font-bold text-gray-900 m-0 mb-1">Delete Zone</h3>
+        <p class="m-0 text-gray-600 leading-relaxed">Are you absolutely sure you want to delete <strong class="text-gray-900 border-b border-gray-300 pb-0.5">{{selectedZone?.name}}</strong>? This action cannot be undone and may affect linked areas.</p>
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <div class="flex justify-end gap-2 mt-4">
+        <p-button (onClick)="showDeletePopup = false" styleClass="p-button-text p-button-secondary font-medium flex gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 5-10 10M5 5l10 10"/>
+          </svg>
+          Cancel
+        </p-button>
+        <p-button (onClick)="confirmDelete()" styleClass="p-button-danger font-medium flex gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6h14M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6m-9-1h14l-1.5 14H6.5L5 10Z"/>
+          </svg>
+          Delete
+        </p-button>
+      </div>
+    </ng-template>
+  </p-dialog>
+</div>
