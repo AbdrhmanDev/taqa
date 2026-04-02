@@ -29,10 +29,19 @@
       <!-- Top Cards -->
       <div class="grid md:grid-cols-2 gap-6">
         <!-- Compressor Information -->
-        <div class="bg-white rounded-2xl shadow-sm p-6">
+        <div class="bg-white rounded-2xl shadow-sm p-6 relative h-[180px]">
           <h3 class="font-semibold text-gray-800 mb-4">Compressor Information</h3>
 
-          <div class="grid grid-cols-2 gap-4 text-sm">
+          <div *ngIf="isLoadingCompressor" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+              <p-skeleton width="100%" height="1.5rem"></p-skeleton>
+              <p-skeleton width="100%" height="1.5rem"></p-skeleton>
+              <p-skeleton width="100%" height="1.5rem"></p-skeleton>
+              <p-skeleton width="100%" height="1.5rem"></p-skeleton>
+            </div>
+          </div>
+
+          <div *ngIf="!isLoadingCompressor" class="grid grid-cols-2 gap-4 text-sm">
             <div>
               <p class="text-gray-400">Compressor ID</p>
               <p class="font-medium">{{ ComproserDataCard?.compressorId }}</p>
@@ -81,15 +90,15 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-2xl shadow-sm p-6">
+        <div class="bg-white rounded-2xl shadow-sm p-6 h-[180px]">
           <h3 class="text-lg font-semibold mb-6">Timeline</h3>
 
-          <!-- <div class="flex justify-between text-sm mb-4">
-            <span class="text-gray-500">Created</span>
-            <span>08/15/2026, 10:00 AM</span>
-          </div> -->
+          <div *ngIf="isLoadingRealtime" class="space-y-4">
+            <p-skeleton width="100%"></p-skeleton>
+            <p-skeleton width="80%"></p-skeleton>
+          </div>
 
-          <div class="flex justify-between text-sm">
+          <div *ngIf="!isLoadingRealtime" class="flex justify-between text-sm">
             <span class="text-gray-500">Last Updated</span>
             <span>{{ compressorDetailsData?.lastSignalTime | date : 'short' }}</span>
           </div>
@@ -108,7 +117,14 @@
       </div>
 
       <!-- Stats Cards -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div *ngIf="isLoadingRealtime" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <p-skeleton width="100%" height="100px" styleClass="rounded-lg"></p-skeleton>
+        <p-skeleton width="100%" height="100px" styleClass="rounded-lg"></p-skeleton>
+        <p-skeleton width="100%" height="100px" styleClass="rounded-lg"></p-skeleton>
+        <p-skeleton width="100%" height="100px" styleClass="rounded-lg"></p-skeleton>
+      </div>
+
+      <div *ngIf="!isLoadingRealtime" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div class="bg-indigo-200 rounded-lg shadow p-4">
           <p class="text-xs text-gray-500 uppercase tracking-wide">Average Pressure</p>
           <p class="text-3xl font-bold text-black mt-1">{{ compressorDetailsData?.avg }}</p>
@@ -133,7 +149,14 @@
       </div>
 
       <!-- Sensor Gauges Grid -->
-      <div class="grid grid-cols-3 gap-4">
+      <div *ngIf="isLoadingRealtime" class="grid grid-cols-3 gap-4">
+        <div *ngFor="let i of [1, 2, 3, 4, 5, 6]" class="flex flex-col items-center">
+          <p-skeleton shape="circle" size="80px"></p-skeleton>
+          <p-skeleton width="40%" styleClass="mt-2"></p-skeleton>
+        </div>
+      </div>
+
+      <div *ngIf="!isLoadingRealtime" class="grid grid-cols-3 gap-4">
         <div *ngFor="let stage of stages" class="card flex flex-col items-center">
           <!-- Gauge SVG -->
           <svg width="160" height="90" viewBox="0 0 160 90">
@@ -198,6 +221,7 @@
       </div>
     </div>
   </div>
+
   <!-- Temperature monitoring -->
   <div class="bg-white p-4 shadow-sm rounded-2xl mt-6">
     <!-- Header -->
@@ -207,7 +231,14 @@
     </div>
 
     <!-- Stats Cards -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div *ngIf="isLoadingRealtime" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <p-skeleton width="100%" height="100px" styleClass="rounded-lg"></p-skeleton>
+      <p-skeleton width="100%" height="100px" styleClass="rounded-lg"></p-skeleton>
+      <p-skeleton width="100%" height="100px" styleClass="rounded-lg"></p-skeleton>
+      <p-skeleton width="100%" height="100px" styleClass="rounded-lg"></p-skeleton>
+    </div>
+
+    <div *ngIf="!isLoadingRealtime" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
       <div class="bg-indigo-200 rounded-lg shadow p-4">
         <p class="text-xs text-gray-500 uppercase tracking-wide">Average Temperature</p>
         <p class="text-3xl font-bold text-black mt-1">{{ compressorDetailsData?.avg_T }}</p>
@@ -232,7 +263,18 @@
     </div>
 
     <!-- Sensor Temp Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div *ngIf="isLoadingRealtime" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        *ngFor="let i of [1, 2, 3, 4, 5, 6]"
+        class="bg-white rounded-xl shadow p-5 flex flex-col items-center"
+      >
+        <p-skeleton width="20%"></p-skeleton>
+        <p-skeleton height="120px" width="60px" styleClass="my-4"></p-skeleton>
+        <p-skeleton width="40%"></p-skeleton>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoadingRealtime" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div
         *ngFor="let sensor of temperatureStages"
         class="bg-white rounded-xl shadow p-5 flex flex-col items-center gap-2"
@@ -285,155 +327,176 @@
       </div>
     </div>
   </div>
-</div>
-<div class="bg-white p-6 rounded-2xl shadow mt-6">
-  <apx-chart
-    [series]="timelineChartOptions.series"
-    [chart]="timelineChartOptions.chart"
-    [plotOptions]="timelineChartOptions.plotOptions"
-    [xaxis]="timelineChartOptions.xaxis"
-    [colors]="timelineChartOptions.colors"
-    [legend]="timelineChartOptions.legend"
-    [fill]="timelineChartOptions.fill"
-    [tooltip]="timelineChartOptions.tooltip"
-  >
-  </apx-chart>
-</div>
 
-<div class="mt-6 bg-white rounded-2xl shadow-sm p-6">
-  <!-- Header -->
-  <div class="mb-4 flex justify-between items-center">
-    <!-- Title -->
-    <div>
-      <h3 class="text-lg font-semibold text-gray-800">Dispensers</h3>
-      <p class="text-xs text-gray-400">total 4 Dispensers</p>
+  <!-- CHART SECTION - FIXED VERSION -->
+  <div class="bg-white p-6 rounded-2xl shadow mt-6 relative min-h-[220px] max-w-[70%] mx-auto">
+    <!-- Loading skeleton instead of overlay -->
+    <div *ngIf="isLoadingTimeline" class="flex items-center justify-center min-h-[160px]">
+      <div class="text-center">
+        <p-progressSpinner styleClass="w-10 h-10"></p-progressSpinner>
+        <p class="text-gray-500 mt-3">Loading chart data...</p>
+      </div>
     </div>
 
-    <!-- Button -->
-    <button
-      class="flex items-center gap-2 bg-indigo-700 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-indigo-800 transition"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
+    <!-- Chart always in DOM, just hidden during loading -->
+    <div [class.hidden]="isLoadingTimeline">
+      <apx-chart
+        #timelineChart
+        [series]="timelineChartOptions.series"
+        [chart]="timelineChartOptions.chart"
+        [plotOptions]="timelineChartOptions.plotOptions"
+        [xaxis]="timelineChartOptions.xaxis"
+        [colors]="timelineChartOptions.colors"
+        [legend]="timelineChartOptions.legend"
+        [fill]="timelineChartOptions.fill"
+        [tooltip]="timelineChartOptions.tooltip"
+        [yaxis]="timelineChartOptions.yaxis"
+        [grid]="timelineChartOptions.grid"
+        [dataLabels]="timelineChartOptions.dataLabels"
+        [stroke]="timelineChartOptions.stroke"
+        [responsive]="timelineChartOptions.responsive"
       >
-        <path
-          d="M10 13.229C10.1416 13.4609 10.3097 13.6804 10.5042 13.8828C11.7117 15.1395 13.5522 15.336 14.9576 14.4722C15.218 14.3121 15.4634 14.1157 15.6872 13.8828L18.9266 10.5114C20.3578 9.02184 20.3578 6.60676 18.9266 5.11718C17.4953 3.6276 15.1748 3.62761 13.7435 5.11718L13.03 5.85978"
-          stroke="#F5F8FF"
-          stroke-width="1.5"
-          stroke-linecap="round"
-        />
-        <path
-          d="M10.9703 18.14L10.2565 18.8828C8.82526 20.3724 6.50471 20.3724 5.07345 18.8828C3.64218 17.3932 3.64218 14.9782 5.07345 13.4886L8.31287 10.1172C9.74413 8.62761 12.0647 8.6276 13.4959 10.1172C13.6904 10.3195 13.8584 10.539 14 10.7708"
-          stroke="#F5F8FF"
-          stroke-width="1.5"
-          stroke-linecap="round"
-        />
-      </svg>
-
-      <span>Link Dispenser</span>
-    </button>
+      </apx-chart>
+    </div>
   </div>
 
-  <!-- Table -->
-  <div class="overflow-x-auto">
-    <table class="w-full text-sm">
-      <!-- Table Head -->
-      <thead class="text-left text-gray-400">
-        <tr>
-          <th class="py-3">Dispensers</th>
-          <th class="py-3">Model</th>
-          <th class="py-3">Parameter</th>
-          <th class="py-3">Status</th>
-          <th class="py-3"></th>
-        </tr>
-      </thead>
+  <div class="mt-6 bg-white rounded-2xl shadow-sm p-6">
+    <!-- Header -->
+    <div class="mb-4 flex justify-between items-center">
+      <!-- Title -->
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800">Dispensers</h3>
+        <p class="text-xs text-gray-400">total 4 Dispensers</p>
+      </div>
 
-      <!-- Table Body -->
-      <tbody class="text-gray-700">
-        <!-- Row -->
-        <tr class="">
-          <td class="py-4">
-            <div class="font-medium">Alpha_1</div>
-            <div class="text-xs text-gray-400">ID-S-78</div>
-          </td>
+      <!-- Button -->
+      <button
+        class="flex items-center gap-2 bg-indigo-700 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-indigo-800 transition"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M10 13.229C10.1416 13.4609 10.3097 13.6804 10.5042 13.8828C11.7117 15.1395 13.5522 15.336 14.9576 14.4722C15.218 14.3121 15.4634 14.1157 15.6872 13.8828L18.9266 10.5114C20.3578 9.02184 20.3578 6.60676 18.9266 5.11718C17.4953 3.6276 15.1748 3.62761 13.7435 5.11718L13.03 5.85978"
+            stroke="#F5F8FF"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+          <path
+            d="M10.9703 18.14L10.2565 18.8828C8.82526 20.3724 6.50471 20.3724 5.07345 18.8828C3.64218 17.3932 3.64218 14.9782 5.07345 13.4886L8.31287 10.1172C9.74413 8.62761 12.0647 8.6276 13.4959 10.1172C13.6904 10.3195 13.8584 10.539 14 10.7708"
+            stroke="#F5F8FF"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+        </svg>
 
-          <td>SR-31314</td>
+        <span>Link Dispenser</span>
+      </button>
+    </div>
 
-          <td>3</td>
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <!-- Table Head -->
+        <thead class="text-left text-gray-400">
+          <tr>
+            <th class="py-3">Dispensers</th>
+            <th class="py-3">Model</th>
+            <th class="py-3">Parameter</th>
+            <th class="py-3">Status</th>
+            <th class="py-3"></th>
+          </tr>
+        </thead>
 
-          <td>
-            <span class="bg-green-100 text-green-600 text-xs px-3 py-1 rounded-full"> Active </span>
-          </td>
+        <!-- Table Body -->
+        <tbody class="text-gray-700">
+          <!-- Row -->
+          <tr class="">
+            <td class="py-4">
+              <div class="font-medium">Alpha_1</div>
+              <div class="text-xs text-gray-400">ID-S-78</div>
+            </td>
 
-          <td class="text-right">
-            <div class="flex justify-end gap-4 text-gray-400">
-              <!-- arrow -->
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <path
-                  d="M19 12L4 12"
-                  stroke="#2D31A6"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M15 7L19.2929 11.2929C19.6262 11.6262 19.7929 11.7929 19.7929 12C19.7929 12.2071 19.6262 12.3738 19.2929 12.7071L15 17"
-                  stroke="#2D31A6"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+            <td>SR-31314</td>
 
-              <!-- settings -->
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <path
-                  d="M10 13.229C10.1416 13.4609 10.3097 13.6804 10.5042 13.8828C11.7117 15.1395 13.5522 15.336 14.9576 14.4722C15.218 14.3121 15.4634 14.1157 15.6872 13.8828L18.9266 10.5114C20.3578 9.02184 20.3578 6.60676 18.9266 5.11718C17.4953 3.6276 15.1748 3.62761 13.7435 5.11718L13.03 5.85978"
-                  stroke="#D92D20"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M10.9703 18.14L10.2565 18.8828C8.82526 20.3724 6.50471 20.3724 5.07345 18.8828C3.64218 17.3932 3.64218 14.9782 5.07345 13.4886L8.31287 10.1172C9.74413 8.62761 12.0647 8.6276 13.4959 10.1172C13.6904 10.3195 13.8584 10.539 14 10.7708"
-                  stroke="#D92D20"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M21 16H18.9211M16 21L16 18.9211"
-                  stroke="#D92D20"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M3 8H5.07889M8 3L8 5.07889"
-                  stroke="#D92D20"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            <td>3</td>
+
+            <td>
+              <span class="bg-green-100 text-green-600 text-xs px-3 py-1 rounded-full">
+                Active
+              </span>
+            </td>
+
+            <td class="text-right">
+              <div class="flex justify-end gap-4 text-gray-400">
+                <!-- arrow -->
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M19 12L4 12"
+                    stroke="#2D31A6"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M15 7L19.2929 11.2929C19.6262 11.6262 19.7929 11.7929 19.7929 12C19.7929 12.2071 19.6262 12.3738 19.2929 12.7071L15 17"
+                    stroke="#2D31A6"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+
+                <!-- settings -->
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M10 13.229C10.1416 13.4609 10.3097 13.6804 10.5042 13.8828C11.7117 15.1395 13.5522 15.336 14.9576 14.4722C15.218 14.3121 15.4634 14.1157 15.6872 13.8828L18.9266 10.5114C20.3578 9.02184 20.3578 6.60676 18.9266 5.11718C17.4953 3.6276 15.1748 3.62761 13.7435 5.11718L13.03 5.85978"
+                    stroke="#D92D20"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M10.9703 18.14L10.2565 18.8828C8.82526 20.3724 6.50471 20.3724 5.07345 18.8828C3.64218 17.3932 3.64218 14.9782 5.07345 13.4886L8.31287 10.1172C9.74413 8.62761 12.0647 8.6276 13.4959 10.1172C13.6904 10.3195 13.8584 10.539 14 10.7708"
+                    stroke="#D92D20"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M21 16H18.9211M16 21L16 18.9211"
+                    stroke="#D92D20"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M3 8H5.07889M8 3L8 5.07889"
+                    stroke="#D92D20"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

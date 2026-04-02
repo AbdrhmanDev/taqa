@@ -4,8 +4,9 @@ import {
   OnInit,
   OnDestroy,
   OnChanges,
-  SimpleChanges,
   ViewChild,
+  AfterViewInit,
+  SimpleChanges,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
@@ -19,6 +20,12 @@ import {
   ApexTitleSubtitle,
   ApexStroke,
   ApexGrid,
+  ApexYAxis,
+  ApexLegend,
+  ApexFill,
+  ApexTooltip,
+  ApexPlotOptions,
+  ApexResponsive,
   NgApexchartsModule,
 } from 'ng-apexcharts';
 import { RealtimeStationDetails } from '../../../service/realtime-station-details';
@@ -30,29 +37,51 @@ export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
   dataLabels: ApexDataLabels;
   grid: ApexGrid;
   stroke: ApexStroke;
   title: ApexTitleSubtitle;
+  legend: ApexLegend;
+  fill: ApexFill;
+  tooltip: ApexTooltip;
+  plotOptions: ApexPlotOptions;
+  colors: string[];
+  responsive: ApexResponsive[];
 };
+
+import { SkeletonModule } from 'primeng/skeleton';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-comproser-details',
-  imports: [SelectModule, FormsModule, NgApexchartsModule, DatePipe, DecimalPipe, CommonModule],
+  imports: [
+    SelectModule,
+    FormsModule,
+    NgApexchartsModule,
+    DatePipe,
+    DecimalPipe,
+    CommonModule,
+    SkeletonModule,
+    ProgressSpinnerModule,
+  ],
   templateUrl: './comproser-details.html',
   styleUrl: './comproser-details.scss',
 })
-export class ComproserDetails implements OnInit, OnDestroy, OnChanges {
-  @ViewChild('chart') chart: ChartComponent | any;
+export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterViewInit {
+  @ViewChild('timelineChart', { static: false }) timelineChart: ChartComponent | any;
   public chartOptions: Partial<ChartOptions> | any;
   timelineChartOptions: any;
   timeLineChart: any = {};
   selectedTime: any;
   station: any;
   private subscription!: Subscription;
+  stationId!: number;
   compressorDetailsData!: any;
   ComproserDataCard!: any;
-  stationId!: number;
+  isLoadingCompressor: boolean = false;
+  isLoadingTimeline: boolean = false;
+  isLoadingRealtime: boolean = true;
 
   timeOptions = [
     { label: 'Last Hour', value: 'hour' },
@@ -76,9 +105,16 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges {
       if (this.stationId) {
         this.onStartConnection();
         this.onGetTimeLineChart();
+        this.onGetCompressorData();
       }
-      this.onGetCompressorData();
     });
+  }
+
+  ngAfterViewInit(): void {
+    // Additional safety for chart rendering after view init
+    setTimeout(() => {
+      this.forceChartRender();
+    }, 500);
   }
 
   initCharts() {
@@ -90,7 +126,7 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges {
         },
       ],
       chart: {
-        height: 300,
+        height: 350,
         type: 'line',
         zoom: { enabled: false },
       },
@@ -109,46 +145,133 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges {
         categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
       },
     };
+
+    // Initialize timelineChartOptions with complete configuration
+    this.timelineChartOptions = {
+      series: [],
+      chart: {
+        height: 160,
+        width: '100%',
+        type: 'bar',
+        stacked: true,
+        stackType: '100%',
+        toolbar: { show: false },
+        animations: { enabled: true, easing: 'easeinout', speed: 800 },
+        background: 'transparent',
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true,
+          barHeight: '50%',
+          borderRadius: 8,
+          borderRadiusApplication: 'end',
+          dataLabels: {
+            position: 'top',
+          },
+        },
+      },
+      colors: ['#3E4A60'],
+      xaxis: {
+        categories: ['Status Distribution'],
+        labels: { show: false },
+        axisBorder: { show: false },
+        axisTicks: { show: false },
+      },
+      yaxis: {
+        labels: { show: false },
+      },
+      grid: { show: false },
+      legend: {
+        position: 'top',
+        horizontalAlign: 'left',
+        fontSize: '12px',
+        fontWeight: 500,
+        offsetY: 0,
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      tooltip: {
+        y: {
+          formatter: (val: number) => val.toFixed(2) + '%',
+        },
+      },
+      fill: {
+        opacity: 1,
+        type: 'solid',
+      },
+      stroke: {
+        show: false,
+        width: 0,
+      },
+      responsive: [
+        {
+          breakpoint: undefined,
+          options: {},
+        },
+      ],
+    };
+  }
+
+  forceChartRender() {
+    if (this.timelineChart && !this.isLoadingTimeline) {
+      try {
+        console.log('Forcing chart render...');
+        // Force update and re-render with a new object reference
+        this.timelineChartOptions = { ...this.timelineChartOptions };
+        this.timelineChart.updateOptions(this.timelineChartOptions, true, true);
+        
+        // Trigger resize event to recalculate dimensions
+        window.dispatchEvent(new Event('resize'));
+      } catch (e) {
+        console.warn('Chart render error:', e);
+      }
+    }
   }
 
   onGetTimeLineChart() {
+    this.isLoadingTimeline = true;
     this.stationDetails.getTimeLineChart(this.stationId).subscribe({
       next: (res) => {
         this.timeLineChart = res.result;
         console.log('timeline', this.timeLineChart);
 
-        this.timelineChartOptions = {
-          series: [
-            {
-              name: 'Compressor Details',
-              data: [
-                {
-                  x: 'President',
-                  y: [new Date(1789, 3, 30).getTime(), new Date(1797, 2, 4).getTime()],
-                },
-              ],
-            },
-          ],
-          chart: {
-            height: 300,
-            type: 'rangeBar',
-          },
-          plotOptions: {
-            bar: {
-              horizontal: true,
-              barHeight: '50%',
-              rangeBarGroupRows: true,
-            },
-          },
-          xaxis: {
-            type: 'datetime',
-          },
+        const statusColors: { [key: string]: string } = {
+          Off: '#9CA3AF',
+          Idle: '#3B82F6',
+          Statring: '#FBBF24',
+          Starting: '#FBBF24',
+          Compression: '#10B981',
+          Recirculating: '#6366F1',
+          Alarm: '#EF4444',
+          Start_delay: '#8B5CF6',
+          Force: '#EC4899',
+          Lockout: '#111827',
         };
 
+        const colors = this.timeLineChart.map((s: any) => statusColors[s.name] || '#3E4A60');
+
+        this.timelineChartOptions = {
+          ...this.timelineChartOptions,
+          series: this.timeLineChart.map((s: any) => ({
+            name: s.name,
+            data: [Number((s.data[0] * 100).toFixed(2))],
+          })),
+          colors: colors,
+        };
+
+        this.isLoadingTimeline = false;
         this.cdr.detectChanges();
+
+        // Force chart to re-render after DOM update with multiple attempts
+        setTimeout(() => this.forceChartRender(), 100);
+        setTimeout(() => this.forceChartRender(), 500);
+        setTimeout(() => this.forceChartRender(), 1200);
       },
       error: (err) => {
         console.log(err);
+        this.isLoadingTimeline = false;
+        this.cdr.detectChanges();
       },
     });
   }
@@ -158,12 +281,19 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges {
   }
 
   onGetCompressorData() {
+    this.isLoadingCompressor = true;
     this.stationDetails.getCompressorById(this.stationId).subscribe({
       next: (res) => {
         this.ComproserDataCard = res[0];
         console.log(this.ComproserDataCard);
+        this.isLoadingCompressor = false;
+        this.cdr.detectChanges();
       },
-      error: (err) => console.log(err),
+      error: (err) => {
+        console.log(err);
+        this.isLoadingCompressor = false;
+        this.cdr.detectChanges();
+      },
     });
   }
 
@@ -263,10 +393,15 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges {
       this.subscription = this.realTime.getCompressorDetails().subscribe({
         next: (data) => {
           this.compressorDetailsData = data[0];
+          this.isLoadingRealtime = false;
           this.cdr.detectChanges();
-          console.log('Received compressor  data:', this.compressorDetailsData);
+          console.log('Received compressor data:', this.compressorDetailsData);
         },
-        error: (err) => console.error(err),
+        error: (err) => {
+          console.error(err);
+          this.isLoadingRealtime = false;
+          this.cdr.detectChanges();
+        },
       });
       await this.realTime.joinCompressor(this.stationId);
     } catch (error) {

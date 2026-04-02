@@ -2,7 +2,7 @@
 <div class="grid grid-cols-5 gap-4 p-2 mt-4">
 
   <!-- Card 1: Total Revenue -->
-  <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all">
+  <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all h-[140px]">
     <div class="flex items-center space-x-3 mb-3">
       <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
         <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -13,47 +13,41 @@
       <h5 class="text-sm font-medium text-gray-500">Total Revenue</h5>
     </div>
     <div class="flex items-baseline gap-2">
-      <p class="text-2xl font-bold">{{dashboardData?.totalRevenue?.value}}</p>
-      <span class="text-sm text-gray-400">EGP</span>
+      <p class="text-2xl font-bold" *ngIf="!isPartLoading('summary')">{{dashboardData?.totalRevenue?.value}}</p>
+      <p class="text-sm text-gray-400" *ngIf="!isPartLoading('summary')">EGP</p>
+      <p-skeleton width="60%" height="2rem" *ngIf="isPartLoading('summary')"></p-skeleton>
     </div>
   </div>
 
   <!-- Card 2: Gas Volume Sold -->
-  <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all">
+  <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all h-[140px]">
     <div class="flex items-center space-x-3 mb-3">
       <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+        <!-- SVG content remains same as before -->
         <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none">
           <g clip-path="url(#clip0_14235_23172)">
-            <path
-              d="M12.3736 18.4387C12.4103 18.6835 12.5591 18.897 12.776 19.016C12.9929 19.1352 13.2529 19.1463 13.479 19.0458L16.8261 17.5673C16.9919 17.4943 17.0744 17.3069 17.0164 17.1351L15.3369 12.1449C15.0681 11.3576 14.2668 10.8828 13.4472 11.0251L12.9222 11.1193C12.0233 11.2761 11.4159 12.1247 11.5576 13.0264L12.3736 18.4387ZM13.1966 18.4054C13.17 18.4179 13.1391 18.4166 13.1137 18.4019C13.0872 18.3879 13.0691 18.3618 13.0654 18.332L12.2472 12.9242C12.2304 12.8078 12.2344 12.6892 12.2592 12.5742L12.851 13.0418C13.1367 13.2646 13.3499 13.5674 13.4633 13.9118L14.7458 17.723L13.1966 18.4054ZM13.0441 11.8108L13.5689 11.7166C13.6253 11.7065 13.6825 11.7015 13.7398 11.7015C14.1613 11.7027 14.5358 11.9708 14.6726 12.3695L16.2512 17.0586L15.388 17.4397L14.1263 13.6909C13.97 13.217 13.6765 12.8002 13.2831 12.4935L12.6416 11.986C12.7608 11.8979 12.8984 11.838 13.0441 11.8108Z"
-              fill="#912018" />
-            <path
-              d="M0.896678 3.32541L6.12204 4.8651C6.19269 4.88609 6.25836 4.92117 6.31491 4.96826L8.15798 6.50378L8.45513 6.75223L10.8632 19.2689C10.9849 19.9051 11.3902 20.4512 11.9641 20.7517C12.5381 21.052 13.2177 21.0741 13.8099 20.8116L17.1675 19.3283C17.4946 19.7158 18.0343 19.8481 18.5036 19.6559L20.2746 18.9294C20.871 18.685 21.1563 18.0036 20.9122 17.4072L17.6869 9.53415L17.9262 9.25767C18.3726 8.7406 18.3164 7.95986 17.8006 7.51198L14.1103 4.31471C13.8618 4.09958 13.5381 3.9921 13.2105 4.0158C12.8828 4.03951 12.5779 4.19249 12.363 4.44093L11.7661 5.13133L10.4248 4.01372H10.4227L7.93821 1.99284C7.81087 1.88904 7.66398 1.81183 7.50636 1.7657L1.84593 0.0973804C1.19046 -0.0951609 0.502785 0.27967 0.309443 0.934983L0.058915 1.78572C-0.0346325 2.10096 0.00124869 2.44039 0.158389 2.72937C0.31553 3.01818 0.581115 3.23266 0.896678 3.32541ZM12.0708 5.85039L12.8925 4.90002C12.9859 4.79206 13.1184 4.72558 13.261 4.71517C13.4034 4.70492 13.5442 4.75169 13.6521 4.84508L17.3425 8.04107C17.5667 8.2357 17.5911 8.57497 17.3971 8.7997L17.0171 9.23909C16.9306 9.33888 16.9076 9.47888 16.9575 9.60095L20.2647 17.6707C20.3624 17.9092 20.2482 18.1818 20.0097 18.2796L18.2381 19.0057C18.1234 19.0526 17.9947 19.0521 17.8804 19.0042C17.7661 18.9563 17.6756 18.8649 17.6287 18.7502C17.593 18.6627 17.5235 18.5934 17.4357 18.558C17.3481 18.5226 17.2499 18.524 17.1634 18.5623L13.5272 20.1688C13.1299 20.3443 12.6744 20.3291 12.2898 20.1276C11.905 19.9261 11.6332 19.5602 11.5512 19.1337L9.11957 6.49465C9.10419 6.41536 9.0619 6.34376 8.99991 6.29202L8.89003 6.2004L10.2306 4.7629L11.5827 5.889C11.7291 6.01074 11.9462 5.99296 12.0708 5.84911V5.85039ZM0.730087 1.98451L0.979974 1.13313C1.02018 0.996013 1.11341 0.880681 1.23883 0.812282C1.36426 0.744044 1.51162 0.728346 1.64858 0.768872L7.30549 2.43415C7.37404 2.45433 7.4378 2.48781 7.49306 2.53282L9.68919 4.31743L8.35181 5.7522L6.76278 4.42764C6.63303 4.31919 6.48246 4.23862 6.32019 4.19105L1.09402 2.65248C0.809057 2.56838 0.64631 2.26948 0.730087 1.98451Z"
-              fill="#912018" />
-            <path
-              d="M10.0332 6.57328C9.9432 6.59635 9.86583 6.65418 9.81841 6.73411C9.771 6.8142 9.75738 6.90983 9.78061 6.99985L9.95553 7.68512C9.99526 7.83986 10.1346 7.94815 10.2943 7.94831C10.3236 7.94847 10.3528 7.94478 10.3811 7.93741C10.5684 7.88968 10.6815 7.69906 10.6338 7.5118L10.4588 6.82638C10.4359 6.73635 10.3783 6.65914 10.2985 6.61173C10.2187 6.56431 10.1232 6.55038 10.0332 6.57328Z"
-              fill="#912018" />
-            <path
-              d="M10.3316 8.82814L10.8275 10.9277C10.8649 11.0855 11.0058 11.1971 11.1679 11.1971C11.1952 11.1973 11.2221 11.1941 11.2485 11.1877C11.4362 11.1434 11.5528 10.9555 11.5091 10.7677L11.0133 8.66812C10.9845 8.54638 10.893 8.44915 10.7732 8.41326C10.6534 8.37722 10.5235 8.40798 10.4324 8.49368C10.3414 8.57954 10.3029 8.70736 10.3316 8.8291V8.82814Z"
-              fill="#912018" />
+            <path d="M12.3736 18.4387C12.4103 18.6835 12.5591 18.897 12.776 19.016C12.9929 19.1352 13.2529 19.1463 13.479 19.0458L16.8261 17.5673C16.9919 17.4943 17.0744 17.3069 17.0164 17.1351L15.3369 12.1449C15.0681 11.3576 14.2668 10.8828 13.4472 11.0251L12.9222 11.1193C12.0233 11.2761 11.4159 12.1247 11.5576 13.0264L12.3736 18.4387ZM13.1966 18.4054C13.17 18.4179 13.1391 18.4166 13.1137 18.4019C13.0872 18.3879 13.0691 18.3618 13.0654 18.332L12.2472 12.9242C12.204 12.8078 12.2344 12.6892 12.2592 12.5742L12.851 13.0418C13.1367 13.2646 13.3499 13.5674 13.4633 13.9118L14.7458 17.723L13.1966 18.4054ZM13.0441 11.8108L13.5689 11.7166C13.6253 11.7065 13.6825 11.7015 13.7398 11.7015C14.1613 11.7027 14.5358 11.9708 14.6726 12.3695L16.2512 17.0586L15.388 17.4397L14.1263 13.6909C13.97 13.217 13.6765 12.8002 13.2831 12.4935L12.6416 11.986C12.7608 11.8979 12.8984 11.838 13.0441 11.8108Z" fill="#912018" />
+            <path d="M0.896678 3.32541L6.12204 4.8651C6.19269 4.88609 6.25836 4.92117 6.31491 4.96826L8.15798 6.50378L8.45513 6.75223L10.8632 19.2689C10.9849 19.9051 11.3902 20.4512 11.9641 20.7517C12.5381 21.052 13.2177 21.0741 13.8099 20.8116L17.1675 19.3283C17.4946 19.7158 18.0343 19.8481 18.5036 19.6559L20.2746 18.9294C20.871 18.685 21.1563 18.0036 20.9122 17.4072L17.6869 9.53415L17.9262 9.25767C18.3726 8.7406 18.3164 7.95986 17.8006 7.51198L14.1103 4.31471C13.8618 4.09958 13.5381 3.9921 13.2105 4.0158C12.8828 4.03951 12.5779 4.19249 12.363 4.44093L11.7661 5.13133L10.4248 4.01372H10.4227L7.93821 1.99284C7.81087 1.88904 7.66398 1.81183 7.50636 1.7657L1.84593 0.0973804C1.19046 -0.0951609 0.502785 0.27967 0.309443 0.934983L0.058915 1.78572C-0.0346325 2.10096 0.00124869 2.44039 0.158389 2.72937C0.31553 3.01818 0.581115 3.23266 0.896678 3.32541ZM12.0708 5.85039L12.8925 4.90002C12.9859 4.79206 13.1184 4.72558 13.261 4.71517C13.4034 4.70492 13.5442 4.75169 13.6521 4.84508L17.3425 8.04107C17.5667 8.2357 17.5911 8.57497 17.3971 8.7997L17.0171 9.23909C16.9306 9.33888 16.9076 9.47888 16.9575 9.60095L20.2647 17.6707C20.3624 17.9092 20.2482 18.1818 20.0097 18.2796L18.2381 19.0057C18.1234 19.0526 17.9947 19.0521 17.8804 19.0042C17.7661 18.9563 17.6756 18.8649 17.6287 18.7502C17.593 18.6627 17.5235 18.5934 17.4357 18.558C17.3481 18.5226 17.2499 18.524 17.1634 18.5623L13.5272 20.1688C13.1299 20.3443 12.6744 20.3291 12.2898 20.1276C11.905 19.9261 11.6332 19.5602 11.5512 19.1337L9.11957 6.49465C9.10419 6.41536 9.0619 6.34376 8.99991 6.29202L8.89003 6.2004L10.2306 4.7629L11.5827 5.889C11.7291 6.01074 11.9462 5.99296 12.0708 5.84911V5.85039ZM0.730087 1.98451L0.979974 1.13313C1.02018 0.996013 1.11341 0.880681 1.23883 0.812282C1.36426 0.744044 1.51162 0.728346 1.64858 0.768872L7.30549 2.43415C7.37404 2.45433 7.4378 2.48781 7.49306 2.53282L9.68919 4.31743L8.35181 5.7522L6.76278 4.42764C6.63303 4.31919 6.48246 4.23862 6.32019 4.19105L1.09402 2.65248C0.809057 2.56838 0.64631 2.26948 0.730087 1.98451Z" fill="#912018" />
+            <path d="M10.0332 6.57328C9.9432 6.59635 9.86583 6.65418 9.81841 6.73411C9.771 6.8142 9.75738 6.90983 9.78061 6.99985L9.95553 7.68512C9.99526 7.83986 10.1346 7.94815 10.2943 7.94831C10.3236 7.94847 10.3528 7.94478 10.3811 7.93741C10.5684 7.88968 10.6815 7.69906 10.6338 7.5118L10.4588 6.82638C10.4359 6.73635 10.3783 6.65914 10.2985 6.61173C10.2187 6.56431 10.1232 6.55038 10.0332 6.57328Z" fill="#912018" />
+            <path d="M10.3316 8.82814L10.8275 10.9277C10.8649 11.0855 11.0058 11.1971 11.1679 11.1971C11.1952 11.1973 11.2221 11.1941 11.2485 11.1877C11.4362 11.1434 11.5528 10.9555 11.5091 10.7677L11.0133 8.66812C10.9845 8.54638 10.893 8.44915 10.7732 8.41326C10.6534 8.37722 10.5235 8.40798 10.4324 8.49368C10.3414 8.57954 10.3029 8.70736 10.3316 8.8291V8.82814Z" fill="#912018" />
           </g>
-          <defs>
-            <clipPath id="clip0_14235_23172">
-              <rect width="21" height="21" fill="white" />
-            </clipPath>
-          </defs>
+          <defs><clipPath id="clip0_14235_23172"><rect width="21" height="21" fill="white" /></clipPath></defs>
         </svg>
       </div>
       <h5 class="text-sm font-medium text-gray-500">Gas Volume Sold</h5>
     </div>
     <div class="flex items-baseline gap-2">
-      <p class="text-2xl font-bold">{{dashboardData?.gasVolumeSold?.value}}</p>
-      <span class="text-sm text-gray-400">L</span>
+      <p class="text-2xl font-bold" *ngIf="!isPartLoading('gas')">{{dashboardData?.gasVolumeSold?.value}}</p>
+      <p class="text-sm text-gray-400" *ngIf="!isPartLoading('gas')">L</p>
+      <p-skeleton width="60%" height="2rem" *ngIf="isPartLoading('gas')"></p-skeleton>
     </div>
   </div>
 
   <!-- Card 3: Vehicles Charged -->
-  <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all">
+  <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all min-h-[140px]">
+    <div *ngIf="isPartLoading('summary')" class="absolute inset-0 flex items-center justify-center bg-white/60 z-10 rounded-3xl">
+      <p-progressSpinner styleClass="w-8 h-8" strokeWidth="4"></p-progressSpinner>
+    </div>
     <div class="flex items-center space-x-3 mb-3">
       <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -79,7 +73,7 @@
   </div>
 
   <!-- Card 4: Active Compressors -->
-  <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all">
+  <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all h-[140px]">
     <div class="flex items-center space-x-3 mb-3">
       <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -92,13 +86,14 @@
       <h5 class="text-sm font-medium text-gray-500">Active Compressors</h5>
     </div>
     <div class="flex items-baseline gap-2">
-      <p class="text-2xl font-bold">{{dashboardData?.activeCompressors?.value}}</p>
-      <span class="text-sm text-gray-400">Compressors</span>
+      <p class="text-2xl font-bold" *ngIf="!isPartLoading('summary')">{{dashboardData?.activeCompressors?.value}}</p>
+      <p class="text-sm text-gray-400" *ngIf="!isPartLoading('summary')">Compressors</p>
+      <p-skeleton width="60%" height="2rem" *ngIf="isPartLoading('summary')"></p-skeleton>
     </div>
   </div>
 
   <!-- Card 5: Active Stations -->
-  <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all">
+  <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all h-[140px]">
     <div class="flex items-center space-x-3 mb-3">
       <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
@@ -118,8 +113,9 @@
       <h5 class="text-sm font-medium text-gray-500">Active Stations</h5>
     </div>
     <div class="flex items-baseline gap-2">
-      <p class="text-2xl font-bold">{{dashboardData?.activeStations?.value}}</p>
-      <span class="text-sm text-gray-400">Stations</span>
+      <p class="text-2xl font-bold" *ngIf="!isPartLoading('summary')">{{dashboardData?.activeStations?.value}}</p>
+      <p class="text-sm text-gray-400" *ngIf="!isPartLoading('summary')">Stations</p>
+      <p-skeleton width="60%" height="2rem" *ngIf="isPartLoading('summary')"></p-skeleton>
     </div>
   </div>
 
@@ -131,12 +127,26 @@
 
 
 <!-- Recent Alarms - Horizontal row -->
-<div class="m-3 bg-white p-6 rounded-3xl shadow-sm">
+<div class="m-3 bg-white p-6 rounded-3xl shadow-sm relative min-h-[180px]">
   <div class="flex justify-between items-center pb-4">
     <h3 class="font-bold">Recent Alarms</h3>
     <a class="text-indigo-500 text-sm cursor-pointer" (click)="openSeeMore()">See more</a>
   </div>
-  <div class="flex gap-4">
+  
+  <div class="flex gap-4" *ngIf="isPartLoading('alarms')">
+    <div class="bg-gray-100 p-4 rounded-3xl flex justify-between flex-1" *ngFor="let i of [1,2,3]">
+      <div class="flex w-full gap-3">
+        <p-skeleton shape="circle" size="3rem" styleClass="flex-shrink-0"></p-skeleton>
+        <div class="w-full space-y-2">
+          <p-skeleton width="40%"></p-skeleton>
+          <p-skeleton width="30%"></p-skeleton>
+          <p-skeleton width="60%"></p-skeleton>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex gap-4" *ngIf="!isPartLoading('alarms')">
     <div class="bg-gray-100 p-4 rounded-3xl flex justify-between flex-1" *ngFor="let alarm of alarms">
       <div class="flex">
         <div class="me-3 w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -168,19 +178,32 @@
 
 <!-- 3 Charts Row -->
 <div class="grid grid-cols-3 gap-4 m-3">
-  <div class="bg-white rounded-3xl shadow-sm p-4" *ngIf="chartRevenue?.series">
-    <apx-chart [series]="chartRevenue.series" [chart]="chartRevenue.chart" [xaxis]="chartRevenue.xaxis"
+  <div class="bg-white rounded-3xl shadow-sm p-4 relative min-h-[350px]">
+    <div *ngIf="isPartLoading('hourlyRevenue')">
+      <p-skeleton width="40%" height="1.5rem" styleClass="mb-4"></p-skeleton>
+      <p-skeleton width="100%" height="250px"></p-skeleton>
+    </div>
+    <apx-chart *ngIf="!isPartLoading('hourlyRevenue') && chartRevenue?.series" 
+      [series]="chartRevenue.series" [chart]="chartRevenue.chart" [xaxis]="chartRevenue.xaxis"
       [stroke]="chartRevenue.stroke" [dataLabels]="chartRevenue.dataLabels" [grid]="chartRevenue.grid"
       [title]="chartRevenue.title" [colors]="chartRevenue.colors">
     </apx-chart>
   </div>
-  <div class="bg-white rounded-3xl shadow-sm p-4" *ngIf="chartGas?.series">
-    <apx-chart [series]="chartGas.series" [chart]="chartGas.chart" [xaxis]="chartGas.xaxis" [stroke]="chartGas.stroke"
+  <div class="bg-white rounded-3xl shadow-sm p-4 relative min-h-[350px]">
+    <div *ngIf="isPartLoading('hourlyGas')">
+      <p-skeleton width="40%" height="1.5rem" styleClass="mb-4"></p-skeleton>
+      <p-skeleton width="100%" height="250px"></p-skeleton>
+    </div>
+    <apx-chart *ngIf="!isPartLoading('hourlyGas') && chartGas?.series" [series]="chartGas.series" [chart]="chartGas.chart" [xaxis]="chartGas.xaxis" [stroke]="chartGas.stroke"
       [dataLabels]="chartGas.dataLabels" [grid]="chartGas.grid" [title]="chartGas.title" [colors]="chartGas.colors">
     </apx-chart>
   </div>
-  <div class="bg-white rounded-3xl shadow-sm p-4" *ngIf="chartVehicles?.series">
-    <apx-chart [series]="chartVehicles.series" [chart]="chartVehicles.chart" [xaxis]="chartVehicles.xaxis"
+  <div class="bg-white rounded-3xl shadow-sm p-4 relative min-h-[350px]">
+    <div *ngIf="isPartLoading('vehicles')">
+      <p-skeleton width="40%" height="1.5rem" styleClass="mb-4"></p-skeleton>
+      <p-skeleton width="100%" height="250px"></p-skeleton>
+    </div>
+    <apx-chart *ngIf="!isPartLoading('vehicles') && chartVehicles?.series" [series]="chartVehicles.series" [chart]="chartVehicles.chart" [xaxis]="chartVehicles.xaxis"
       [stroke]="chartVehicles.stroke" [dataLabels]="chartVehicles.dataLabels" [grid]="chartVehicles.grid"
       [title]="chartVehicles.title" [colors]="chartVehicles.colors">
     </apx-chart>
@@ -191,10 +214,20 @@
 <div class="grid gap-2 m-3" style="grid-template-columns: 420px 1fr">
 
   <!-- Highest Consumption -->
-  <div class="bg-white rounded-3xl shadow-sm p-5">
+  <div class="bg-white rounded-3xl shadow-sm p-5 relative min-h-[400px]">
     <p class="font-bold text-gray-700 mb-1">Highest Consumption Stations</p>
     <p class="text-gray-400 text-sm mb-4">Daily Average</p>
-    <div class="space-y-3">
+    
+    <div class="space-y-4" *ngIf="isPartLoading('highest')">
+      <div class="flex items-center gap-3" *ngFor="let i of [1,2,3,4,5]">
+        <p-skeleton width="20px"></p-skeleton>
+        <p-skeleton width="80px"></p-skeleton>
+        <p-skeleton styleClass="flex-1" height="8px"></p-skeleton>
+        <p-skeleton width="60px"></p-skeleton>
+      </div>
+    </div>
+
+    <div class="space-y-3" *ngIf="!isPartLoading('highest')">
       <div class="flex items-center gap-3" *ngFor="let station of highestConsumptionStations; let i = index">
         <span class="w-4 text-sm text-gray-400">{{ i + 1 }}</span>
         <span class="text-sm w-24 truncate">{{ station.stationName }}</span>
@@ -211,7 +244,13 @@
   </div>
 
   <!-- Map -->
-  <div class="bg-white rounded-3xl shadow-sm overflow-hidden" style="height:400px; position:relative;">
+  <div class="bg-white rounded-3xl shadow-sm overflow-hidden relative" style="height:400px;">
+    <div *ngIf="isPartLoading('map')" class="absolute inset-0 bg-gray-50 flex items-center justify-center z-10">
+      <div class="flex flex-col items-center">
+        <p-skeleton width="100px" height="100px" styleClass="mb-4"></p-skeleton>
+        <p-skeleton width="150px"></p-skeleton>
+      </div>
+    </div>
     <div id="map" style="width:100%; height:100%;"></div>
     <!-- Legend - dynamic -->
     <div
@@ -228,7 +267,23 @@
 </div>
 
 <!-- Table -->
-<p-table #dt class="mt-4 m-3" styleClass="p-datatable-sm" [paginator]="true" [lazy]="true">
+<div class="relative m-3 bg-white p-4 rounded-3xl shadow-sm min-h-[400px]">
+  <div *ngIf="isPartLoading('map')" class="space-y-4">
+    <div class="flex gap-4">
+      <p-skeleton width="20%" height="2rem"></p-skeleton>
+      <p-skeleton width="20%" height="2rem"></p-skeleton>
+      <p-skeleton width="20%" height="2rem"></p-skeleton>
+      <p-skeleton width="20%" height="2rem"></p-skeleton>
+    </div>
+    <div *ngFor="let i of [1,2,3,4,5]" class="flex gap-4 border-b border-gray-100 py-3">
+      <p-skeleton width="25%"></p-skeleton>
+      <p-skeleton width="15%"></p-skeleton>
+      <p-skeleton width="15%"></p-skeleton>
+      <p-skeleton width="15%"></p-skeleton>
+      <p-skeleton width="30%"></p-skeleton>
+    </div>
+  </div>
+  <p-table #dt class="mt-4" styleClass="p-datatable-sm" [paginator]="true" [lazy]="true" *ngIf="!isPartLoading('map')">
   <ng-template pTemplate="header">
     <tr class="bg-gray-50 text-gray-500 text-sm">
       <th class="px-4 py-3 text-left">Station</th>
@@ -273,3 +328,4 @@
     </tr>
   </ng-template>
 </p-table>
+</div>

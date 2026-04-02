@@ -1,4 +1,14 @@
-import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  ChangeDetectorRef,
+  AfterViewInit,
+  OnDestroy,
+} from '@angular/core';
 import { dashboardService } from './../../service/dashboard';
 
 import { Sidebar } from '../../../../shared/sidebar/component/sidebar/sidebar';
@@ -8,11 +18,10 @@ import { Navbar } from '../../../../shared/navbar/component/navbar/navbar';
 import { ChartDashboard } from '../chart-dashboard/chart-dashboard';
 import { SharedData } from '../../../../shared/service/shared-data';
 import { RealtimeAlarmsDashboard } from '../../service/realtime-alarms-dashboard';
-import { ChangeDetectorRef } from '@angular/core';
 import { TableModule } from 'primeng/table';
-import { Route } from '@angular/router';
-import { ChartOptions } from 'highcharts';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { SkeletonModule } from 'primeng/skeleton';
+import { Router } from '@angular/router';
 import * as L from 'leaflet';
 import {
   ChartComponent,
@@ -25,8 +34,8 @@ import {
   ApexGrid,
   NgApexchartsModule,
 } from 'ng-apexcharts';
-import { Station } from '../../../stations/components/station/station';
 import { MoreAlarm } from '../more-alarm/more-alarm';
+
 export type chartGas = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -47,19 +56,22 @@ export type chartGas = {
     Navbar,
     ChartDashboard,
     TableModule,
+    ProgressSpinnerModule,
+    SkeletonModule,
     NgApexchartsModule,
     MoreAlarm,
   ],
   templateUrl: './home-dashboard.html',
   styleUrl: './home-dashboard.scss',
 })
-export class HomeDashboard implements OnInit {
+export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
   private map!: L.Map;
   allStations: any[] = [];
   dashboardData: any;
   dashboardRevenueData: any;
   dashboardGasData: any;
   isLoading: boolean = true;
+  private loadingItems = new Set<string>();
   alarms: any[] = [];
   gasSoldCahrt: any[] = [];
   gasVehiclesChart: any[] = [];
@@ -79,6 +91,16 @@ export class HomeDashboard implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.setLoading('summary');
+    this.setLoading('gas');
+    this.setLoading('revenue');
+    this.setLoading('hourlyGas');
+    this.setLoading('hourlyRevenue');
+    this.setLoading('vehicles');
+    this.setLoading('highest');
+    this.setLoading('alarms');
+    this.setLoading('map');
+
     this.getSummaryData();
     this.getGasData();
     this.getRevenueData();
@@ -89,6 +111,23 @@ export class HomeDashboard implements OnInit {
     this.getHighestConsumption();
     this.getHourlyGasChart();
     this.getAlarmsHistory();
+  }
+
+  private setLoading(key: string) {
+    this.loadingItems.add(key);
+    this.isLoading = true;
+  }
+
+  private clearLoading(key: string) {
+    this.loadingItems.delete(key);
+    if (this.loadingItems.size === 0) {
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  public isPartLoading(key: string): boolean {
+    return this.loadingItems.has(key);
   }
 
   @ViewChildren('barFill') barFills!: QueryList<ElementRef<HTMLDivElement>>;
@@ -102,56 +141,31 @@ export class HomeDashboard implements OnInit {
     this.dashboardService.hourlyGasSold().subscribe({
       next: (res) => {
         this.gasSoldCahrt = res;
-
         const gasValues = res.map((item: any) => item.totalGasSold);
         const timeLabels = res.map((item: any) => {
           const date = new Date(item.hourStartTime);
           return date.getHours() + ':00';
         });
-        console.log('Gas Sold Chart Data:', this.gasSoldCahrt);
         this.chartGas = {
-          series: [
-            {
-              name: 'gas sold',
-              data: gasValues,
-            },
-          ],
-          chart: {
-            height: 350,
-            type: 'line',
-            zoom: {
-              enabled: false,
-            },
-          },
-          dataLabels: {
-            enabled: false,
-          },
-          stroke: {
-            curve: 'straight',
-          },
+          series: [{ name: 'gas sold', data: gasValues }],
+          chart: { height: 350, type: 'line', zoom: { enabled: false } },
+          dataLabels: { enabled: false },
+          stroke: { curve: 'straight' },
           title: {
             text: 'Gas Volume Sold',
             align: 'left',
-            style: {
-              fontSize: '25px',
-              fontWeight: 'bold',
-            },
+            style: { fontSize: '25px', fontWeight: 'bold' },
           },
-          grid: {
-            row: {
-              colors: ['#ffffff', 'transparent'],
-              opacity: 0.5,
-            },
-          },
-          xaxis: {
-            categories: timeLabels,
-          },
+          grid: { row: { colors: ['#ffffff', 'transparent'], opacity: 0.5 } },
+          xaxis: { categories: timeLabels },
           colors: ['#B42318'],
         };
+        this.clearLoading('hourlyGas');
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.log('Error fetching hourly gas sold:', err);
+        this.clearLoading('hourlyGas');
       },
     });
   }
@@ -160,123 +174,79 @@ export class HomeDashboard implements OnInit {
     this.dashboardService.hourlyRevenue().subscribe({
       next: (res) => {
         this.revenueChart = res;
-
         const revenue = res.map((item: any) => item.totalRevenue);
         const timeLabels = res.map((item: any) => {
           const date = new Date(item.hourStartTime);
           return date.getHours() + ':00';
         });
-        console.log('Revenue Chart Data:', this.revenueChart);
-
         this.chartRevenue = {
-          series: [
-            {
-              name: 'revenue',
-              data: revenue,
-            },
-          ],
-          chart: {
-            height: 350,
-            type: 'line',
-            zoom: {
-              enabled: false,
-            },
-          },
-          dataLabels: {
-            enabled: false,
-          },
-          stroke: {
-            curve: 'straight',
-          },
+          series: [{ name: 'revenue', data: revenue }],
+          chart: { height: 350, type: 'line', zoom: { enabled: false } },
+          dataLabels: { enabled: false },
+          stroke: { curve: 'straight' },
           title: {
             text: 'Revenue',
             align: 'left',
-            style: {
-              fontSize: '25px',
-              fontWeight: 'bold',
-            },
+            style: { fontSize: '25px', fontWeight: 'bold' },
           },
-          grid: {
-            row: {
-              colors: ['#ffffff', 'transparent'], // takes an array which will be repeated on columns
-              opacity: 0.5,
-            },
-          },
-          xaxis: {
-            categories: timeLabels,
-          },
+          grid: { row: { colors: ['#ffffff', 'transparent'], opacity: 0.5 } },
+          xaxis: { categories: timeLabels },
           colors: ['#29B705'],
         };
+        this.clearLoading('hourlyRevenue');
         this.cdr.detectChanges();
       },
-      error: (err) => console.log(err),
+      error: (err) => {
+        console.log(err);
+        this.clearLoading('hourlyRevenue');
+      },
     });
   }
+
   getVehiclesChart() {
     this.dashboardService.hourlyVehicles().subscribe({
       next: (res) => {
         this.gasVehiclesChart = res;
-
         const gasVehicles = res.map((item: any) => item.totalVehiclesCharged);
         const timeLabels = res.map((item: any) => {
           const date = new Date(item.hourStartTime);
           return date.getHours() + ':00';
         });
-        console.log('Gas Sold Chart Data:', this.gasVehiclesChart);
-
         this.chartVehicles = {
-          series: [
-            {
-              name: 'gas vehicles',
-              data: gasVehicles,
-            },
-          ],
-          chart: {
-            height: 350,
-            type: 'line',
-            zoom: {
-              enabled: false,
-            },
-          },
-          dataLabels: {
-            enabled: false,
-          },
-          stroke: {
-            curve: 'straight',
-          },
+          series: [{ name: 'gas vehicles', data: gasVehicles }],
+          chart: { height: 350, type: 'line', zoom: { enabled: false } },
+          dataLabels: { enabled: false },
+          stroke: { curve: 'straight' },
           title: {
             text: 'Vehicles Charged',
             align: 'left',
-            style: {
-              fontSize: '25px',
-              fontWeight: 'bold',
-            },
+            style: { fontSize: '25px', fontWeight: 'bold' },
           },
-          grid: {
-            row: {
-              colors: ['#ffffff', 'transparent'], // takes an array which will be repeated on columns
-              opacity: 0.5,
-            },
-          },
-          xaxis: {
-            categories: timeLabels,
-          },
+          grid: { row: { colors: ['#ffffff', 'transparent'], opacity: 0.5 } },
+          xaxis: { categories: timeLabels },
           colors: ['#3673E8'],
         };
+        this.clearLoading('vehicles');
         this.cdr.detectChanges();
-        console.log('Vehicles Charged Chart Data:', this.gasVehiclesChart);
       },
-      error: (err) => console.log(err),
+      error: (err) => {
+        console.log(err);
+        this.clearLoading('vehicles');
+      },
     });
   }
+
   getSummaryData() {
     this.sharedData.dashboardSummary$.subscribe({
       next: (data) => {
-        this.dashboardData = data;
-        console.log(data);
+        if (data) {
+          this.dashboardData = data;
+          this.clearLoading('summary');
+        }
       },
       error: (error) => {
         console.error('Error fetching dashboard summary:', error);
+        this.clearLoading('summary');
       },
     });
   }
@@ -284,31 +254,42 @@ export class HomeDashboard implements OnInit {
   getGasData() {
     this.sharedData.dashboardGas$.subscribe({
       next: (data) => {
-        this.dashboardGasData = data;
+        if (data) {
+          this.dashboardGasData = data;
+          this.clearLoading('gas');
+        }
       },
-      error: (error) => console.log(error),
+      error: (error) => {
+        console.log(error);
+        this.clearLoading('gas');
+      },
     });
   }
-
-  //charts:
 
   getRevenueData() {
     this.sharedData.dashboardRevenue$.subscribe({
       next: (data) => {
-        this.dashboardRevenueData = data;
+        if (data) {
+          this.dashboardRevenueData = data;
+          this.clearLoading('revenue');
+        }
       },
-      error: (error) => console.log(error),
+      error: (error) => {
+        console.log(error);
+        this.clearLoading('revenue');
+      },
     });
   }
+
   getHighestConsumption() {
     this.dashboardService.dashboardHighest().subscribe({
       next: (res) => {
-        this.highestConsumptionStations = res.map((s: { stationName: string }) => ({
+        this.highestConsumptionStations = res.map((s: any) => ({
           ...s,
           stationName: s.stationName.trim(),
         }));
+        this.clearLoading('highest');
         this.cdr.detectChanges();
-        console.log('Highest Consumption Stations:', this.highestConsumptionStations);
         setTimeout(() => {
           this.barFills.forEach((barRef) => {
             const val = +(barRef.nativeElement.dataset['val'] ?? 0);
@@ -317,26 +298,34 @@ export class HomeDashboard implements OnInit {
           });
         }, 100);
       },
-      error: (err) => console.log(err),
+      error: (err) => {
+        console.log(err);
+        this.clearLoading('highest');
+      },
     });
   }
+
   openSeeMore() {
     this.router.navigate(['/dashboard/more-alarms']);
   }
+
   getAlarmsHistory() {
     this.dashboardService.dashboardAlarms().subscribe({
       next: (res) => {
         this.alarms = this.getLatest3([...res, ...this.alarms]);
+        this.clearLoading('alarms');
         this.cdr.detectChanges();
       },
-      error: (err) => console.log(err),
+      error: (err) => {
+        console.log(err);
+        this.clearLoading('alarms');
+      },
     });
   }
 
   async onStartConnection() {
     await this.realTime.startConnection();
     this.realTime.showAlarms((data) => {
-      console.log('Received alarm data:', data);
       this.alarms = this.getLatest3([data, ...this.alarms]);
       this.cdr.detectChanges();
     });
@@ -357,29 +346,24 @@ export class HomeDashboard implements OnInit {
       .sort((a, b) => new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())
       .slice(0, 3);
   }
+
   getStationsMap() {
     this.dashboardService.dashboardMap().subscribe({
       next: (res) => {
         this.allStations = res;
-
-        console.log('Map Stations Data:', this.allStations);
-        this.cdr.detectChanges();
         this.initMap();
+        this.clearLoading('map');
+        this.cdr.detectChanges();
       },
-      error: (err) => console.log(err),
+      error: (err) => {
+        console.log(err);
+        this.clearLoading('map');
+      },
     });
   }
-  private statusColors: Map<string, string> = new Map();
 
-  private colorPalette = [
-    '#16a34a',
-    '#dc2626',
-    '#f59e0b',
-    '#3b82f6',
-    '#8b5cf6',
-    '#ec4899',
-    '#6b7280',
-  ];
+  private statusColors: Map<string, string> = new Map();
+  private colorPalette = ['#16a34a', '#dc2626', '#f59e0b', '#3b82f6', '#8b5cf6', '#ec4899', '#6b7280'];
 
   private getStatusColor(status: string): string {
     if (!this.statusColors.has(status)) {
@@ -388,6 +372,7 @@ export class HomeDashboard implements OnInit {
     }
     return this.statusColors.get(status)!;
   }
+
   get statusLegend(): { status: string; color: string }[] {
     return Array.from(this.statusColors.entries()).map(([status, color]) => ({
       status,
@@ -408,16 +393,10 @@ export class HomeDashboard implements OnInit {
         !isNaN(parseFloat(s.longitude)),
     );
 
-    console.log('Total valid stations:', validStations.length);
+    if (validStations.length === 0) return;
 
-    if (validStations.length === 0) {
-      console.error('No valid stations to display');
-      return;
-    }
-
-    // حساب المركز المتوسط لجميع المحطات
-    let totalLat = 0;
-    let totalLng = 0;
+    let totalLat = 0,
+      totalLng = 0;
     validStations.forEach((station) => {
       totalLat += parseFloat(station.latitude);
       totalLng += parseFloat(station.longitude);
@@ -426,100 +405,60 @@ export class HomeDashboard implements OnInit {
     const centerLat = totalLat / validStations.length;
     const centerLng = totalLng / validStations.length;
 
-    // إنشاء الخريطة
-    this.map = L.map('map', {
-      zoomControl: true,
-      center: [centerLat, centerLng],
-      zoom: 8,
-    });
+    this.map = L.map('map', { zoomControl: true, center: [centerLat, centerLng], zoom: 8 });
 
-    // إضافة طبقة الخريطة
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors',
       maxZoom: 19,
     }).addTo(this.map);
 
-    // تجميع الإحداثيات للـ bounds
     const bounds = L.latLngBounds([]);
-
     this.statusColors.clear();
 
-    // إضافة كل المحطات للخريطة
     validStations.forEach((station) => {
       const lat = parseFloat(station.latitude);
       const lng = parseFloat(station.longitude);
       const color = this.getStatusColor(station.status);
-
-      // إضافة الإحداثيات للـ bounds
       bounds.extend([lat, lng]);
 
-      // إنشاء أيقونة مخصصة
       const icon = L.divIcon({
         className: 'custom-marker',
-        html: `<div style="
-        width: 12px;
-        height: 12px;
-        background: ${color};
-        border-radius: 50%;
-        border: 2px solid white;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-        cursor: pointer;
-      "></div>`,
+        html: `<div style="width: 12px; height: 12px; background: ${color}; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.3); cursor: pointer;"></div>`,
         iconSize: [12, 12],
         iconAnchor: [6, 6],
       });
 
       const marker = L.marker([lat, lng], { icon }).addTo(this.map);
-
-      marker.bindPopup(`
-      <div style="font-family: system-ui; min-width: 150px;">
-        <strong>${station.stationName}</strong><br>
-        <span style="color: ${color};">● ${station.status}</span>
-      </div>
-    `);
+      marker.bindPopup(
+        `<strong>${station.stationName}</strong><br><span style="color: ${color};">● ${station.status}</span>`,
+      );
     });
 
-    // ضبط الخريطة لتشمل كل المحطات
     if (bounds.isValid()) {
-      this.map.fitBounds(bounds, {
-        padding: [50, 50],
-        maxZoom: 12,
-      });
+      this.map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
     }
 
-    // إضافة scale bar
-    L.control
-      .scale({
-        metric: true,
-        imperial: false,
-        position: 'bottomright',
-      })
-      .addTo(this.map);
+    L.control.scale({ metric: true, imperial: false, position: 'bottomright' }).addTo(this.map);
 
     setTimeout(() => {
       if (this.map) {
         this.map.invalidateSize();
-        console.log('Map invalidated, current bounds:', this.map.getBounds());
-        console.log('Number of markers:', validStations.length);
+        if (bounds.isValid()) {
+          this.map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
+        }
       }
-    }, 100);
+    }, 200);
 
     setTimeout(() => {
-      if (this.map) {
-        this.map.invalidateSize();
-      }
+      if (this.map) this.map.invalidateSize();
     }, 500);
   }
-  zoomIn() {
-    if (this.map) {
-      this.map.zoomIn();
-    }
-  }
 
+  zoomIn() {
+    if (this.map) this.map.zoomIn();
+  }
   zoomOut() {
-    if (this.map) {
-      this.map.zoomOut();
-    }
+    if (this.map) this.map.zoomOut();
   }
 
   resetView() {
@@ -531,17 +470,15 @@ export class HomeDashboard implements OnInit {
           !isNaN(parseFloat(s.latitude)) &&
           !isNaN(parseFloat(s.longitude)),
       );
-
       if (validStations.length > 0) {
-        const bounds = L.latLngBounds(
-          validStations.map((s) => [parseFloat(s.latitude), parseFloat(s.longitude)]),
-        );
+        const bounds = L.latLngBounds(validStations.map((s) => [parseFloat(s.latitude), parseFloat(s.longitude)]));
         this.map.fitBounds(bounds, { padding: [50, 50] });
       } else {
         this.map.setView([30.0444, 31.2357], 7);
       }
     }
   }
+
   ngAfterViewInit() {
     this.getStationsMap();
   }

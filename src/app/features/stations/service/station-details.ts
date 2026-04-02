@@ -34,7 +34,9 @@ export class StationDetails {
   }
 
   getTimeLineChart(id: number): Observable<any> {
-    return this.http.get(`${environment.url}Compressor/GetTimeLine?/${id}`);
+    return this.http.get(`${environment.url}Compressor/GetTimeLine/`, {
+      params: { stationId: id },
+    });
   }
 
   unlinkCompressor(compressorId: number, userId: number = 0): Observable<any> {
