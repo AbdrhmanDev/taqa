@@ -66,7 +66,7 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges {
     private cdr: ChangeDetectorRef,
     private realTime: RealtimeStationDetails,
     private stationDetails: StationDetails,
-    private activateRoute: ActivatedRoute,
+    private activateRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -216,7 +216,7 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges {
     if (value === null || value === undefined) return 0;
     return Math.min(
       Math.max((value - this.minPressure) / (this.maxPressure - this.minPressure), 0),
-      1,
+      1
     );
   }
 
@@ -236,7 +236,9 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges {
     const endX = cx + r * Math.cos(angleRad);
     const endY = cy + r * Math.sin(angleRad);
     const largeArc = ratio > 0.5 ? 1 : 0;
-    return `M ${startX} ${startY} A ${r} ${r} 0 ${largeArc} 1 ${endX.toFixed(2)} ${endY.toFixed(2)}`;
+    return `M ${startX} ${startY} A ${r} ${r} 0 ${largeArc} 1 ${endX.toFixed(2)} ${endY.toFixed(
+      2
+    )}`;
   }
 
   getColor(value: number | null): string {
