@@ -157,8 +157,8 @@
           </svg>
 
           <!-- Label & Value -->
-          <p class="text-gray-500 text-sm mt-1">{{ stage.label }}</p>
-
+          <p class="text-black text-sm mt-1">{{ stage.label }}</p>
+          <span [ngClass]="{'text-black': stage.value >= 0, 'text-black': stage.value < 0}" class="font-bold"></span>
           <p class="font-bold text-lg" [style.color]="getColor(stage.value)">
             {{ stage.value !== null ? (stage.value | number:'1.0-2') : 'N/A' }}
           </p>
@@ -214,7 +214,8 @@
     <!-- Sensor Temp Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-      <div *ngFor="let sensor of stages" class="bg-white rounded-xl shadow p-5 flex flex-col items-center gap-2">
+      <div *ngFor="let sensor of temperatureStages"
+        class="bg-white rounded-xl shadow p-5 flex flex-col items-center gap-2">
         <p class="text-sm font-semibold text-gray-600">{{ sensor.label }}</p>
 
         <!-- Dynamic Thermometer SVG -->
@@ -240,7 +241,7 @@
         </svg>
 
 
-        <p class="text-2xl font-bold" [style.color]="isInvalidValue(sensor.value) ? '#94a3b8' : getColor(sensor.value)">
+        <p class="text-2xl font-bold" [style.color]="isInvalidValue(sensor.value) ? '#101828' : getColor(sensor.value)">
           {{ isInvalidValue(sensor.value) ? 'N/A' : sensor.value }}
         </p>
         <p class="text-xs text-gray-400">°C</p>

@@ -86,9 +86,9 @@
 
         <!-- Card 3 -->
         <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-gray-500 text-sm mb-3"> Pressure</p>
+          <p class="text-gray-500 text-sm mb-3">Total Revenue</p>
           <h3 class="text-2xl font-semibold text-gray-800">
-            {{stationDetailsData?.pressure}} <span class="text-gray-400 text-base">##</span>
+            {{stationDetailsData?.totalRevenue}} <span class="text-gray-400 text-base">##</span>
           </h3>
         </div>
 
@@ -117,11 +117,11 @@
 
           <div class="flex flex-col">
             <p class="text-sm text-gray-700 font-medium">
-              {{ alarm.className }}
+              {{ alarm?.className }}
             </p>
 
             <p class="text-xs text-gray-400">
-              {{ alarm.stationName }} • {{ alarm.timeStamp | date:'short' }}
+              {{ alarm?.stationName }} • {{ alarm?.timeStamp | date:'short' }}
             </p>
           </div>
 

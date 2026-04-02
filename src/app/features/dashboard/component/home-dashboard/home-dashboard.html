@@ -168,7 +168,7 @@
 
 <!-- 3 Charts Row -->
 <div class="grid grid-cols-3 gap-4 m-3">
-  <div class="bg-white rounded-3xl shadow-xl p-4" *ngIf="chartRevenue?.series">
+  <div class="bg-white rounded-3xl shadow-sm p-4" *ngIf="chartRevenue?.series">
     <apx-chart [series]="chartRevenue.series" [chart]="chartRevenue.chart" [xaxis]="chartRevenue.xaxis"
       [stroke]="chartRevenue.stroke" [dataLabels]="chartRevenue.dataLabels" [grid]="chartRevenue.grid"
       [title]="chartRevenue.title" [colors]="chartRevenue.colors">
