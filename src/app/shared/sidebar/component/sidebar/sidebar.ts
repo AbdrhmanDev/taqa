@@ -69,8 +69,8 @@ export class Sidebar {
     {
       title: 'Location',
       items: [
-        { name: 'Zone', icon: 'zone', route: '/dashboard/zones' },
-        { name: 'Area', icon: 'area', route: '/dashboard/areas' },
+        { name: 'Zone', icon: 'location', route: '/dashboard/zones' },
+        { name: 'Area', icon: 'map', route: '/dashboard/areas' },
       ],
     },
   ];

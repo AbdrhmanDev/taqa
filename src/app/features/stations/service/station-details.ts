@@ -32,4 +32,16 @@ export class StationDetails {
   getCompressorById(id: number): Observable<any> {
     return this.http.get(`${environment.url}Compressor/by-station/${id}`);
   }
+
+  unlinkCompressor(compressorId: number, userId: number = 0): Observable<any> {
+    return this.http.post(`${environment.url}compressors/${compressorId}/unlink`, { userId });
+  }
+
+  linkCompressor(compressorId: number, assetId: number, userId: number = 0): Observable<any> {
+    return this.http.post(`${environment.url}compressors/${compressorId}/link`, { assetId, userId });
+  }
+
+  getAvailableAssets(): Observable<any> {
+    return this.http.get(`${environment.url}compressors/available-assets`);
+  }
 }

@@ -1,17 +1,35 @@
-<button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar" type="button"
-  class="text-heading bg-transparent box-border border border-transparent hover:bg-neutral-secondary-medium focus:ring-4 focus:ring-neutral-tertiary font-medium leading-5 rounded-base ms-3 mt-3 text-sm p-2 focus:outline-none inline-flex sm:hidden">
+<button
+  data-drawer-target="logo-sidebar"
+  data-drawer-toggle="logo-sidebar"
+  aria-controls="logo-sidebar"
+  type="button"
+  class="text-heading bg-transparent box-border border border-transparent hover:bg-neutral-secondary-medium focus:ring-4 focus:ring-neutral-tertiary font-medium leading-5 rounded-base ms-3 mt-3 text-sm p-2 focus:outline-none inline-flex sm:hidden"
+>
   <span class="sr-only">Open sidebar</span>
-  <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-    viewBox="0 0 24 24">
-    <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h10" />
+  <svg
+    class="w-6 h-6"
+    aria-hidden="true"
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    fill="none"
+    viewBox="0 0 24 24"
+  >
+    <path
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-width="2"
+      d="M5 7h14M5 12h14M5 17h10"
+    />
   </svg>
 </button>
 
-<aside id="logo-sidebar"
+<aside
+  id="logo-sidebar"
   class="fixed top-0 left-0 z-40 w-64 h-full transition-transform -translate-x-full sm:translate-x-0"
-  aria-label="Sidebar">
+  aria-label="Sidebar"
+>
   <div class="h-full px-4 py-6 overflow-y-auto bg-white border-e border-gray-200 flex flex-col">
-
     <!-- Logo Section -->
     <div class="flex items-center gap-2 mb-8 px-2">
       <img src="../../../../../assets/Images/Logo.png" class="h-8" alt="Taqa Logo" />
@@ -19,154 +37,248 @@
 
     <!-- Navigation Links -->
     <ul class="space-y-1 font-medium flex-1">
-      @for(section of links; track section.title) {
-      @if(section.title) {
+      @for(section of links; track section.title) { @if(section.title) {
       <li class="pt-4 pb-2 px-2">
         <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">
           {{ section.title }}
         </p>
       </li>
-      }
-
-      @for (item of section.items; track item.route) {
+      } @for (item of section.items; track item.route) {
       <li>
-        <a [routerLink]="item.route" routerLinkActive="bg-blue-50 text-blue-600"
-          class="flex items-center px-3 py-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-50 group transition-colors">
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="bg-blue-50 text-blue-600"
+          class="flex items-center px-3 py-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-50 group transition-colors"
+        >
           <span class="w-5 h-5 flex items-center justify-center">
-            @switch(item.icon) {
-            @case('dashboard') {
+            @switch(item.icon) { @case('dashboard') {
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+              />
             </svg>
-            }
-            @case('stations') {
+            } @case('stations') {
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+              />
             </svg>
-            }
-            @case('map') {
+            } @case('map') {
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+              />
             </svg>
-            }
-            @case('qr') {
+            } @case('qr') {
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
+              />
             </svg>
-            }
-            @case('tasks') {
+            } @case('tasks') {
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+              />
             </svg>
-            }
-            @case('revenue') {
+            } @case ('location') {
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              />
             </svg>
-            }
-            @case('report') {
+            } @case('revenue') {
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
-            }
-            @case('layers-01') {
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            } @case('report') {
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+            } @case('layers-01') {
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+            >
               <path
                 d="M5.76199 2.09967L4.62544 2.62502C2.87515 3.43406 2 3.83858 2 4.5026C2 5.16662 2.87515 5.57115 4.62544 6.38019L5.76199 6.90554C6.86349 7.41469 7.41425 7.66927 8 7.66927C8.58575 7.66927 9.13651 7.41469 10.238 6.90554L11.3746 6.38019C13.1249 5.57115 14 5.16662 14 4.5026C14 3.83858 13.1249 3.43406 11.3746 2.62502L10.238 2.09967C9.13651 1.59051 8.58575 1.33594 8 1.33594C7.41425 1.33594 6.86349 1.59051 5.76199 2.09967Z"
-                stroke="#3E4A60" stroke-linecap="round" stroke-linejoin="round" />
+                stroke="#3E4A60"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
               <path
                 d="M13.8587 7.39844C13.9529 7.53094 14 7.66904 14 7.82091C14 8.47548 13.1249 8.87424 11.3746 9.67177L10.238 10.1896C9.13651 10.6915 8.58575 10.9425 8 10.9425C7.41425 10.9425 6.86349 10.6915 5.76199 10.1896L4.62544 9.67177C2.87515 8.87424 2 8.47548 2 7.82091C2 7.66904 2.04711 7.53094 2.14133 7.39844"
-                stroke="#3E4A60" stroke-linecap="round" stroke-linejoin="round" />
+                stroke="#3E4A60"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
               <path
                 d="M13.5844 10.8438C13.8615 11.0644 14 11.2843 14 11.5448C14 12.1993 13.1249 12.5981 11.3746 13.3956L10.238 13.9135C9.13651 14.4154 8.58575 14.6663 8 14.6663C7.41425 14.6663 6.86349 14.4154 5.76199 13.9135L4.62544 13.3956C2.87515 12.5981 2 12.1993 2 11.5448C2 11.2843 2.13852 11.0644 2.41556 10.8438"
-                stroke="#3E4A60" stroke-linecap="round" stroke-linejoin="round" />
+                stroke="#3E4A60"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
-            }
-            @case('tariff') {
+            } @case('tariff') {
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+              />
             </svg>
-            }
-            @case('alarm-alert') {
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            } @case('alarm-alert') {
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+            >
               <g clip-path="url(#clip0_13523_3152)">
                 <path
                   d="M15 8.50002C14.9988 7.75048 14.8773 7.006 14.64 6.29502C15.1967 5.66033 15.5025 4.84424 15.5 4.00002C15.5 3.07176 15.1313 2.18152 14.4749 1.52514C13.8185 0.868766 12.9283 0.500017 12 0.500017C11.5136 0.498502 11.0324 0.599712 10.5878 0.797024C10.1432 0.994337 9.74523 1.2833 9.42002 1.64502C8.48322 1.45167 7.51681 1.45167 6.58002 1.64502C6.2548 1.2833 5.85688 0.994337 5.41228 0.797024C4.96768 0.599712 4.48643 0.498502 4.00002 0.500017C3.07176 0.500017 2.18152 0.868766 1.52514 1.52514C0.868764 2.18152 0.500015 3.07176 0.500015 4.00002C0.497528 4.84424 0.803339 5.66033 1.36002 6.29502C1.12274 7.006 1.00119 7.75048 1.00002 8.50002C0.999134 9.95121 1.45384 11.3661 2.30001 12.545L1.69502 13.265C1.47539 13.5287 1.36895 13.8686 1.39892 14.2105C1.4289 14.5524 1.59285 14.8685 1.85502 15.09C2.08992 15.2848 2.38486 15.3925 2.69002 15.395C3.01856 15.3939 3.33459 15.2689 3.57502 15.045L4.26002 14.41C5.1544 14.9821 6.16851 15.3406 7.22374 15.4576C8.27898 15.5747 9.34699 15.4472 10.345 15.085C11.043 15.4639 11.849 15.5941 12.6308 15.4543C13.4126 15.3145 14.1235 14.913 14.6469 14.3157C15.1704 13.7184 15.4751 12.9609 15.5111 12.1676C15.5471 11.3742 15.3122 10.5922 14.845 9.95002C14.9474 9.47346 14.9994 8.98745 15 8.50002ZM12 1.50002C12.4339 1.50221 12.8597 1.61729 13.2356 1.83393C13.6116 2.05057 13.9246 2.36131 14.1441 2.73561C14.3635 3.10991 14.4817 3.53487 14.4872 3.96872C14.4926 4.40256 14.385 4.83035 14.175 5.21002C13.3809 3.74212 12.0907 2.60437 10.535 2.00002C10.9582 1.68255 11.4711 1.50749 12 1.50002ZM1.50002 4.00002C1.50472 3.54162 1.63538 3.09334 1.8777 2.7042C2.12002 2.31506 2.46468 2.00004 2.87397 1.79359C3.28327 1.58713 3.74146 1.49719 4.19843 1.5336C4.6554 1.57 5.09357 1.73136 5.46502 2.00002C3.90607 2.60937 2.61546 3.75461 1.82502 5.23002C1.61243 4.8549 1.50047 4.43118 1.50002 4.00002ZM2.89002 14.315C2.83614 14.3625 2.76681 14.3887 2.69501 14.3887C2.62322 14.3887 2.55389 14.3625 2.50002 14.315C2.44014 14.2637 2.40289 14.1908 2.39634 14.1122C2.38979 14.0336 2.41446 13.9556 2.46501 13.895L2.96501 13.32C3.12502 13.485 3.29001 13.645 3.46501 13.795L2.89002 14.315ZM2.00002 8.50002C2.00002 6.90872 2.63216 5.38259 3.75737 4.25738C4.88259 3.13216 6.40872 2.50002 8.00002 2.50002C9.59131 2.50002 11.1174 3.13216 12.2427 4.25738C13.3679 5.38259 14 6.90872 14 8.50002C13.9989 8.70231 13.9856 8.90434 13.96 9.10502C13.3101 8.66134 12.5288 8.45139 11.7441 8.50952C10.9593 8.56765 10.2175 8.89042 9.64002 9.42502L8.50002 8.28502V6.00002H7.50002V8.50002C7.49963 8.56582 7.51225 8.63105 7.53713 8.69197C7.56201 8.75289 7.59867 8.8083 7.64502 8.85502L9.00002 10.2C8.61194 10.8378 8.44026 11.5839 8.51053 12.3272C8.5808 13.0705 8.88928 13.7712 9.39002 14.325C8.93558 14.4399 8.46876 14.4987 8.00002 14.5C6.40872 14.5 4.88259 13.8679 3.75737 12.7427C2.63216 11.6174 2.00002 10.0913 2.00002 8.50002ZM12 14.5C11.5056 14.5 11.0222 14.3534 10.6111 14.0787C10.2 13.804 9.87954 13.4135 9.69032 12.9567C9.5011 12.4999 9.45159 11.9972 9.54805 11.5123C9.64452 11.0273 9.88262 10.5819 10.2322 10.2323C10.5819 9.88262 11.0273 9.64452 11.5123 9.54805C11.9972 9.45159 12.4999 9.5011 12.9567 9.69032C13.4135 9.87954 13.804 10.2 14.0787 10.6111C14.3534 11.0222 14.5 11.5056 14.5 12C14.5 12.6631 14.2366 13.2989 13.7678 13.7678C13.2989 14.2366 12.6631 14.5 12 14.5Z"
-                  fill="#3E4A60" />
-                <path d="M12.5 10.5H11.5V11.5H10.5V12.5H11.5V13.5H12.5V12.5H13.5V11.5H12.5V10.5Z" fill="#3E4A60" />
+                  fill="#3E4A60"
+                />
+                <path
+                  d="M12.5 10.5H11.5V11.5H10.5V12.5H11.5V13.5H12.5V12.5H13.5V11.5H12.5V10.5Z"
+                  fill="#3E4A60"
+                />
               </g>
               <defs>
                 <clipPath id="clip0_13523_3152">
                   <rect width="16" height="16" fill="white" />
                 </clipPath>
-              </defs>
-            </svg>}
-
-            @case('maintenance') {
+              </defs></svg
+            >} @case('maintenance') {
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
             </svg>
-            }
-            @case('users') {
+            } @case('users') {
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+              />
             </svg>
-            }
-            @case('bell') {
+            } @case('bell') {
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+              />
             </svg>
-            }
-            @case('settings') {
+            } @case('settings') {
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
             </svg>
-            }
-            }
+            } }
           </span>
           <span class="ms-3 whitespace-nowrap">{{ item.name }}</span>
         </a>
       </li>
-      }
-      }
+      } }
     </ul>
 
     <!-- User Profile Section -->
     <div class="pt-4 mt-4 border-t border-gray-200">
-      <div class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 cursor-pointer">
+      <div
+        class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 cursor-pointer"
+      >
         <div class="flex items-center gap-3">
           <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
             <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+              <path
+                fill-rule="evenodd"
+                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                clip-rule="evenodd"
+              />
             </svg>
           </div>
           <div class="flex flex-col">
             <span class="text-sm font-medium text-gray-900">Lewis Verstappen</span>
           </div>
         </div>
-        <svg (click)="logout()" class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+        <svg
+          (click)="logout()"
+          class="w-5 h-5 text-red-500"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+          />
         </svg>
       </div>
     </div>
-
   </div>
 </aside>
 
