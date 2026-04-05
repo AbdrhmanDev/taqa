@@ -13,3 +13,17 @@
   box-shadow: inset;
   border-radius: 15px;
 }
+// Add to your comproser-details.scss file
+.card-separator {
+  position: relative;
+  
+  &:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -1rem;
+    top: 1rem;
+    bottom: 1rem;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, #e5e7eb, transparent);
+  }
+}
