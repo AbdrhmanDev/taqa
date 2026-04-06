@@ -62,6 +62,7 @@ export const routes: Routes = [
         path: 'more-alarms',
         loadComponent: () =>
           import('./features/dashboard/component/more-alarm/more-alarm').then((m) => m.MoreAlarm),
+        title: 'Alarms',
       },
       {
         path: 'tech-ops',

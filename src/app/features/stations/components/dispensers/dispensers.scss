@@ -16,7 +16,7 @@
 // Add to your comproser-details.scss file
 .card-separator {
   position: relative;
-  
+
   &:not(:last-child)::after {
     content: '';
     position: absolute;
@@ -26,4 +26,9 @@
     width: 1px;
     background: linear-gradient(to bottom, transparent, #e5e7eb, transparent);
   }
+}
+.line {
+  width: 1px;
+  height: 212px;
+  background-color: #53535330;
 }
