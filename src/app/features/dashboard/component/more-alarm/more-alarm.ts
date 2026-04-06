@@ -3,43 +3,43 @@ import { RealtimeAlarmsDashboard } from '../../service/realtime-alarms-dashboard
 import { FormsModule } from '@angular/forms';
 import { dashboardService } from '../../service/dashboard';
 import { CommonModule, DatePipe } from '@angular/common';
-
 import { InputTextModule } from 'primeng/inputtext';
-
 import { SelectModule } from 'primeng/select';
-import { AutoComplete } from 'primeng/autocomplete';
 import { DatePickerModule } from 'primeng/datepicker';
+
 @Component({
   selector: 'app-more-alarm',
-  imports: [
-    DatePipe,
-    CommonModule,
-    FormsModule,
-    SelectModule,
-    AutoComplete,
-    DatePickerModule,
-    InputTextModule,
-  ],
+  imports: [DatePipe, CommonModule, FormsModule, SelectModule, DatePickerModule, InputTextModule],
   templateUrl: './more-alarm.html',
   styleUrl: './more-alarm.scss',
 })
 export class MoreAlarm implements OnInit {
+  // Raw data from API
   alarmsHistory: any[] = [];
+  // Real-time alarms from SignalR
+  alarmsRealTime: any[] = [];
+
+  // Final list shown in the UI (after tab filter + sort)
+  displayedAlarms: any[] = [];
+
   currentPage = 1;
   pageSize = 15;
+
   searchText = '';
   selectedStation = '';
   selectedSeverity = '';
   selectedStatus = '';
+
+  fromDatePicker: Date | null = null;
+  toDatePicker: Date | null = null;
   fromDate = '';
   toDate = '';
-  dateRange: Date[] = [];
+
   activeTab: 'all' | 'system' | 'user' = 'all';
-  severity!: any;
+
   allStations: any[] = [];
   severityOptions: any[] = [];
-  alarmsRealTime: any[] = [];
-  displayedAlarms: any[] = [];
+
   statusOptions = [
     { label: 'Acknowledged', value: 'acknowledged' },
     { label: 'Pending', value: 'pending' },
@@ -50,103 +50,79 @@ export class MoreAlarm implements OnInit {
     private cdr: ChangeDetectorRef,
     private dashboardService: dashboardService,
   ) {}
+
   ngOnInit(): void {
     this.getAlarmsHistory();
     this.onStartConnection();
     this.onGetAllStation();
     this.onGetAllSeverity();
   }
+
   private formatDateForAPI(date: Date | string): string {
     if (!date) return '';
-
     const dateObj = typeof date === 'string' ? new Date(date) : date;
-
     return dateObj.toISOString();
   }
 
-  onDateRangeChange(dates: Date[] | any) {
-    this.dateRange = dates;
-
-    if (dates && dates.length === 2 && dates[0] && dates[1]) {
-      this.fromDate = this.formatDateForAPI(dates[0]);
-      this.toDate = this.formatDateForAPI(dates[1]);
-      this.onFilterChange();
-    } else {
-      this.fromDate = '';
-      this.toDate = '';
-    }
+  onFromDateChange(date: Date | null) {
+    this.fromDatePicker = date;
+    this.fromDate = date ? this.formatDateForAPI(date) : '';
+    this.onFilterChange();
   }
 
+  onToDateChange(date: Date | null) {
+    this.toDatePicker = date;
+    this.toDate = date ? this.formatDateForAPI(date) : '';
+    this.onFilterChange();
+  }
+
+  setTab(tab: 'all' | 'system' | 'user') {
+    this.activeTab = tab;
+    this.currentPage = 1;
+    this.applyClientSideFilters();
+  }
+
+  // ── Fetch from API (server handles: station, severity, date range) ─────────
   getAlarmsHistory() {
-    if (this.dateRange && this.dateRange.length === 2) {
-      if (!this.dateRange[0] || !this.dateRange[1]) {
-        return;
-      }
-    }
-
-    const formattedFromDate = this.fromDate ? this.formatDateForAPI(this.fromDate) : '';
-    const formattedToDate = this.toDate ? this.formatDateForAPI(this.toDate) : '';
-
-    console.log('Sending dates to API:', { fromDate: formattedFromDate, toDate: formattedToDate });
-
     this.dashboardService
-      .dashboardAlarms(
-        this.selectedStation,
-        this.selectedSeverity,
-        formattedFromDate,
-        formattedToDate,
-      )
+      .dashboardAlarms(this.selectedStation, this.selectedSeverity, this.fromDate, this.toDate)
       .subscribe({
-        next: (res) => {
-          this.alarmsHistory = res;
-          this.mergeAndFilterAlarms();
-          console.log('Alarms History:', this.alarmsHistory);
+        next: (res: any[]) => {
+          this.alarmsHistory = res ?? [];
+          console.log('API response count:', this.alarmsHistory.length, this.alarmsHistory);
+          this.applyClientSideFilters();
           this.cdr.detectChanges();
         },
-        error: (err) => {
-          console.log(err);
-        },
+        error: (err) => console.error(err),
       });
   }
-  onGetAllSeverity() {
-    this.dashboardService.getAllSeverity().subscribe({
-      next: (res) => {
-        this.severityOptions = res.map((item: string) => ({
-          label: item,
-          value: item,
-        }));
-        console.log('Severities:', res);
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+
+  // ── Client-side only: tab filter + real-time merge + sort ──────────────────
+  applyClientSideFilters() {
+    let result = [...this.alarmsHistory, ...this.alarmsRealTime];
+
+    // Tab filter
+    if (this.activeTab === 'system') result = result.filter((a) => a.type === 'system');
+    if (this.activeTab === 'user') result = result.filter((a) => a.type === 'user');
+
+    // Sort newest first
+    result.sort(
+      (a, b) =>
+        new Date(b.timeStamp || b.timestamp).getTime() -
+        new Date(a.timeStamp || a.timestamp).getTime(),
+    );
+
+    this.displayedAlarms = result;
+    this.cdr.detectChanges();
   }
 
-  onGetAllStation() {
-    this.dashboardService.getAllStation().subscribe({
-      next: (res) => {
-        this.allStations = res.items;
-        this.cdr.detectChanges();
-        console.log('Stations:', res);
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+  // ── Called whenever any dropdown/date filter changes ──────────────────────
+  onFilterChange() {
+    this.currentPage = 1;
+    this.getAlarmsHistory();
   }
 
-  async onStartConnection() {
-    await this.realTime.startConnection();
-    this.realTime.showAlarms((data) => {
-      this.alarmsRealTime = data;
-      this.mergeAndFilterAlarms();
-      this.alarmsHistory.unshift(data);
-      this.currentPage = 1;
-      this.cdr.detectChanges();
-    });
-  }
-
+  // ── Counts based on full API result ───────────────────────────────────────
   get systemCount(): number {
     return this.alarmsHistory.filter((a) => a.type === 'system').length;
   }
@@ -155,66 +131,36 @@ export class MoreAlarm implements OnInit {
     return this.alarmsHistory.filter((a) => a.type === 'user').length;
   }
 
-  mergeAndFilterAlarms() {
-    let allAlarms = [...this.alarmsHistory, ...this.alarmsRealTime];
-    allAlarms = this.filteredAlarms(allAlarms);
-    this.cdr.detectChanges();
-    allAlarms.sort((a, b) => {
-      return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+  onGetAllSeverity() {
+    this.dashboardService.getAllSeverity().subscribe({
+      next: (res) => {
+        this.severityOptions = res.map((item: string) => ({ label: item, value: item }));
+      },
+      error: (err) => console.error(err),
     });
-    this.displayedAlarms = allAlarms;
   }
 
-  filteredAlarms(alarms: any[]): any {
-    let result = [...alarms];
-    if (this.activeTab === 'system') result = result.filter((a) => a.type === 'system');
-    if (this.activeTab === 'user') result = result.filter((a) => a.type === 'user');
-    if (this.selectedStation) {
-      result = result.filter((a) => a.stationName === this.selectedStation);
-    }
-    if (this.selectedSeverity) {
-      result = result.filter((a) => a.severity?.toLowerCase() === this.selectedSeverity);
-    }
-    if (this.selectedStatus === 'acknowledged') {
-      result = result.filter((a) => a.isAcknowledged);
-    } else if (this.selectedStatus === 'pending') {
-      result = result.filter((a) => !a.isAcknowledged);
-    }
-
-    if (this.dateRange && this.dateRange.length === 2) {
-      const fromDateTime = new Date(this.dateRange[0]).getTime();
-      const toDateTime = new Date(this.dateRange[1]).getTime();
-
-      result = result.filter((a) => {
-        const alarmTime = new Date(a.timeStamp || a.timestamp).getTime();
-        return alarmTime >= fromDateTime && alarmTime <= toDateTime;
-      });
-    }
-    return result;
+  onGetAllStation() {
+    this.dashboardService.getAllStation().subscribe({
+      next: (res) => {
+        this.allStations = res.items;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error(err),
+    });
   }
 
-  onFilterChange() {
-    if (this.dateRange && this.dateRange.length === 2 && this.dateRange[0] && this.dateRange[1]) {
-      this.getAlarmsHistory();
-    } else if (this.selectedStation || this.selectedSeverity) {
-      this.getAlarmsHistory();
-    } else {
-      this.mergeAndFilterAlarms();
-    }
-  }
-  clearDateFilter() {
-    this.dateRange = [];
-    this.fromDate = '';
-    this.toDate = '';
-    this.onFilterChange();
+  async onStartConnection() {
+    await this.realTime.startConnection();
+    this.realTime.showAlarms((data) => {
+      this.alarmsRealTime = [data, ...this.alarmsRealTime];
+      this.applyClientSideFilters();
+    });
   }
 
-  get totalAlarms(): number {
-    return this.alarmsHistory.length;
-  }
-
+  // ── Pagination ────────────────────────────────────────────────────────────
   get totalPagesCount(): number {
-    return Math.ceil(this.alarmsHistory.length / this.pageSize);
+    return Math.ceil(this.displayedAlarms.length / this.pageSize) || 1;
   }
 
   get totalPages(): number[] {
@@ -223,7 +169,7 @@ export class MoreAlarm implements OnInit {
 
   get pagedAlarms(): any[] {
     const start = (this.currentPage - 1) * this.pageSize;
-    return this.alarmsHistory.slice(start, start + this.pageSize);
+    return this.displayedAlarms.slice(start, start + this.pageSize);
   }
 
   goToPage(page: number) {
