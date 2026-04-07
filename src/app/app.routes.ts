@@ -1,3 +1,4 @@
+import { AdminGuard } from './core/guards/admin-guard';
 import { authGuard } from './core/guards/auth-guard';
 import { Dashboard } from './features/dashboard/component/dashboard/dashboard';
 import { Routes } from '@angular/router';
@@ -92,6 +93,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/user-management/component/users/users').then((m) => m.Users),
         title: 'User Management',
+        canActivate: [AdminGuard],
       },
 
       {

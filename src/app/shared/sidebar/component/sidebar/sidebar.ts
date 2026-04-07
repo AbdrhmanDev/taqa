@@ -12,9 +12,21 @@ export class Sidebar {
   constructor(private _Authen: Authen) {}
   @Input() isDrawer: boolean = false;
   @Input() isCollapsed: boolean = true;
-
+  menuItems: any[] = [];
   @Output() toggleSidebar = new EventEmitter<boolean>();
+  ngOnInit(): void {
+    const role = localStorage.getItem('roles');
 
+    this.menuItems = this.links.map((section) => ({
+      ...section,
+      items: section.items.filter((item) => {
+        if (item.adminOnly) {
+          return role === 'Admin';
+        }
+        return true;
+      }),
+    }));
+  }
   toggleBar() {
     this.isCollapsed = !this.isCollapsed;
     this.toggleSidebar.emit(this.isCollapsed);
@@ -56,7 +68,12 @@ export class Sidebar {
         { name: 'Tariff', icon: 'tariff', route: '/dashboard/tariff' },
         { name: 'Alarm & Alert', icon: 'alarm-alert', route: '/dashboard/alarm-alert' },
         { name: 'Maintenance Request', icon: 'maintenance', route: '/dashboard/requests' },
-        { name: 'User Management', icon: 'users', route: '/dashboard/users' },
+        {
+          name: 'User Management',
+          icon: 'users',
+          route: '/dashboard/users',
+          adminOnly: true,
+        },
       ],
     },
     {
@@ -76,5 +93,8 @@ export class Sidebar {
   ];
   logout() {
     this._Authen.logout();
+  }
+  onCheckRole() {
+    return localStorage.getItem('roles') === 'Admin' ? true : false;
   }
 }

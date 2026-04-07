@@ -10,6 +10,7 @@ import { environment } from '../../../../env/environment';
 })
 export class Authen {
   private TokenKey = 'token';
+  private roleKey = 'roles';
   private email!: string;
   constructor(
     private http: HttpClient,
@@ -35,12 +36,16 @@ export class Authen {
       responseType: 'text',
     });
   }
-  setToken(token: string) {
+  setToken(token: string, roles: string) {
     localStorage.setItem(this.TokenKey, token);
+    localStorage.setItem(this.roleKey, roles);
   }
 
   getToken(): string | null {
     return localStorage.getItem(this.TokenKey);
+  }
+  getRole(): string | null {
+    return localStorage.getItem(this.roleKey);
   }
 
   setEmail(email: string) {
@@ -52,6 +57,7 @@ export class Authen {
   }
   logout() {
     localStorage.removeItem(this.TokenKey);
+    localStorage.removeItem(this.roleKey);
     this.Router.navigate(['/login']);
   }
 }

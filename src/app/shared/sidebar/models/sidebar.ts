@@ -4,6 +4,7 @@ export interface SidebarItem {
   route?: string;
   children?: SidebarItem[];
   expanded?: boolean;
+  adminOnly?: boolean;
 }
 
 export interface SidebarSection {

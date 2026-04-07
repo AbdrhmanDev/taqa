@@ -18,7 +18,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           message = 'Unauthorized';
           break;
         case 403:
-          message = 'Forbidden';
+          message = "Don't have permission to access";
           break;
         case 404:
           message = 'Not Found';

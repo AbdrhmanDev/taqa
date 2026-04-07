@@ -112,8 +112,7 @@
 
   <!-- Alarms List -->
   <div class="alarms-list">
-    <div class="alarm-card" *ngFor="let alarm of pagedAlarms" [class.system-alarm]="alarm.type === 'system'"
-      [class.user-alarm]="alarm.type === 'user'">
+    <div class="alarm-card" *ngFor="let alarm of displayedAlarms">
 
       <div class="alarm-left">
         <div class="alarm-icon-wrapper">
@@ -174,7 +173,7 @@
       </div>
     </div>
 
-    <div *ngIf="alarmsHistory.length === 0" class="empty-state">
+    <div *ngIf="displayedAlarms.length === 0" class="empty-state">
       <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d1d5db"
         stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
@@ -184,7 +183,7 @@
     </div>
   </div>
 
-  <!-- Pagination -->
+
   <div class="pagination-wrapper">
     <button class="page-nav-btn" [disabled]="currentPage === 1" (click)="prevPage()">
       ← Previous

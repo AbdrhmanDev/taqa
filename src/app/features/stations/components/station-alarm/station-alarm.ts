@@ -9,6 +9,9 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
+import { AlarmsStationDetails } from '../../service/alarms-station-details';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-station-alarm',
   imports: [DatePipe, CommonModule, FormsModule, SelectModule, DatePickerModule, InputTextModule],
@@ -22,6 +25,9 @@ export class StationAlarm implements OnInit {
   alarmsHistory: any[] = [];
   // Real-time alarms from SignalR
   alarmsRealTime: any[] = [];
+  stationDetailsDataAlarm: any[] = [];
+  private subscription!: Subscription;
+  stationId!: number;
 
   // Final list shown in the UI (after tab filter + sort)
   displayedAlarms: any[] = [];
@@ -52,94 +58,60 @@ export class StationAlarm implements OnInit {
     private realTime: RealtimeAlarmsDashboard,
     private cdr: ChangeDetectorRef,
     private dashboardService: dashboardService,
+    private realtimeAlarmDetails: AlarmsStationDetails,
+    private activateRoute: ActivatedRoute,
   ) {}
   ngOnInit(): void {
-    this.getAlarmsHistory();
-    this.onStartConnection();
-    this.onGetAllStation();
-    this.onGetAllSeverity();
-  }
+    this.activateRoute.paramMap.subscribe((params) => {
+      this.stationId = Number(params.get('id'));
+      this.getAlarmsHistory();
+      this.onStartConnectionAlarms();
+      this.onGetAllStation();
+    });
 
-  private formatDateForAPI(date: Date | string): string {
-    if (!date) return '';
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
-    return dateObj.toISOString();
-  }
-
-  onFromDateChange(date: Date | null) {
-    this.fromDatePicker = date;
-    this.fromDate = date ? this.formatDateForAPI(date) : '';
-    this.onFilterChange();
-  }
-
-  onToDateChange(date: Date | null) {
-    this.toDatePicker = date;
-    this.toDate = date ? this.formatDateForAPI(date) : '';
-    this.onFilterChange();
+    // this.onGetAllSeverity();
   }
 
   setTab(tab: 'all' | 'system' | 'user') {
     this.activeTab = tab;
     this.currentPage = 1;
-    this.applyClientSideFilters();
+    // this.applyClientSideFilters();
   }
 
-  // ── Fetch from API (server handles: station, severity, date range) ─────────
   getAlarmsHistory() {
-    this.dashboardService
-      .dashboardAlarms(this.selectedStation, this.selectedSeverity, this.fromDate, this.toDate)
-      .subscribe({
-        next: (res: any[]) => {
-          this.alarmsHistory = res ?? [];
-          console.log('API response count:', this.alarmsHistory.length, this.alarmsHistory);
-          this.applyClientSideFilters();
+    this.dashboardService.StationAlarmById(this.stationId).subscribe({
+      next: (res: any[]) => {
+        this.alarmsHistory = res;
+        console.log('Alarms history:', this.alarmsHistory);
+        this.mergeAlarms();
+      },
+      error: (err) => console.error(err),
+    });
+  }
+  mergeAlarms() {
+    this.displayedAlarms = [...this.stationDetailsDataAlarm, ...this.alarmsHistory];
+  }
+
+  async onStartConnectionAlarms() {
+    try {
+      await this.realtimeAlarmDetails.startConnection();
+
+      this.subscription = this.realtimeAlarmDetails.getStationDetails().subscribe({
+        next: (data) => {
+          console.log('Received station Alarm data byStation:', data);
+          data.className = data.className?.trim(); //remove r/n/
+
+          this.stationDetailsDataAlarm.unshift(data);
+          this.mergeAlarms();
           this.cdr.detectChanges();
         },
         error: (err) => console.error(err),
       });
-  }
 
-  // ── Client-side only: tab filter + real-time merge + sort ──────────────────
-  applyClientSideFilters() {
-    let result = [...this.alarmsHistory, ...this.alarmsRealTime];
-
-    // Tab filter
-    if (this.activeTab === 'system') result = result.filter((a) => a.type === 'system');
-    if (this.activeTab === 'user') result = result.filter((a) => a.type === 'user');
-
-    // Sort newest first
-    result.sort(
-      (a, b) =>
-        new Date(b.timeStamp || b.timestamp).getTime() -
-        new Date(a.timeStamp || a.timestamp).getTime(),
-    );
-
-    this.displayedAlarms = result;
-    this.cdr.detectChanges();
-  }
-
-  // ── Called whenever any dropdown/date filter changes ──────────────────────
-  onFilterChange() {
-    this.currentPage = 1;
-    this.getAlarmsHistory();
-  }
-
-  // ── Counts based on full API result ───────────────────────────────────────
-  get systemCount(): number {
-    return this.alarmsHistory.filter((a) => a.type === 'system').length;
-  }
-
-  get userCount(): number {
-    return this.alarmsHistory.filter((a) => a.type === 'user').length;
-  }
-
-  onGetAllSeverity() {
-    this.dashboardService.getAllSeverity().subscribe({
-      next: (res) => {
-        this.severityOptions = res.map((item: string) => ({ label: item, value: item }));
-      },
-      error: (err) => console.error(err),
-    });
+      await this.realtimeAlarmDetails.joinStation(this.stationId);
+    } catch (error) {
+      console.error('Error starting connection:', error);
+    }
   }
 
   onGetAllStation() {
@@ -151,16 +123,6 @@ export class StationAlarm implements OnInit {
       error: (err) => console.error(err),
     });
   }
-
-  async onStartConnection() {
-    await this.realTime.startConnection();
-    this.realTime.showAlarms((data) => {
-      this.alarmsRealTime = [data, ...this.alarmsRealTime];
-      this.applyClientSideFilters();
-    });
-  }
-
-  // ── Pagination ────────────────────────────────────────────────────────────
   get totalPagesCount(): number {
     return Math.ceil(this.displayedAlarms.length / this.pageSize) || 1;
   }

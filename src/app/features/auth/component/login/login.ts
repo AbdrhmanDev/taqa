@@ -54,7 +54,7 @@ export class Login implements OnInit {
     this._Authen.login(this.loginForm.value).subscribe({
       next: (res) => {
         console.log(res);
-        this._Authen.setToken(res.token);
+        this._Authen.setToken(res.token, res.roles);
         this.showSuccess();
 
         this.Router.navigate(['/dashboard']);

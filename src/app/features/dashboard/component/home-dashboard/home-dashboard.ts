@@ -101,7 +101,6 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
     this.setLoading('highest');
     this.setLoading('alarms');
     this.setLoading('map');
-
     this.getSummaryData();
     this.getGasData();
     this.getRevenueData();
