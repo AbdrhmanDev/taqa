@@ -304,6 +304,12 @@ export const routes: Routes = [
           import('./features/area/components/areas/areas').then((m) => m.AreasComponent),
         title: 'Areas Management',
       },
+      {
+        path: 'station-config',
+        loadComponent: () =>
+          import('./features/station-config/station-config').then((m) => m.StationConfig),
+        title: 'Station Configuration',
+      },
     ],
   },
 

@@ -1,0 +1,422 @@
+<div class="config-page">
+  <header class="config-header">
+    <div class="breadcrumb">
+      <span>Configuration</span>
+      <i class="pi pi-chevron-right"></i>
+      <span class="current">Stations</span>
+    </div>
+    <div class="header-actions">
+      <div class="search-box">
+        <i class="pi pi-search"></i>
+        <input type="text" placeholder="Search stations, devices..." pInputText />
+      </div>
+      <button class="notif-btn">
+        <i class="pi pi-bell"></i>
+      </button>
+    </div>
+  </header>
+
+  @if (viewMode === 'list' || viewMode === 'form') {
+    <p-tabs value="0">
+      <p-tablist>
+        <p-tab value="0">Stations</p-tab>
+        <p-tab value="1">Asset</p-tab>
+        <p-tab value="2">Compressor</p-tab>
+        <p-tab value="3">Dispenser</p-tab>
+        <p-tab value="4">Inventory</p-tab>
+        <p-tab value="5">Adult Log</p-tab>
+      </p-tablist>
+
+      <p-tabpanels>
+        <p-tabpanel value="0">
+          @if (viewMode === 'list') {
+            <div class="tab-content">
+              <div class="section-header">
+                <div class="title-desc">
+                  <h2>Station Management</h2>
+                  <p>Manage all stations</p>
+                </div>
+                <p-button
+                  label="Add Station"
+                  icon="pi pi-plus"
+                  (onClick)="openAdd()"
+                ></p-button>
+              </div>
+
+              <div class="filters-card">
+                <p-select 
+                  [options]="zones" 
+                  optionLabel="zoneName" 
+                  placeholder="All zones"
+                  [(ngModel)]="filterZone"
+                  (onChange)="onFilterChange()"
+                  [showClear]="true"
+                ></p-select>
+                <p-select 
+                  [options]="statusOptions" 
+                  optionLabel="label"
+                  placeholder="All Status"
+                  [(ngModel)]="filterStatus"
+                  (onChange)="onFilterChange()"
+                  [showClear]="true"
+                ></p-select>
+                <div class="search-input">
+                  <i class="pi pi-search"></i>
+                  <input 
+                    type="text" 
+                    pInputText 
+                    placeholder="Search by name"
+                    [(ngModel)]="searchText"
+                    (input)="onSearch()"
+                  />
+                </div>
+              </div>
+
+              <div class="stations-table">
+                <h3>Stations</h3>
+                <p class="count">total {{ filteredStations.length }} Stations</p>
+                <p-table [value]="filteredStations" [loading]="loading">
+                  <ng-template #header>
+                    <tr>
+                      <th>Station</th>
+                      <th>Location</th>
+                      <th>Zone</th>
+                      <th>Status</th>
+                      <th>Last Update</th>
+                      <th>Actions</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template #body let-station>
+                    <tr>
+                      <td>
+                        <div class="station-cell">
+                          <span class="name">{{ station.stationName }}</span>
+                          <span class="id">ID:{{ station.id }}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="location-cell">
+                          <i class="pi pi-map-marker"></i>
+                          <span>{{ station.location || station.address }}</span>
+                        </div>
+                      </td>
+                      <td>{{ station.zoneName }}</td>
+                      <td>
+                        <span class="status-badge" [ngClass]="station.status?.toLowerCase() || 'active'">
+                          {{ station.status || 'Active' }}
+                        </span>
+                      </td>
+                      <td>{{ station.lastUpdate | date: 'short' }}</td>
+                      <td>
+                        <button class="action-btn delete" (click)="confirmDelete(station.id)">
+                          <i class="pi pi-trash"></i>
+                        </button>
+                        <button class="action-btn edit" (click)="openEdit(station)">
+                          <i class="pi pi-pencil"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+            </div>
+          } @else {
+            <div class="form-container">
+              <div class="form-header">
+                <div class="title-desc">
+                  <h2>{{ isEditMode ? 'Edit Station' : 'Add New Station' }}</h2>
+                  <p>{{ isEditMode ? 'Modify station details' : 'Create a new station' }}</p>
+                </div>
+                <p-button
+                  label="Back to List"
+                  icon="pi pi-arrow-left"
+                  severity="secondary"
+                  (onClick)="onCancelEdit()"
+                ></p-button>
+              </div>
+
+              <form [formGroup]="stationForm" (ngSubmit)="saveStation()">
+                <div class="form-card">
+                  <div class="form-section">
+                    <h3>Basic Information <span class="required">*</span></h3>
+                    <p class="subtitle">Add station info</p>
+                    <div class="grid-form">
+                      <div class="field">
+                        <label>ID</label>
+                        <input type="text" pInputText formControlName="id" placeholder="Station ID" />
+                      </div>
+                      <div class="field">
+                        <label>Name</label>
+                        <input type="text" pInputText formControlName="name" placeholder="Station-name" />
+                      </div>
+                      <div class="field">
+                        <label>Phone</label>
+                        <input type="text" pInputText formControlName="phone" placeholder="Phone Number" />
+                      </div>
+                      <div class="field">
+                        <label>Email</label>
+                        <input type="email" pInputText formControlName="email" placeholder="Email Address" />
+                      </div>
+                      <div class="field col-span-2">
+                        <label>Address</label>
+                        <input type="text" pInputText formControlName="address" placeholder="Address" />
+                      </div>
+                      <div class="field col-span-2">
+                        <label>Location</label>
+                        <input type="text" pInputText formControlName="location" placeholder="Location Name" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-section">
+                    <h3>Tariff <span class="required">*</span></h3>
+                    <p class="subtitle">Add price for liter gas</p>
+                    <div class="field mt-3">
+                      <div class="tariff-input">
+                        <input type="number" pInputText formControlName="priceconversionValue" />
+                        <span class="currency">EGP/ 10,54</span>
+                        <span class="system-label">as a System</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-section">
+                    <h3>Location <span class="required">*</span></h3>
+                    <p class="subtitle">Add location and Coordinates</p>
+                    <div class="grid-form location-grid">
+                      <div class="field">
+                        <label>Zones</label>
+                        <p-select
+                          [options]="zones"
+                          optionLabel="zoneName"
+                          optionValue="id"
+                          formControlName="zoneId"
+                          placeholder="Select Zone"
+                        ></p-select>
+                      </div>
+                      <div class="field">
+                        <label>Latitude</label>
+                        <input type="text" pInputText formControlName="latitude" readonly />
+                      </div>
+                      <div class="field">
+                        <label>Longitude</label>
+                        <input type="text" pInputText formControlName="longitude" readonly />
+                      </div>
+                    </div>
+                    <div class="map-picker-container">
+                      <app-map
+                        [isPicker]="true"
+                        [selectedLocation]="selectedLocation"
+                        (locationSelected)="onLocationSelected($event)"
+                      ></app-map>
+                    </div>
+                  </div>
+
+                  <div class="form-footer">
+                    <p-button label="Previous" severity="danger" [outlined]="true" (onClick)="onCancelEdit()" class="btn-prev"></p-button>
+                    <p-button type="submit" label="Save" [disabled]="stationForm.invalid" class="btn-save"></p-button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          }
+        </p-tabpanel>
+        <p-tabpanel value="1"></p-tabpanel>
+        <p-tabpanel value="2"></p-tabpanel>
+        <p-tabpanel value="3">
+          <div class="tab-content">
+            <div class="section-header">
+              <div class="title-desc">
+                <h2>Dispenser Management</h2>
+                <p>Manage all dispensers</p>
+              </div>
+              <p-button
+                label="Add Dispenser"
+                icon="pi pi-plus"
+                (onClick)="startDispenserWizard()"
+              ></p-button>
+            </div>
+
+            <div class="filters-card">
+              <p-select 
+                [options]="dispenserStatusOptions" 
+                optionLabel="label"
+                placeholder="All Status"
+                [(ngModel)]="dispenserFilterStatus"
+                (onChange)="onDispenserFilterChange()"
+                [showClear]="true"
+              ></p-select>
+              <div class="search-input">
+                <i class="pi pi-search"></i>
+                <input 
+                  type="text" 
+                  pInputText 
+                  placeholder="Search by name or ID"
+                  [(ngModel)]="dispenserSearchText"
+                  (input)="onDispenserSearch()"
+                />
+              </div>
+            </div>
+
+            <div class="stations-table">
+              <h3>Dispensers</h3>
+              <p class="count">total {{ filteredDispensers.length }} Dispensers</p>
+              <p-table [value]="filteredDispensers">
+                <ng-template #header>
+                  <tr>
+                    <th>Dispenser Name</th>
+                    <th>Display ID</th>
+                    <th>Model</th>
+                    <th>Status</th>
+                    <th>Activity</th>
+                    <th>Actions</th>
+                  </tr>
+                </ng-template>
+                <ng-template #body let-dispenser>
+                  <tr>
+                    <td>
+                      <div class="station-cell">
+                        <span class="name">{{ dispenser.dispenserName }}</span>
+                        <span class="id">ID:{{ dispenser.machineId }}</span>
+                      </div>
+                    </td>
+                    <td>{{ dispenser.displayId }}</td>
+                    <td>{{ dispenser.model || 'N/A' }}</td>
+                    <td>
+                      <span class="status-badge" [ngClass]="dispenser.status?.toLowerCase() || 'offline'">
+                        {{ dispenser.status }}
+                      </span>
+                    </td>
+                    <td>{{ dispenser.activitySummary }}</td>
+                    <td>
+                      <button class="action-btn delete" (click)="confirmDeleteDispenser(dispenser.machineId)">
+                        <i class="pi pi-trash"></i>
+                      </button>
+                      <button class="action-btn edit" disabled>
+                        <i class="pi pi-pencil"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+        </p-tabpanel>
+        <p-tabpanel value="4"></p-tabpanel>
+        <p-tabpanel value="5"></p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  } @else if (viewMode === 'dispenserWizard') {
+  <div class="form-container">
+    <div class="form-header">
+      <div class="title-desc">
+        <h2>{{ dispenserStep === 1 ? 'Configure Machine' : 'Add Dispensers' }}</h2>
+        <p>Step {{ dispenserStep }} of 2: {{ dispenserStep === 1 ? 'Select/Create Machine' : 'Enter Dispenser Details' }}</p>
+      </div>
+      <p-button
+        label="Cancel"
+        icon="pi pi-times"
+        severity="secondary"
+        (onClick)="onCancelEdit()"
+      ></p-button>
+    </div>
+
+    <div class="form-card">
+      @if (dispenserStep === 1) {
+        <div class="wizard-step">
+          <div class="toggle-container mb-4">
+            <span class="mr-3" [class.active]="!isNewMachine">Existing Machine</span>
+            <input type="checkbox" class="toggle-switch" [checked]="isNewMachine" (change)="toggleNewMachine($any($event.target).checked)" />
+            <span class="ml-3" [class.active]="isNewMachine">Create New Machine</span>
+          </div>
+
+          @if (!isNewMachine) {
+            <div class="field">
+              <label>Select Machine</label>
+              <p-select
+                [options]="machines"
+                optionLabel="name"
+                placeholder="Select an existing machine"
+                [(ngModel)]="selectedMachine"
+                (onChange)="onMachineSelect($event.value)"
+              ></p-select>
+            </div>
+          } @else {
+            <form [formGroup]="machineForm">
+              <div class="grid-form">
+                <div class="field">
+                  <label>Machine Name</label>
+                  <input type="text" pInputText formControlName="name" placeholder="e.g. Adly_Mans01_2" />
+                </div>
+                <div class="field">
+                  <label>Model</label>
+                  <input type="text" pInputText formControlName="model" placeholder="Model info" />
+                </div>
+                <div class="field">
+                  <label>Code</label>
+                  <input type="text" pInputText formControlName="code" placeholder="Machine Code" />
+                </div>
+                <div class="field">
+                  <label>Assign to Station</label>
+                  <p-select
+                    [options]="stations"
+                    optionLabel="stationName"
+                    optionValue="id"
+                    formControlName="stationId"
+                    placeholder="Select Station"
+                  ></p-select>
+                </div>
+              </div>
+            </form>
+          }
+          
+          <div class="wizard-footer mt-5">
+            <p-button label="Next Step" [disabled]="isNewMachine ? machineForm.invalid : !selectedMachine" (onClick)="nextStep()"></p-button>
+          </div>
+        </div>
+      } @else {
+        <div class="wizard-step">
+          <div class="selected-context mb-4">
+            <strong>Selected Machine:</strong> {{ selectedMachine?.name }}
+          </div>
+
+          <form [formGroup]="dispenserForm">
+            <div class="grid-form">
+              <div class="field">
+                <label>Dispenser Number</label>
+                <input type="number" pInputText formControlName="dispenser_No" />
+              </div>
+              <div class="field">
+                <label>Serial Number</label>
+                <input type="text" pInputText formControlName="serialNumper" placeholder="Enter Serial" />
+              </div>
+              <div class="field col-span-2">
+                <label>Dispenser Name (System Generated)</label>
+                <input type="text" pInputText formControlName="name" [readonly]="true" />
+              </div>
+            </div>
+          </form>
+
+          <div class="wizard-footer space-between mt-5">
+            <p-button label="Add Another Dispenser" severity="info" [outlined]="true" (onClick)="saveDispenser()"></p-button>
+            <div class="right-actions">
+              <p-button label="Save & Finish" (onClick)="saveDispenser(); finishWizard()"></p-button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}
+
+<p-toast></p-toast>
+<app-confirm-dialog
+  [visible]="showConfirmDelete"
+  [title]="deleteMode === 'station' ? 'Delete Station' : 'Delete Dispenser'"
+  [message]="deleteMode === 'station' ? 'Are you sure you want to delete this station?' : 'Are you sure you want to delete this dispenser?'"
+  severity="danger"
+  confirmLabel="Delete"
+  (confirm)="onDeleteConfirmed()"
+  (cancel)="showConfirmDelete = false"
+></app-confirm-dialog>
+</div>
