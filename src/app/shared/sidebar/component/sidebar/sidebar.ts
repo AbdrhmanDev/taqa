@@ -64,7 +64,7 @@ export class Sidebar {
     {
       title: 'Setting',
       items: [
-        { name: 'Configuration', icon: 'layers-01', route: '/dashboard/station-config' },
+        { name: 'Station Configuration', icon: 'layers-01', route: '/dashboard/station-config' },
         { name: 'Tariff', icon: 'tariff', route: '/dashboard/tariff' },
         { name: 'Alarm & Alert', icon: 'alarm-alert', route: '/dashboard/alarm-alert' },
         { name: 'Maintenance Request', icon: 'maintenance', route: '/dashboard/requests' },
@@ -88,6 +88,7 @@ export class Sidebar {
       items: [
         { name: 'Zone', icon: 'location', route: '/dashboard/zones' },
         { name: 'Area', icon: 'map', route: '/dashboard/areas' },
+        { name: 'Station Hierarchy', icon: 'layers-01', route: '/dashboard/station-hierarchy' },
       ],
     },
   ];

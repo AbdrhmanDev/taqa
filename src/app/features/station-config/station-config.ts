@@ -17,6 +17,7 @@ import { TabsModule } from 'primeng/tabs';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialog } from '../../shared/components/confirm-dialog/confirm-dialog';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-station-config',
@@ -33,6 +34,7 @@ import { ConfirmDialog } from '../../shared/components/confirm-dialog/confirm-di
     TabsModule,
     ToastModule,
     ConfirmDialog,
+    DialogModule,
   ],
   providers: [MessageService],
   templateUrl: './station-config.html',
@@ -57,6 +59,7 @@ export class StationConfig implements OnInit {
   stationForm: FormGroup;
   machineForm: FormGroup;
   dispenserForm: FormGroup;
+  compressorForm: FormGroup;
   selectedLocation: { lat: number; lng: number } | null = null;
   
   // Dispenser Wizard state
@@ -81,10 +84,42 @@ export class StationConfig implements OnInit {
     { label: 'Online', value: 'Online' }
   ];
 
-  // Confirmation state
+  // Compressors state
+  compressors: any[] = [];
+  filteredCompressors: any[] = [];
+  showCompressorDialog: boolean = false;
+  isEditCompressorMode: boolean = false;
+  compressorSearchText: string = '';
+  compressorManufacturerOptions = [
+    { id: 1, name: 'Janasi' },
+    { id: 2, name: 'Safe' },
+    { id: 3, name: 'IMW' }
+  ];
+
   showConfirmDelete: boolean = false;
   itemToDelete: number | null = null;
-  deleteMode: 'station' | 'dispenser' = 'station';
+  deleteMode: 'station' | 'dispenser' | 'compressor' | 'unlinkCompressor' = 'station';
+
+  // Audit Logs state
+  auditLogs: any[] = [];
+  filteredAuditLogs: any[] = [];
+  auditAssetFilter: any = null;
+  auditTypeFilter: any = null;
+  auditActionFilter: any = null;
+  auditUserFilter: any = null;
+
+  assetTypeOptions = [
+    { label: 'Compressor', value: 'Compressor' },
+    { label: 'Dispenser', value: 'Dispenser' }
+  ];
+
+  actionOptions = [
+    { label: 'Link', value: 'Link' },
+    { label: 'Unlink', value: 'Unlink' },
+    { label: 'Create', value: 'Create' },
+    { label: 'Edit', value: 'Edit' },
+    { label: 'Delete', value: 'Delete' }
+  ];
 
   constructor() {
     this.stationForm = this.fb.group({
@@ -115,6 +150,16 @@ export class StationConfig implements OnInit {
       stationId: [null]
     });
 
+    this.compressorForm = this.fb.group({
+      id: [null],
+      name: ['', Validators.required],
+      code: ['', Validators.required],
+      brokerId: ['', Validators.required],
+      serialNumber: ['', Validators.required],
+      stationId: [null, Validators.required],
+      compressorManufacturerId: [null, Validators.required]
+    });
+
     // Auto-update dispenser name based on machine and number
     this.machineForm.valueChanges.subscribe(() => {
       this.updateDispenserName();
@@ -130,6 +175,15 @@ export class StationConfig implements OnInit {
     this.loadZones();
     this.loadDispensers();
     this.loadMachines();
+    this.loadCompressors();
+    this.loadAuditLogs();
+  }
+
+  loadCompressors() {
+    this.service.getCompressors().subscribe((res: any[]) => {
+      this.compressors = res;
+      this.applyCompressorFilters();
+    });
   }
 
   loadMachines() {
@@ -160,6 +214,14 @@ export class StationConfig implements OnInit {
     });
   }
 
+  loadAuditLogs() {
+    this.service.getAssetLinkHistory().subscribe((res: any[]) => {
+      this.auditLogs = res;
+      this.applyAuditFilters();
+      this.cdr.detectChanges();
+    });
+  }
+
   applyFilters() {
     this.filteredStations = this.stations.filter(s => {
       const matchZone = !this.filterZone || s.zoneName === this.filterZone.zoneName;
@@ -179,6 +241,30 @@ export class StationConfig implements OnInit {
         (d.dispenserName?.toLowerCase().includes(this.dispenserSearchText.toLowerCase()) || 
          d.displayId?.toString().includes(this.dispenserSearchText));
       return matchStatus && matchSearch;
+    });
+    this.cdr.detectChanges();
+  }
+
+  applyAuditFilters() {
+    this.filteredAuditLogs = this.auditLogs.filter(log => {
+      const matchType = !this.auditTypeFilter || log.entityType === this.auditTypeFilter?.value;
+      const matchAction = !this.auditActionFilter || log.action === this.auditActionFilter?.value;
+      return matchType && matchAction;
+    });
+    this.cdr.detectChanges();
+  }
+
+  onAuditFilterChange() {
+    this.applyAuditFilters();
+  }
+
+
+  applyCompressorFilters() {
+    this.filteredCompressors = this.compressors.filter(c => {
+      const matchSearch = !this.compressorSearchText || 
+        (c.name?.toLowerCase().includes(this.compressorSearchText.toLowerCase()) || 
+         c.code?.toLowerCase().includes(this.compressorSearchText.toLowerCase()));
+      return matchSearch;
     });
     this.cdr.detectChanges();
   }
@@ -209,7 +295,17 @@ export class StationConfig implements OnInit {
     });
   }
 
+  formatSourceDestParts(str: string): { from: string, to: string } {
+    if (!str) return { from: '-', to: '' };
+    const parts = str.split(' → ');
+    if (parts.length > 1) {
+      return { from: parts[0], to: parts[1] };
+    }
+    return { from: str, to: '' };
+  }
+
   startDispenserWizard() {
+
     this.dispenserStep = 1;
     this.isNewMachine = false;
     this.selectedMachine = null;
@@ -382,25 +478,100 @@ export class StationConfig implements OnInit {
     this.showConfirmDelete = true;
   }
 
+  confirmDeleteCompressor(id: number) {
+    this.itemToDelete = id;
+    this.deleteMode = 'compressor';
+    this.showConfirmDelete = true;
+  }
+
+  confirmUnlinkCompressor(id: number) {
+    this.itemToDelete = id;
+    this.deleteMode = 'unlinkCompressor';
+    this.showConfirmDelete = true;
+  }
+
   onDeleteConfirmed() {
     if (this.itemToDelete) {
-      const obs = this.deleteMode === 'station' 
-        ? this.service.deleteStation(this.itemToDelete)
-        : this.service.deleteDispenser(this.itemToDelete);
+      let obs;
+      if (this.deleteMode === 'station') obs = this.service.deleteStation(this.itemToDelete);
+      else if (this.deleteMode === 'dispenser') obs = this.service.deleteDispenser(this.itemToDelete);
+      else if (this.deleteMode === 'unlinkCompressor') obs = this.service.unlinkCompressor(this.itemToDelete);
+      else obs = this.service.deleteCompressor(this.itemToDelete);
 
       obs.subscribe(() => {
+        const isUnlink = this.deleteMode === 'unlinkCompressor';
         this.messageService.add({ 
           severity: 'success', 
-          summary: 'Deleted', 
-          detail: `${this.deleteMode === 'station' ? 'Station' : 'Dispenser'} removed successfully` 
+          summary: isUnlink ? 'Unlinked' : 'Deleted', 
+          detail: isUnlink 
+            ? 'Compressor unlinked successfully' 
+            : `${this.deleteMode === 'station' ? 'Station' : this.deleteMode === 'dispenser' ? 'Dispenser' : 'Compressor'} removed successfully` 
         });
         if (this.deleteMode === 'station') this.loadStations();
-        else this.loadDispensers();
+        else if (this.deleteMode === 'dispenser') this.loadDispensers();
+        else this.loadCompressors();
       });
     }
     this.showConfirmDelete = false;
   }
 
+  // --- Compressor Modal Methods ---
+
+  openAddCompressor() {
+    this.isEditCompressorMode = false;
+    this.editingId = null;
+    this.compressorForm.reset({
+      name: '',
+      code: '',
+      brokerId: '',
+      serialNumber: '',
+      stationId: null,
+      compressorManufacturerId: null
+    });
+    this.showCompressorDialog = true;
+  }
+
+  openEditCompressor(compressor: any) {
+    this.isEditCompressorMode = true;
+    this.editingId = compressor.id;
+    this.compressorForm.patchValue({
+      id: compressor.id,
+      name: compressor.name,
+      code: compressor.code,
+      brokerId: compressor.brokerId,
+      serialNumber: compressor.serialNumber,
+      stationId: compressor.stationId,
+      compressorManufacturerId: compressor.compressorManufacturerId
+    });
+    this.showCompressorDialog = true;
+  }
+
+  hideCompressorDialog() {
+    this.showCompressorDialog = false;
+  }
+
+  saveCompressor() {
+    if (this.compressorForm.valid) {
+      const data = this.compressorForm.value;
+      const obs = (this.isEditCompressorMode && this.editingId)
+        ? this.service.updateCompressor(this.editingId, data)
+        : this.service.createCompressor(data);
+
+      obs.subscribe({
+        next: () => {
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: `Compressor ${this.isEditCompressorMode ? 'updated' : 'created'}` });
+          this.loadCompressors();
+          this.hideCompressorDialog();
+        },
+        error: () => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Operation failed' });
+        }
+      });
+    }
+  }
+
+  // Removed unlinkCompressor method as it is now handled by onDeleteConfirmed
+  
   onCancelEdit() {
     this.viewMode = 'list';
   }
