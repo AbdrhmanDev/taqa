@@ -98,7 +98,7 @@ export class StationConfig implements OnInit {
 
   showConfirmDelete: boolean = false;
   itemToDelete: number | null = null;
-  deleteMode: 'station' | 'dispenser' | 'compressor' | 'unlinkCompressor' = 'station';
+  deleteMode: 'station' | 'dispenser' | 'compressor' | 'unlinkCompressor' | 'asset' = 'station';
 
   // Audit Logs state
   auditLogs: any[] = [];
@@ -120,6 +120,14 @@ export class StationConfig implements OnInit {
     { label: 'Edit', value: 'Edit' },
     { label: 'Delete', value: 'Delete' }
   ];
+
+  // Assets state
+  assets: any[] = [];
+  filteredAssets: any[] = [];
+  showAssetDialog: boolean = false;
+  isEditAssetMode: boolean = false;
+  assetSearchText: string = '';
+  assetForm!: FormGroup;
 
   constructor() {
     this.stationForm = this.fb.group({
@@ -160,6 +168,13 @@ export class StationConfig implements OnInit {
       compressorManufacturerId: [null, Validators.required]
     });
 
+    this.assetForm = this.fb.group({
+      id: [null],
+      name: ['', Validators.required],
+      serialNumber: ['', Validators.required],
+      stationId: [null, Validators.required]
+    });
+
     // Auto-update dispenser name based on machine and number
     this.machineForm.valueChanges.subscribe(() => {
       this.updateDispenserName();
@@ -177,6 +192,7 @@ export class StationConfig implements OnInit {
     this.loadMachines();
     this.loadCompressors();
     this.loadAuditLogs();
+    this.loadAssets();
   }
 
   loadCompressors() {
@@ -222,6 +238,15 @@ export class StationConfig implements OnInit {
     });
   }
 
+  loadAssets() {
+    this.service.getAssets().subscribe((res: any[]) => {
+      this.assets = res;
+      this.applyAssetFilters();
+      this.cdr.detectChanges();
+    });
+  }
+
+
   applyFilters() {
     this.filteredStations = this.stations.filter(s => {
       const matchZone = !this.filterZone || s.zoneName === this.filterZone.zoneName;
@@ -256,6 +281,64 @@ export class StationConfig implements OnInit {
 
   onAuditFilterChange() {
     this.applyAuditFilters();
+  }
+
+  applyAssetFilters() {
+    this.filteredAssets = this.assets.filter(a => {
+      const matchSearch = !this.assetSearchText ||
+        (a.name?.toLowerCase().includes(this.assetSearchText.toLowerCase()) ||
+         a.serialNumber?.toLowerCase().includes(this.assetSearchText.toLowerCase()));
+      return matchSearch;
+    });
+    this.cdr.detectChanges();
+  }
+
+  onAssetSearch() {
+    this.applyAssetFilters();
+  }
+
+  openAddAsset() {
+    this.isEditAssetMode = false;
+    this.assetForm.reset();
+    this.showAssetDialog = true;
+  }
+
+  openEditAsset(asset: any) {
+    this.isEditAssetMode = true;
+    this.assetForm.patchValue({
+      id: asset.id,
+      name: asset.name,
+      serialNumber: asset.serialNumber,
+      stationId: asset.stationId
+    });
+    this.showAssetDialog = true;
+  }
+
+  saveAsset() {
+    const data = this.assetForm.getRawValue();
+    if (this.isEditAssetMode && data.id) {
+      this.service.updateAsset(data.id, { name: data.name, serialNumber: data.serialNumber }).subscribe({
+        next: () => {
+          this.messageService.add({ severity: 'success', summary: 'Updated', detail: 'Asset updated successfully' });
+          this.loadAssets();
+          this.showAssetDialog = false;
+        },
+        error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update asset' })
+      });
+    } else {
+      this.service.createAsset({ name: data.name, serialNumber: data.serialNumber, stationId: data.stationId }).subscribe({
+        next: () => {
+          this.messageService.add({ severity: 'success', summary: 'Created', detail: 'Asset created successfully' });
+          this.loadAssets();
+          this.showAssetDialog = false;
+        },
+        error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to create asset' })
+      });
+    }
+  }
+
+  hideAssetDialog() {
+    this.showAssetDialog = false;
   }
 
 
@@ -490,25 +573,37 @@ export class StationConfig implements OnInit {
     this.showConfirmDelete = true;
   }
 
+  confirmDeleteAsset(id: number) {
+    this.itemToDelete = id;
+    this.deleteMode = 'asset';
+    this.showConfirmDelete = true;
+  }
+
+  getStationName(stationId: number): string {
+    const station = this.stations.find((s: any) => s.id === stationId);
+    return station?.stationName || station?.name || `Station ${stationId}`;
+  }
+
   onDeleteConfirmed() {
     if (this.itemToDelete) {
       let obs;
       if (this.deleteMode === 'station') obs = this.service.deleteStation(this.itemToDelete);
       else if (this.deleteMode === 'dispenser') obs = this.service.deleteDispenser(this.itemToDelete);
       else if (this.deleteMode === 'unlinkCompressor') obs = this.service.unlinkCompressor(this.itemToDelete);
+      else if (this.deleteMode === 'asset') obs = this.service.updateAsset(this.itemToDelete, { isActive: false });
       else obs = this.service.deleteCompressor(this.itemToDelete);
 
       obs.subscribe(() => {
         const isUnlink = this.deleteMode === 'unlinkCompressor';
+        const label = this.deleteMode === 'station' ? 'Station' : this.deleteMode === 'dispenser' ? 'Dispenser' : this.deleteMode === 'asset' ? 'Asset' : 'Compressor';
         this.messageService.add({ 
           severity: 'success', 
           summary: isUnlink ? 'Unlinked' : 'Deleted', 
-          detail: isUnlink 
-            ? 'Compressor unlinked successfully' 
-            : `${this.deleteMode === 'station' ? 'Station' : this.deleteMode === 'dispenser' ? 'Dispenser' : 'Compressor'} removed successfully` 
+          detail: isUnlink ? 'Compressor unlinked successfully' : `${label} removed successfully` 
         });
         if (this.deleteMode === 'station') this.loadStations();
         else if (this.deleteMode === 'dispenser') this.loadDispensers();
+        else if (this.deleteMode === 'asset') this.loadAssets();
         else this.loadCompressors();
       });
     }

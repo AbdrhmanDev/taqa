@@ -119,4 +119,25 @@ export class StationConfigService {
     const url = environment.url.replace('/api/', '/') + 'asset-link-history';
     return this.http.get<any[]>(url);
   }
+
+  // --- ASSETS ---
+  getAssets(): Observable<any[]> {
+    return this.http.get<any[]>(environment.url + 'Asset');
+  }
+
+  getAssetById(id: number): Observable<any> {
+    return this.http.get<any>(`${environment.url}Asset/${id}`);
+  }
+
+  createAsset(data: any): Observable<any> {
+    return this.http.post(environment.url + 'Asset', data);
+  }
+
+  updateAsset(id: number, data: any): Observable<any> {
+    return this.http.put(`${environment.url}Asset/${id}`, data);
+  }
+
+  getAvailableAssets(): Observable<any[]> {
+    return this.http.get<any[]>(environment.url + 'Asset/available');
+  }
 }

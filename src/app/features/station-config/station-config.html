@@ -24,7 +24,7 @@
       <p-tab value="2">Compressor</p-tab>
       <p-tab value="3">Dispenser</p-tab>
       <p-tab value="4">Inventory</p-tab>
-      <p-tab value="5">Audit Log</p-tab>
+      <p-tab value="5">Adult Log</p-tab>
     </p-tablist>
 
     <p-tabpanels>
@@ -251,7 +251,98 @@
         </div>
         }
       </p-tabpanel>
-      <p-tabpanel value="1"></p-tabpanel>
+      <p-tabpanel value="1">
+        <div class="tab-content">
+          <div class="section-header">
+            <div class="title-desc">
+              <h2>Asset Management</h2>
+              <p>Manage all assets across stations</p>
+            </div>
+            <p-button
+              label="Add Asset"
+              icon="pi pi-plus"
+              (onClick)="openAddAsset()"
+            ></p-button>
+          </div>
+
+          <div class="filters-card">
+            <div class="search-input">
+              <i class="pi pi-search"></i>
+              <input
+                type="text"
+                pInputText
+                placeholder="Search by name or serial"
+                [(ngModel)]="assetSearchText"
+                (input)="onAssetSearch()"
+              />
+            </div>
+          </div>
+
+          <div class="stations-table">
+            <h3>Assets</h3>
+            <p class="count">total {{ filteredAssets.length }} Assets</p>
+            <p-table [value]="filteredAssets">
+              <ng-template #header>
+                <tr>
+                  <th>Asset Name</th>
+                  <th>Serial Number</th>
+                  <th>Station</th>
+                  <th>In Inventory</th>
+                  <th>Status</th>
+                  <th>Created At</th>
+                  <th>Actions</th>
+                </tr>
+              </ng-template>
+              <ng-template #body let-asset>
+                <tr>
+                  <td>
+                    <div class="station-cell">
+                      <span class="name">{{ asset.name }}</span>
+                      <span class="id">ID:{{ asset.id }}</span>
+                    </div>
+                  </td>
+                  <td>{{ asset.serialNumber || 'N/A' }}</td>
+                  <td>{{ getStationName(asset.stationId) }}</td>
+                  <td>
+                    <span
+                      class="status-badge"
+                      [ngClass]="asset.inInventory ? 'active' : 'inactive'"
+                    >
+                      {{ asset.inInventory ? 'Yes' : 'No' }}
+                    </span>
+                  </td>
+                  <td>
+                    <span
+                      class="status-badge"
+                      [ngClass]="asset.isActive ? 'active' : 'inactive'"
+                    >
+                      {{ asset.isActive ? 'Active' : 'Inactive' }}
+                    </span>
+                  </td>
+                  <td>{{ asset.createdAt | date : 'short' }}</td>
+                  <td>
+                    <button
+                      class="action-btn edit"
+                      (click)="openEditAsset(asset)"
+                      title="Edit"
+                      style="margin-right: 8px"
+                    >
+                      <i class="pi pi-pencil"></i>
+                    </button>
+                    <button
+                      class="action-btn delete"
+                      (click)="confirmDeleteAsset(asset.id)"
+                      title="Delete"
+                    >
+                      <i class="pi pi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </p-tabpanel>
       <p-tabpanel value="2">
         <div class="tab-content">
           <div class="section-header">
@@ -503,7 +594,7 @@
               </ng-template>
               <ng-template #body let-log>
                 <tr>
-                  <td class="text-gray-600 font-medium">{{ log.serialNumber }}</td>
+                  <td class="text-gray-600 font-medium">AtlasCocop-CNG</td>
                   <td>
                     <div class="font-semibold text-gray-900">
                       {{ log.entityType }} {{ log.serialNumber || log.id }}
@@ -695,6 +786,8 @@
         ? 'Delete Station'
         : deleteMode === 'compressor'
         ? 'Delete Compressor'
+        : deleteMode === 'asset'
+        ? 'Delete Asset'
         : 'Delete Dispenser'
     "
     [message]="
@@ -704,6 +797,8 @@
         ? 'Are you sure you want to delete this station?'
         : deleteMode === 'compressor'
         ? 'Are you sure you want to delete this compressor?'
+        : deleteMode === 'asset'
+        ? 'Are you sure you want to delete this asset?'
         : 'Are you sure you want to delete this dispenser?'
     "
     severity="danger"
@@ -790,6 +885,66 @@
           [icon]="isEditCompressorMode ? 'pi pi-check' : 'pi pi-plus'"
           type="submit"
           [disabled]="compressorForm.invalid"
+          styleClass="w-full bg-blue-600 border-none"
+        ></p-button>
+      </div>
+    </form>
+  </p-dialog>
+
+  <!-- Asset Modal -->
+  <p-dialog
+    [(visible)]="showAssetDialog"
+    [header]="isEditAssetMode ? 'Edit Asset' : 'Add New Asset'"
+    [modal]="true"
+    [style]="{ width: '450px', 'border-radius': '16px' }"
+    [draggable]="false"
+    [resizable]="false"
+    styleClass="app-dialog premium-modal"
+  >
+    <form [formGroup]="assetForm" (ngSubmit)="saveAsset()" class="p-4 pt-0">
+      <div class="vertical-form">
+        <div class="field">
+          <label>Name <span class="text-red-500">*</span></label>
+          <input type="text" pInputText formControlName="name" placeholder="Asset Name" />
+        </div>
+        <div class="field">
+          <label>Serial Number <span class="text-red-500">*</span></label>
+          <input
+            type="text"
+            pInputText
+            formControlName="serialNumber"
+            placeholder="Serial Number"
+          />
+        </div>
+        <div class="field">
+          <label class="text-lg font-semibold mt-3 mb-1"
+            >Station ID <span class="text-red-500">*</span></label
+          >
+          <p class="text-sm text-gray-400 mb-2 mt-0">Select which station to assign</p>
+          <p-select
+            [options]="stations"
+            optionLabel="stationName"
+            optionValue="id"
+            formControlName="stationId"
+            placeholder="Station ID"
+            appendTo="body"
+          ></p-select>
+        </div>
+      </div>
+
+      <div class="modal-footer mt-5 pt-3">
+        <p-button
+          label="Cancel"
+          [outlined]="true"
+          severity="secondary"
+          (onClick)="hideAssetDialog()"
+          styleClass="w-full"
+        ></p-button>
+        <p-button
+          [label]="isEditAssetMode ? 'Save' : 'Add'"
+          [icon]="isEditAssetMode ? 'pi pi-check' : 'pi pi-plus'"
+          type="submit"
+          [disabled]="assetForm.invalid"
           styleClass="w-full bg-blue-600 border-none"
         ></p-button>
       </div>
