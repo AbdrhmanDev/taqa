@@ -32,38 +32,39 @@
       </div>
 
       <!-- Content -->
-      <div class="grid grid-cols-2 gap-6 text-sm">
+      <div class="grid grid-cols-[1fr_auto_1fr] gap-6 text-sm items-stretch">
 
-        <!-- Left -->
+
         <div class="space-y-3">
-          <h1>Left Dispenser</h1>
-          <div class="flex justify-between">
+          <h1 class="font-bold text-base">Left Dispenser</h1>
 
+          <div class="flex justify-between">
             <span class="text-gray-500">Name</span>
             <span class="font-medium">{{ dispenser.left.name }}</span>
           </div>
-          <div class="flex justify-between">
 
+          <div class="flex justify-between">
             <span class="text-gray-500">Charge(Volum)</span>
             <span class="font-medium">{{ dispenser.left.chargeVolume }} m³</span>
           </div>
+
           <div class="flex justify-between">
             <span class="text-gray-500">Charging Time</span>
-            <span class="font-medium">{{
-              dispenser.left.chargingTime}}min</span>
+            <span class="font-medium">{{ dispenser.left.chargingTime }} min</span>
           </div>
 
           <div class="flex justify-between">
             <span class="text-gray-500">Throughput</span>
-            <span class="font-medium">{{ dispenser.left.throughput }}min</span>
+            <span class="font-medium">{{ dispenser.left.throughput }} m³/min</span>
           </div>
+
           <div class="flex justify-between">
             <span class="text-gray-500">Status</span>
             <span class="inline-block px-2 py-1 text-xs rounded-2xl" [ngClass]="{
-    'bg-[#FEE4E2] text-[#B42318] rounded-2xl': dispenser.left?.connectionStatus === 'Offline',
-    'bg-[#DCFAE6] text-[#085D3A] rounded-2xl': dispenser.left?.connectionStatus === 'Online',
-    'bg-[#FCD34D] text-[#F79009] rounded-2xl': dispenser.left?.connectionStatus === 'Warning'
-  }">
+        'bg-[#FEE4E2] text-[#B42318]': dispenser.left?.connectionStatus === 'Offline',
+        'bg-[#DCFAE6] text-[#085D3A]': dispenser.left?.connectionStatus === 'Online',
+        'bg-[#FCD34D] text-[#F79009]': dispenser.left?.connectionStatus === 'Warning'
+      }">
               {{ dispenser.left.connectionStatus }}
             </span>
           </div>
@@ -74,16 +75,19 @@
           </div>
         </div>
 
-        <!-- Right -->
-        <div class="space-y-3">
-          <h1>Right Dispenser</h1>
-          <div class="flex justify-between">
 
+        <div class="w-px bg-gray-300 mx-4 self-stretch"></div>
+
+
+        <div class="space-y-3">
+          <h1 class="font-bold text-base">Right Dispenser</h1>
+
+          <div class="flex justify-between">
             <span class="text-gray-500">Name</span>
             <span class="font-medium">{{ dispenser.right.name }}</span>
           </div>
-          <div class="flex justify-between">
 
+          <div class="flex justify-between">
             <span class="text-gray-500">Charge(Volum)</span>
             <span class="font-medium">{{ dispenser.right.chargeVolume }} m³</span>
           </div>
@@ -97,14 +101,15 @@
             <span class="text-gray-500">Throughput</span>
             <span class="font-medium">{{ dispenser.right.throughput }} m³/min</span>
           </div>
+
           <div class="flex justify-between">
             <span class="text-gray-500">Status</span>
             <span class="inline-block px-2 py-1 text-xs rounded-2xl" [ngClass]="{
-    'bg-[#FEE4E2] text-[#B42318] rounded-2xl': dispenser.status === 'Offline',
-    'bg-[#DCFAE6] text-[#085D3A] rounded-2xl': dispenser.status === 'Online',
-    'bg-[#FCD34D] text-[#F79009] rounded-2xl': dispenser.status === 'Warning'
-  }">
-              {{ dispenser.right?.connectionStatus }}
+        'bg-[#FEE4E2] text-[#B42318]': dispenser.right?.connectionStatus === 'Offline',
+        'bg-[#DCFAE6] text-[#085D3A]': dispenser.right?.connectionStatus === 'Online',
+        'bg-[#FCD34D] text-[#F79009]': dispenser.right?.connectionStatus === 'Warning'
+      }">
+              {{ dispenser.right.connectionStatus }}
             </span>
           </div>
 

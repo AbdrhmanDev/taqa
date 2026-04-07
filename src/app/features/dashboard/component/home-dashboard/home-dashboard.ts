@@ -68,6 +68,7 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
   private map!: L.Map;
   allStations: any[] = [];
   dashboardData: any;
+  stationUptime: any[] = [];
   dashboardRevenueData: any;
   dashboardGasData: any;
   isLoading: boolean = true;
@@ -105,12 +106,12 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
     this.getGasData();
     this.getRevenueData();
     this.onStartConnection();
-
     this.hourlyRevenufChart();
     this.getVehiclesChart();
     this.getHighestConsumption();
     this.getHourlyGasChart();
     this.getAlarmsHistory();
+    this.onGetDataTable();
   }
 
   private setLoading(key: string) {
@@ -304,7 +305,18 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
       },
     });
   }
-
+  onGetDataTable() {
+    this.dashboardService.dashboardTable().subscribe({
+      next: (res) => {
+        this.stationUptime = res;
+        this.cdr.detectChanges();
+        console.log(res);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
   openSeeMore() {
     this.router.navigate(['/dashboard/more-alarms']);
   }
@@ -363,7 +375,15 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private statusColors: Map<string, string> = new Map();
-  private colorPalette = ['#16a34a', '#dc2626', '#f59e0b', '#3b82f6', '#8b5cf6', '#ec4899', '#6b7280'];
+  private colorPalette = [
+    '#16a34a',
+    '#dc2626',
+    '#f59e0b',
+    '#3b82f6',
+    '#8b5cf6',
+    '#ec4899',
+    '#6b7280',
+  ];
 
   private getStatusColor(status: string): string {
     if (!this.statusColors.has(status)) {
@@ -471,7 +491,9 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
           !isNaN(parseFloat(s.longitude)),
       );
       if (validStations.length > 0) {
-        const bounds = L.latLngBounds(validStations.map((s) => [parseFloat(s.latitude), parseFloat(s.longitude)]));
+        const bounds = L.latLngBounds(
+          validStations.map((s) => [parseFloat(s.latitude), parseFloat(s.longitude)]),
+        );
         this.map.fitBounds(bounds, { padding: [50, 50] });
       } else {
         this.map.setView([30.0444, 31.2357], 7);

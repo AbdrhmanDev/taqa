@@ -1,11 +1,11 @@
-<div class="m-3 bg-white p-6 rounded-3xl flex flex-col">
-  <!-- Header -->
+<!-- <div class="m-3 bg-white p-6 rounded-3xl flex flex-col">
+
   <div class="flex justify-between items-center pb-4">
     <h3 class="font-bold">Recent Alarms</h3>
     <span class="text-gray-400 text-sm">Total Alarms: {{ totalAlarms }}</span>
   </div>
 
-  <!-- Alarms List -->
+
   <div class="flex flex-col gap-3">
     <div class="bg-gray-100 p-4 rounded-3xl flex justify-between" *ngFor="let alarm of pagedAlarms">
       <div class="flex">
@@ -41,7 +41,7 @@
     </div>
   </div>
 
-  <!-- Pagination -->
+
   <div class="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
     <button
       class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition"
@@ -64,4 +64,212 @@
       Next →
     </button>
   </div>
+</div> -->
+<div class="alarm-page">
+
+  <!-- Search & Filter Section -->
+  <div class="search-filter-card">
+    <div class="search-filter-header">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+      </svg>
+      <span class="search-filter-title">Search & Filter</span>
+    </div>
+
+    <div class="filter-controls">
+
+      <!-- Search by Alarm Name -->
+      <!-- <div class="filter-item search-item">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input type="text" placeholder="Search by Alarm Name" class="search-input" />
+        </div>
+      </div> -->
+
+      <!-- All Stations -->
+      <div class="filter-item">
+        <p-select [options]="allStations" [(ngModel)]="selectedStation" (ngModelChange)="onFilterChange()"
+          optionLabel="stationName" optionValue="id" placeholder="All Stations" class="w-full filter-select">
+        </p-select>
+      </div>
+
+      <!-- All Severity -->
+      <div class="filter-item">
+        <p-select [options]="severityOptions" [(ngModel)]="selectedSeverity" (ngModelChange)="onFilterChange()"
+          optionLabel="label" optionValue="value" placeholder="All Severity" [showClear]="true"
+          class="w-full filter-select">
+        </p-select>
+      </div>
+
+      <!-- Status -->
+      <div class="filter-item">
+        <p-select [options]="statusOptions" [(ngModel)]="selectedStatus" (ngModelChange)="onFilterChange()"
+          optionLabel="label" optionValue="value" placeholder="Status" [showClear]="true" class="w-full filter-select">
+        </p-select>
+      </div>
+
+      <!-- From Date -->
+      <div class="filter-item date-item">
+        <div class="date-input-wrapper">
+          <p-datepicker [(ngModel)]="fromDatePicker" (ngModelChange)="onFromDateChange($event)" dateFormat="yy-mm-dd"
+            placeholder="from data" class="w-full" inputStyleClass="date-input">
+          </p-datepicker>
+          <svg class="date-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 18 18"
+            fill="none">
+            <path d="M13.5 1.5V3M4.5 1.5V3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+            <path d="M4.5 6H13.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+            <rect x="1.875" y="2.25" width="14.25" height="14.25" rx="3" stroke="currentColor" stroke-width="1.2" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- To Date -->
+      <div class="filter-item date-item">
+        <div class="date-input-wrapper">
+          <p-datepicker [(ngModel)]="toDatePicker" (ngModelChange)="onToDateChange($event)" dateFormat="yy-mm-dd"
+            placeholder="to data" class="w-full" inputStyleClass="date-input">
+          </p-datepicker>
+          <svg class="date-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 18 18"
+            fill="none">
+            <path d="M13.5 1.5V3M4.5 1.5V3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+            <path d="M4.5 6H13.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+            <rect x="1.875" y="2.25" width="14.25" height="14.25" rx="3" stroke="currentColor" stroke-width="1.2" />
+          </svg>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Tabs: All / System / User -->
+    <div class="tabs-row">
+      <button class="tab-btn" [class.active]="activeTab === 'all'" (click)="setTab('all')">All</button>
+      <button class="tab-btn" [class.active]="activeTab === 'system'" (click)="setTab('system')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+          <line x1="8" y1="21" x2="16" y2="21" />
+          <line x1="12" y1="17" x2="12" y2="21" />
+        </svg>
+        System <span class="tab-count">{{ systemCount }}</span>
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'user'" (click)="setTab('user')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+        User <span class="tab-count">{{ userCount }}</span>
+      </button>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend-row">
+      <span class="legend-item">
+        <span class="legend-dot system-dot"></span>
+        System — auto-generated by the monitoring system
+      </span>
+      <span class="legend-item">
+        <span class="legend-dot user-dot"></span>
+        User — custom alerts created by operators
+      </span>
+    </div>
+  </div>
+
+  <!-- Alarms List -->
+  <div class="alarms-list">
+    <div class="alarm-card" *ngFor="let alarm of pagedAlarms" [class.system-alarm]="alarm.type === 'system'"
+      [class.user-alarm]="alarm.type === 'user'">
+
+      <div class="alarm-left">
+        <div class="alarm-icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path
+              d="M3.39309 6.61077C5.40449 3.05165 6.41019 1.2721 7.79022 0.814009C8.54943 0.561997 9.36724 0.561997 10.1264 0.814009C11.5065 1.2721 12.5122 3.05165 14.5236 6.61077C16.535 10.1699 17.5407 11.9494 17.239 13.3995C17.073 14.1972 16.6641 14.9207 16.0709 15.4664C14.9925 16.4583 12.9811 16.4583 8.95833 16.4583C4.93554 16.4583 2.92414 16.4583 1.8458 15.4664C1.25257 14.9207 0.843658 14.1972 0.677686 13.3995C0.375995 11.9494 1.38169 10.1699 3.39309 6.61077Z"
+              stroke="#B54708" stroke-width="1.25" />
+            <path d="M8.95101 11.875H8.9585" stroke="#B54708" stroke-width="1.66667" stroke-linecap="round" />
+            <path d="M8.95898 9.375L8.95898 6.04167" stroke="#B54708" stroke-width="1.25" stroke-linecap="round" />
+          </svg>
+        </div>
+
+        <div class="alarm-info">
+          <div class="alarm-meta-row">
+            <span class="severity-badge" [ngClass]="alarm.severity?.toLowerCase()">
+              {{ alarm.severity }}
+            </span>
+            <span class="alarm-timestamp">{{ alarm?.timeStamp | date:'M/d/yyyy, h:mm:ss a' }}</span>
+            <span *ngIf="alarm.isAcknowledged" class="status-acknowledged">Acknowledged</span>
+            <span class="type-badge" [class.user-badge]="alarm.type === 'user'"
+              [class.system-badge]="alarm.type === 'system'">
+              <ng-container *ngIf="alarm.type === 'user'">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                User
+              </ng-container>
+              <ng-container *ngIf="alarm.type === 'system'">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                  <line x1="8" y1="21" x2="16" y2="21" />
+                  <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>
+                System
+              </ng-container>
+            </span>
+          </div>
+
+          <div class="alarm-station-row">
+            <span class="station-name">{{ alarm?.stationName }}</span>
+            <span class="class-name">{{ alarm?.className }}</span>
+          </div>
+          <p class="alarm-description">{{ alarm?.name }}</p>
+        </div>
+      </div>
+
+      <div class="alarm-actions">
+        <button class="action-btn acknowledge-btn" [class.acknowledged]="alarm.isAcknowledged"
+          [disabled]="alarm.isAcknowledged">
+          {{ alarm.isAcknowledged ? 'Acknowledged' : 'Acknowledge' }}
+        </button>
+        <button class="action-btn create-ticket-btn">
+          Create Ticket
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="alarmsHistory.length === 0" class="empty-state">
+      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d1d5db"
+        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+      </svg>
+      <p>No alarms yet...</p>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination-wrapper">
+    <button class="page-nav-btn" [disabled]="currentPage === 1" (click)="prevPage()">
+      ← Previous
+    </button>
+
+    <div class="page-numbers">
+      <button *ngFor="let page of totalPages" (click)="goToPage(page)" class="page-number"
+        [class.active]="page === currentPage">
+        {{ page }}
+      </button>
+    </div>
+
+    <button class="page-nav-btn" [disabled]="currentPage === totalPagesCount" (click)="nextPage()">
+      Next →
+    </button>
+  </div>
+
 </div>

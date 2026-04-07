@@ -46,10 +46,26 @@ export class dashboardService {
     return this.http.get(environment.url + 'Dashboard/hourly-gas-sold');
   }
 
-  dashboardAlarms(): Observable<any> {
-    return this.http.get(environment.url + 'Alarms/history');
+  dashboardAlarms(
+    stationId?: any,
+    severity?: any,
+    from: string = '',
+    to: string = '',
+  ): Observable<any> {
+    return this.http.get(environment.url + 'Alarms/history', {
+      params: { stationId, severity, from, to },
+    });
   }
   dashboardMap(): Observable<any> {
     return this.http.get(environment.url + 'Dashboard/stations-map');
+  }
+  dashboardTable(): Observable<any> {
+    return this.http.get(environment.url + 'Dashboard/stations-uptime');
+  }
+  getAllStation(): Observable<any> {
+    return this.http.get(environment.url + 'Stations/All-Stations');
+  }
+  getAllSeverity(): Observable<any> {
+    return this.http.get(environment.url + 'Alarms/severities');
   }
 }
