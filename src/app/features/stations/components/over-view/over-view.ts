@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -24,6 +24,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AllStation } from '../../service/all-station';
 import { AlarmsStationDetails } from '../../service/alarms-station-details';
+import { LinkComprosser } from './link-comprosser/link-comprosser';
+
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -33,6 +35,7 @@ export type ChartOptions = {
   stroke: ApexStroke;
   title: ApexTitleSubtitle;
 };
+
 @Component({
   selector: 'app-over-view',
   imports: [
@@ -45,11 +48,12 @@ export type ChartOptions = {
     CommonModule,
     DatePickerModule,
     SkeletonModule,
+    LinkComprosser,
   ],
   templateUrl: './over-view.html',
   styleUrl: './over-view.scss',
 })
-export class OverView {
+export class OverView implements OnInit, OnDestroy {
   @ViewChild('chart') chart: ChartComponent | any;
   public chartOptions: Partial<ChartOptions> | any;
   isLoading: boolean = false;
@@ -59,27 +63,26 @@ export class OverView {
   duration!: number;
   moveDialogVisible = false;
   unlinkDialogVisible = false;
+  linkDialogVisible = false;
   selectedCompressorToMove: any = null;
   selectedCompressorToUnlink: any = null;
   comproserTableData: any[] = [];
   availableAssets: any[] = [];
   assetId!: number;
   private subscription!: Subscription;
+  private alarmSubscription!: Subscription;
   stationDetailsData!: any;
   allGasData: any[] = [];
   page = 1;
   pageSize = 10;
   totalRecords = 0;
-  stationDetailsDataAlarm: any[] = []; //convert alarms from object to array
+  stationDetailsDataAlarm: any[] = [];
   allSation: any[] = [];
   fromDate!: string;
   toDate!: string;
   dateRange: Date[] = [];
-  isSummaryLoading = true;
-  isAlarmsLoading = true;
-  isChartLoading = true;
-  isTableLoading = true;
   private loadingItems = new Set<string>();
+
   timeOptions = [
     { label: 'Current', value: 0 },
     { label: 'Last Shift', value: 1 },
@@ -88,6 +91,7 @@ export class OverView {
     { label: 'Last Month', value: 4 },
     { label: 'Custom', value: 5 },
   ];
+
   statusEnum: { [key: number]: string } = {
     0: 'OffLine',
     1: 'Idle',
@@ -109,8 +113,9 @@ export class OverView {
     Alarm: 'bg-red-100 text-red-600',
     'Start delay': 'bg-purple-100 text-purple-600',
     Force: 'bg-pink-100 text-pink-600',
-    Lockout: 'bg-black text-white',
+    Lockout: 'bg-gray-800 text-white',
   };
+
   constructor(
     private stationDetails: StationDetails,
     private activateRoute: ActivatedRoute,
@@ -120,27 +125,29 @@ export class OverView {
     private changeDetectorRef: ChangeDetectorRef,
     private realtimeAlarmDetails: AlarmsStationDetails,
   ) {}
+
   ngOnInit(): void {
     this.activateRoute.paramMap.subscribe((params) => {
-      // show anything in url
       this.stationId = Number(params.get('id'));
       this.onGetStationDetails();
+      this.onGetComproser();
+      this.onGetAllGasConsumption();
     });
-    this.onGetComproser();
-    this.onStartConnection();
     this.onGetAllStation();
-    this.onGetAllGasConsumption();
+    this.onStartConnection();
     this.onStartConnectionAlarms();
   }
+
   public isPartLoading(key: string): boolean {
     return this.loadingItems.has(key);
   }
+
   onGetStationDetails() {
     this.stationDetails.getStationById(this.stationId).subscribe({
       next: (res) => {
         this.assetId = res.assetId;
       },
-      error: (err) => console.log(err),
+      error: (err) => console.log('Error getting station details:', err),
     });
   }
 
@@ -151,72 +158,88 @@ export class OverView {
         this.availableAssets = assets;
         this.moveDialogVisible = true;
       },
-      error: (err) => console.log(err),
+      error: (err) => console.log('Error getting available assets:', err),
     });
   }
+
   openUnlinkDialog(compressor: any) {
     this.selectedCompressorToUnlink = compressor;
     this.unlinkDialogVisible = true;
   }
 
+  openLinkComproser() {
+    this.linkDialogVisible = true;
+  }
+
   handleUnlink(compressor: any) {
     const compId = compressor.id || compressor.compressorId;
+    this.loadingItems.add('table');
     this.stationDetails.unlinkCompressor(compId).subscribe({
-      next: () => this.onGetComproser(),
-      error: (err) => console.log(err),
+      next: () => {
+        this.onGetComproser();
+      },
+      error: (err) => {
+        console.log('Error unlinking compressor:', err);
+        this.loadingItems.delete('table');
+      },
     });
+  }
+
+  handleLink(compressorData: any) {
+    // Implement link logic based on your API
+    console.log('Linking compressor:', compressorData);
+    // Example: this.stationDetails.linkCompressor(compressorData.compressorId, this.assetId).subscribe(...)
   }
 
   handleMove(payload: any) {
     const { compressor, targetAsset } = payload;
     const compId = compressor.id || compressor.compressorId;
 
-    // 1. Unlink from current station
+    this.loadingItems.add('table');
+
     this.stationDetails.unlinkCompressor(compId).subscribe({
       next: () => {
-        // 2. Link to target asset
         this.stationDetails.linkCompressor(compId, targetAsset.id).subscribe({
-          next: () => this.onGetComproser(),
-          error: (err) => console.log('Link err', err),
+          next: () => {
+            this.onGetComproser();
+          },
+          error: (err) => {
+            console.log('Link error:', err);
+            this.loadingItems.delete('table');
+          },
         });
       },
-      error: (err) => console.log('Unlink err', err),
+      error: (err) => {
+        console.log('Unlink error:', err);
+        this.loadingItems.delete('table');
+      },
     });
   }
-  // onGetComproser() {
-  //   this.stationDetails.getComproserById(this.stationId).subscribe({
-  //     next: (res) => {
-  //       this.comproserTableData = res;
-  //       console.log('tablee', this.comproserTableData);
-  //       this.isTableLoading = false;
-  //       this.cdr.detectChanges();
-  //     },
-  //     error: (err) => {
-  //       console.log(err);
-  //       this.isTableLoading = false;
-  //     },
-  //   });
-  // }
+
   onGetAllStation() {
     this.Station.getAllStations(this.page, this.pageSize).subscribe({
       next: (res) => {
         this.allSation = res.items;
-
         this.changeDetectorRef.detectChanges();
-        console.log(this.allSation);
       },
       error: (err) => {
-        console.log(err);
+        console.log('Error getting stations:', err);
       },
     });
   }
+
   get currentStation() {
     return this.allSation.find((s) => s.id === this.stationId);
   }
+
   async onStartConnection() {
     this.loadingItems.add('summary');
     try {
       await this.realTime.startConnection();
+
+      if (this.subscription) {
+        this.subscription.unsubscribe();
+      }
 
       this.subscription = this.realTime.getStationDetails().subscribe({
         next: (data) => {
@@ -226,7 +249,7 @@ export class OverView {
           this.cdr.detectChanges();
         },
         error: (err) => {
-          console.error(err);
+          console.error('Error receiving station data:', err);
           this.loadingItems.delete('summary');
         },
       });
@@ -238,51 +261,53 @@ export class OverView {
     }
   }
 
-  // تعديل onStartConnectionAlarms
   async onStartConnectionAlarms() {
     this.loadingItems.add('alarms');
     try {
       await this.realtimeAlarmDetails.startConnection();
 
-      this.subscription = this.realtimeAlarmDetails.getStationDetails().subscribe({
+      if (this.alarmSubscription) {
+        this.alarmSubscription.unsubscribe();
+      }
+
+      this.alarmSubscription = this.realtimeAlarmDetails.getStationDetails().subscribe({
         next: (data) => {
           console.log('Received station Alarm data:', data);
-          data.className = data.className?.trim();
+          if (data.className) {
+            data.className = data.className.trim();
+          }
           this.stationDetailsDataAlarm.unshift(data);
           this.loadingItems.delete('alarms');
           this.cdr.detectChanges();
         },
         error: (err) => {
-          console.error(err);
+          console.error('Error receiving alarm data:', err);
           this.loadingItems.delete('alarms');
         },
       });
 
       await this.realtimeAlarmDetails.joinStation(this.stationId);
     } catch (error) {
-      console.error('Error starting connection:', error);
+      console.error('Error starting alarms connection:', error);
       this.loadingItems.delete('alarms');
     }
   }
 
-  // تعديل onGetComproser
   onGetComproser() {
     this.loadingItems.add('table');
     this.stationDetails.getComproserById(this.stationId).subscribe({
       next: (res) => {
         this.comproserTableData = res;
-        console.log('tablee', this.comproserTableData);
         this.loadingItems.delete('table');
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.log(err);
+        console.log('Error getting compressors:', err);
         this.loadingItems.delete('table');
       },
     });
   }
 
-  // تعديل onGetAllGasConsumption
   onGetAllGasConsumption() {
     let fromDate: string | undefined;
     let toDate: string | undefined;
@@ -292,7 +317,7 @@ export class OverView {
 
     if (this.selectedTime === 5) {
       if (!this.dateRange || this.dateRange.length < 2) {
-        alert('Please select date range');
+        console.warn('Please select date range');
         this.loadingItems.delete('chart');
         return;
       }
@@ -348,21 +373,29 @@ export class OverView {
             categories: res.map((item: { bucket: string }) => item.bucket.split('T')[0]),
           },
         };
+        this.cdr.detectChanges();
       },
       error: (err) => {
-        console.log(err);
+        console.log('Error getting gas consumption:', err);
         this.loadingItems.delete('chart');
         this.noGasData = true;
       },
     });
   }
+
   onTimeChange() {
     if (this.selectedTime !== 5) {
       this.onGetAllGasConsumption();
     }
   }
+
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+    if (this.alarmSubscription) {
+      this.alarmSubscription.unsubscribe();
+    }
     this.realTime.stopConnection();
     this.realtimeAlarmDetails.stopConnection();
   }

@@ -1,0 +1,9 @@
+:host ::ng-deep .p-dialog .p-dialog-content {
+  padding: 0;
+}
+:host ::ng-deep .p-select {
+  width: 100%;
+}
+.reason-textarea:focus {
+  outline: none;
+}

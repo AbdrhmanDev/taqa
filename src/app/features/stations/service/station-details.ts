@@ -53,4 +53,7 @@ export class StationDetails {
   getAvailableAssets(): Observable<any> {
     return this.http.get(`${environment.url}compressors/available-assets`);
   }
+  getComroserById(compressorId: number): Observable<any> {
+    return this.http.get(`${environment.url}Compressor/${compressorId}`);
+  }
 }
