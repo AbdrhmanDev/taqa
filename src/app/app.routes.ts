@@ -310,6 +310,12 @@ export const routes: Routes = [
           import('./features/station-config/station-config').then((m) => m.StationConfig),
         title: 'Station Configuration',
       },
+      {
+        path: 'station-hierarchy',
+        loadComponent: () =>
+          import('./features/station-hierarchy/station-hierarchy').then((m) => m.StationHierarchyComponent),
+        title: 'Station Hierarchy',
+      },
     ],
   },
 

@@ -73,4 +73,50 @@ export class StationConfigService {
   createDispenser(data: any): Observable<any> {
     return this.http.post(environment.url + 'Dispenser', data);
   }
+
+  getZonesWithStations(): Observable<any[]> {
+    return this.http.get<any[]>(environment.url + 'Zone/GetAllZonesWithStations');
+  }
+
+  createZone(name: string): Observable<any> {
+    return this.http.post(`${environment.url}Zone`, { name: name });
+  }
+
+  updateZone(id: number, name: string): Observable<any> {
+    return this.http.put(`${environment.url}Zone/UpdateZone/${id}`, { id: id, name: name });
+  }
+
+  deleteZone(id: number): Observable<any> {
+    return this.http.delete(`${environment.url}Zone/DeleteZone/${id}`);
+  }
+
+  // --- COMPRESSORS ---
+  getCompressors(): Observable<any[]> {
+    return this.http.get<any[]>(environment.url + 'Compressor/GetAll');
+  }
+
+  getCompressorById(id: number): Observable<any> {
+    return this.http.get<any>(`${environment.url}Compressor/${id}`);
+  }
+
+  createCompressor(data: any): Observable<any> {
+    return this.http.post(environment.url + 'Compressor', data);
+  }
+
+  updateCompressor(id: number, data: any): Observable<any> {
+    return this.http.put(`${environment.url}Compressor/${id}`, data);
+  }
+
+  deleteCompressor(id: number): Observable<any> {
+    return this.http.delete(`${environment.url}Compressor/${id}`);
+  }
+
+  unlinkCompressor(id: number, userId: number = 0): Observable<any> {
+    return this.http.post(`${environment.url}compressors/${id}/unlink`, { userId });
+  }
+
+  getAssetLinkHistory(): Observable<any[]> {
+    const url = environment.url.replace('/api/', '/') + 'asset-link-history';
+    return this.http.get<any[]>(url);
+  }
 }

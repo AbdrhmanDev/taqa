@@ -1,0 +1,93 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="hierarchy-page">
+
+  <div class="top-filters">
+    <div class="filter-field">
+      <label>Area</label>
+      <p-select
+        [options]="areaOptions"
+        optionLabel="name"
+        optionValue="value"
+        [(ngModel)]="selectedArea"
+        (onChange)="onAreaChange()"
+        placeholder="All Areas"
+      ></p-select>
+    </div>
+    
+    <button class="add-zone-btn" (click)="addZone()">
+      <i class="pi pi-plus"></i>
+      Add Zone
+    </button>
+  </div>
+
+  <div class="cards-grid">
+    @for (area of filteredAreas; track area.areaId) {
+      <div class="area-card" [class.expanded]="area.isExpanded">
+        <header class="card-header" (click)="toggleExpand(area, $event)" style="cursor: pointer;">
+          <div class="left">
+            <div class="toggle-icon">
+              <i class="pi" [ngClass]="area.isExpanded ? 'pi-minus-circle' : 'pi-plus-circle'"></i>
+            </div>
+            <div class="area-info">
+              <h3>
+                {{ area.name }} 
+                <span class="zone-label" style="font-size: 0.8rem; color: #666;">({{ area.zoneName }})</span>
+                <i class="pi pi-pencil action-icon" (click)="editZone(area, $event)" title="Edit Zone" style="margin-left: 8px; font-size: 0.9rem;"></i>
+                <i class="pi pi-trash action-icon" (click)="deleteZone(area, $event)" title="Delete Zone" style="margin-left: 4px; font-size: 0.9rem; color: #dc3545;"></i>
+              </h3>
+              <span class="station-count">{{ area.totalCount }} stations</span>
+            </div>
+          </div>
+          <div class="stats-summary">
+            <div class="status-dots">
+              @for (station of area.stations | slice:0:3; track station.stationId) {
+                <span class="dot" [ngClass]="station.status?.toLowerCase()"></span>
+              }
+              @if (area.stations.length > 3) {
+                <i class="pi pi-plus-circle"></i>
+              }
+            </div>
+            <span class="ratio">{{ area.activeCount }}/{{ area.totalCount }}</span>
+          </div>
+        </header>
+
+        @if (area.isExpanded) {
+        <div class="stations-list scrollable">
+          @for (station of area.stations; track station.stationId) {
+            <div class="station-item" (click)="goToStationDetails(station.stationId)" style="cursor: pointer;">
+              <div class="left">
+                <span class="status-dot" [ngClass]="station.connectivity?.toLowerCase()"></span>
+                <div class="station-id-status">
+                  <span class="name">CID_{{ station.stationId }}</span>
+                  <span class="connectivity">{{ station.connectivity }}</span>
+                </div>
+              </div>
+              <div class="badges">
+                <span class="badge secondary">{{ station.installation }}</span>
+                <span class="badge" [ngClass]="station.status?.toLowerCase()">
+                  {{ station.status }}
+                </span>
+              </div>
+            </div>
+          }
+        </div>
+        
+        <div class="add-station-action" (click)="addStationToArea(area)" style="margin-top: 16px; padding: 12px; border: 1px dashed #3b82f6; border-radius: 8px; text-align: center; color: #3b82f6; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s;">
+          <i class="pi pi-plus"></i>
+          Add Station
+        </div>
+        }
+      </div>
+    }
+
+    @if (loading) {
+      <div class="loading-overlay">
+        <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+      </div>
+    }
+
+    <!-- Removed old empty add-station block since we now have contextual add station buttons inside cards -->
+  </div>
+</div>

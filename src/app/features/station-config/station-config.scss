@@ -282,6 +282,10 @@
       color: #6b7280; 
       &:hover { background: #f9fafb; border-color: #d1d5db; }
     }
+    &.link {
+      color: #f59e0b;
+      &:hover { background: #fef3c7; border-color: #fde68a; }
+    }
   }
 
   .tariff-input {
@@ -391,4 +395,68 @@
   .mr-3 { margin-right: 0.75rem; }
   .ml-3 { margin-left: 0.75rem; }
 }
+}
+
+/* Custom styles for the dialog */
+::ng-deep .premium-modal {
+  .p-dialog-header {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 20px 24px;
+    .p-dialog-title {
+      font-weight: 600;
+      color: #111827;
+      font-size: 18px;
+    }
+  }
+  .p-dialog-content {
+    padding: 0 !important;
+  }
+}
+
+.vertical-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  
+  .field {
+    display: flex;
+    flex-direction: column;
+    
+    label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+    
+    ::ng-deep .p-inputtext, ::ng-deep .p-select {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      padding: 10px 12px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      
+      &:enabled:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      }
+    }
+  }
+}
+
+.modal-footer {
+  display: flex;
+  gap: 12px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 20px;
+  
+  ::ng-deep p-button {
+    flex: 1;
+    .p-button {
+      width: 100%;
+      border-radius: 8px;
+      font-weight: 600;
+      padding: 10px 0;
+    }
+  }
 }
