@@ -1,0 +1,76 @@
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../../env/environment';
+
+export interface Station {
+  id?: number;
+  name: string;
+  stationName?: string; // used in GET response
+  location: string;
+  address: string;
+  latitude: string;
+  longitude: string;
+  priceconversionValue: number;
+  consumptionconversionValue?: number;
+  zoneId: number;
+  phone?: string;
+  email?: string;
+  status?: string;
+  zoneName?: string;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class StationConfigService {
+  private http = inject(HttpClient);
+  private apiUrl = environment.url + 'Stations';
+
+  getStations(page: number = 1, pageSize: number = 10, search: string = ''): Observable<any> {
+    return this.http.get(
+      `${this.apiUrl}/All-Stations?page=${page}&pageSize=${pageSize}&search=${search}`,
+    );
+  }
+
+  createStation(station: Station): Observable<any> {
+    return this.http.post(this.apiUrl, station);
+  }
+
+  updateStation(id: number, station: Station): Observable<any> {
+    // Note: User added consumptionconversionValue: 0 in PUT payload example
+    const payload = {
+      ...station,
+      consumptionconversionValue: station.consumptionconversionValue ?? 0,
+    };
+    return this.http.put(`${this.apiUrl}/${id}`, payload);
+  }
+
+  deleteStation(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+  getZones(): Observable<any[]> {
+    return this.http.get<any[]>(environment.url + 'Zone/GetAllZones');
+  }
+
+  getDispensers(): Observable<any[]> {
+    return this.http.get<any[]>(environment.url + 'Dispenser/dispensers/all');
+  }
+
+  deleteDispenser(id: number): Observable<any> {
+    return this.http.delete(environment.url + `Dispenser/${id}`);
+  }
+
+  getMachines(): Observable<any[]> {
+    return this.http.get<any[]>(environment.url + 'Machine');
+  }
+
+  createMachine(data: any): Observable<any> {
+    return this.http.post(environment.url + 'Machine', data);
+  }
+
+  createDispenser(data: any): Observable<any> {
+    return this.http.post(environment.url + 'Dispenser', data);
+  }
+}
