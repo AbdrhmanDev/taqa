@@ -2,126 +2,150 @@
   <div class="max-w-9xl grid grid-cols-1 lg:grid-cols-4 gap-6">
     <!-- Left Section -->
     <div class="lg:col-span-3 space-y-6">
+      <!-- Station Information Section with Skeleton -->
       <div
-        class="bg-white rounded-2xl shadow-sm p-6 flex flex-col lg:flex-row justify-between items-start lg:items-center"
-      >
-        <div>
-          <h2 class="text-xl font-semibold text-gray-800 mb-4">Station Information</h2>
-
-          <div class="grid grid-cols-2 md:grid-cols-5 gap-6 text-sm text-gray-600">
-            <div>
-              <p class="text-gray-400">Station ID</p>
-              <p class="font-medium text-gray-800">{{ stationDetailsData?.stationId }}</p>
+        class="bg-white rounded-2xl shadow-sm p-6 flex flex-col lg:flex-row justify-between items-start lg:items-center">
+        <!-- Show Skeleton while loading -->
+        <div *ngIf="isPartLoading('summary')" class="w-full">
+          <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center w-full gap-4">
+            <div class="w-full lg:w-3/4">
+              <p-skeleton width="40%" height="1.5rem" class="mb-4"></p-skeleton>
+              <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
+                <div><p-skeleton width="80px" height="1rem" class="mb-2"></p-skeleton><p-skeleton width="60px"
+                    height="1.25rem"></p-skeleton></div>
+                <div><p-skeleton width="80px" height="1rem" class="mb-2"></p-skeleton><p-skeleton width="100px"
+                    height="1.25rem"></p-skeleton></div>
+                <div><p-skeleton width="80px" height="1rem" class="mb-2"></p-skeleton><p-skeleton width="90px"
+                    height="1.25rem"></p-skeleton></div>
+                <div><p-skeleton width="80px" height="1rem" class="mb-2"></p-skeleton><p-skeleton width="80px"
+                    height="1.25rem"></p-skeleton></div>
+              </div>
             </div>
-
-            <div>
-              <p class="text-gray-400">Location</p>
-              <p class="font-medium text-gray-800 flex items-center gap-1">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 18 18"
-                  fill="none"
-                >
-                  <path
-                    d="M10.2133 16.0252C9.88804 16.3298 9.45329 16.5 9.00084 16.5C8.54839 16.5 8.11364 16.3298 7.78837 16.0252C4.80977 13.2195 0.818072 10.0852 2.7647 5.53475C3.81723 3.07437 6.34376 1.5 9.00084 1.5C11.6579 1.5 14.1845 3.07437 15.237 5.53475C17.1811 10.0795 13.1993 13.2292 10.2133 16.0252Z"
-                    stroke="#667085"
-                    stroke-width="1.125"
-                  />
-                  <path
-                    d="M11.625 8.25C11.625 9.69975 10.4497 10.875 9 10.875C7.55025 10.875 6.375 9.69975 6.375 8.25C6.375 6.80025 7.55025 5.625 9 5.625C10.4497 5.625 11.625 6.80025 11.625 8.25Z"
-                    stroke="#667085"
-                    stroke-width="1.125"
-                  />
-                </svg>
-                {{ currentStation?.stationName }}
-              </p>
-            </div>
-
-            <div>
-              <p class="text-gray-400">Zone</p>
-              <p class="font-medium text-gray-800">{{ currentStation?.zoneName }}</p>
-            </div>
-
-            <!-- <div>
-              <p class="text-gray-400">Tariff</p>
-              <p class="font-medium text-gray-800">12.32 <span
-                  class="text-gray-400 text-xs">{{stationDetailsData?.tariff}}EGP</span></p>
-            </div> -->
-
-            <div>
-              <p class="text-gray-400">Total Revenue</p>
-              <p class="font-medium text-gray-800">
-                {{ stationDetailsData?.totalRevenue }}
-                <span class="text-gray-400 text-xs">EGP</span>
-              </p>
+            <div class="flex gap-3">
+              <p-skeleton width="70px" height="28px" borderRadius="16px"></p-skeleton>
+              <p-skeleton width="120px" height="40px" borderRadius="8px"></p-skeleton>
             </div>
           </div>
         </div>
 
-        <!-- Right Side -->
-        <div class="flex items-center gap-3 mt-4 lg:mt-8">
-          <span class="bg-green-100 text-green-600 text-xs font-medium px-3 py-1 rounded-full">
-            Active
-          </span>
+        <!-- Actual Content -->
+        <ng-container *ngIf="!isPartLoading('summary')">
+          <div>
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Station Information</h2>
 
-          <button
-            class="bg-green-50 text-green-700 text-sm px-4 py-2 rounded-lg hover:bg-green-100 transition"
-          >
-            # Type Compressors
-          </button>
-        </div>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-6 text-sm text-gray-600">
+              <div>
+                <p class="text-gray-400">Station ID</p>
+                <p class="font-medium text-gray-800">{{ stationDetailsData?.stationId }}</p>
+              </div>
+
+              <div>
+                <p class="text-gray-400">Location</p>
+                <p class="font-medium text-gray-800 flex items-center gap-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <path
+                      d="M10.2133 16.0252C9.88804 16.3298 9.45329 16.5 9.00084 16.5C8.54839 16.5 8.11364 16.3298 7.78837 16.0252C4.80977 13.2195 0.818072 10.0852 2.7647 5.53475C3.81723 3.07437 6.34376 1.5 9.00084 1.5C11.6579 1.5 14.1845 3.07437 15.237 5.53475C17.1811 10.0795 13.1993 13.2292 10.2133 16.0252Z"
+                      stroke="#667085" stroke-width="1.125" />
+                    <path
+                      d="M11.625 8.25C11.625 9.69975 10.4497 10.875 9 10.875C7.55025 10.875 6.375 9.69975 6.375 8.25C6.375 6.80025 7.55025 5.625 9 5.625C10.4497 5.625 11.625 6.80025 11.625 8.25Z"
+                      stroke="#667085" stroke-width="1.125" />
+                  </svg>
+                  {{ currentStation?.stationName }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-gray-400">Zone</p>
+                <p class="font-medium text-gray-800">{{ currentStation?.zoneName }}</p>
+              </div>
+
+              <div>
+                <p class="text-gray-400">Total Revenue</p>
+                <p class="font-medium text-gray-800">
+                  {{ stationDetailsData?.totalRevenue }}
+                  <span class="text-gray-400 text-xs">EGP</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Side -->
+          <div class="flex items-center gap-3 mt-4 lg:mt-8">
+            <span class="bg-green-100 text-green-600 text-xs font-medium px-3 py-1 rounded-full">
+              Active
+            </span>
+
+            <button class="bg-green-50 text-green-700 text-sm px-4 py-2 rounded-lg hover:bg-green-100 transition">
+              # Type Compressors
+            </button>
+          </div>
+        </ng-container>
       </div>
 
-      <!-- Bottom Cards -->
+      <!-- Bottom Cards with Skeleton -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Card 1 -->
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-gray-500 text-sm mb-3">Gas Volume Sold</p>
-          <h3 class="text-2xl font-semibold text-gray-800">
-            {{ stationDetailsData?.gasVolumeSold }} <span class="text-gray-400 text-base">L</span>
-          </h3>
-        </div>
+        <!-- Skeleton for Bottom Cards -->
+        <ng-container *ngIf="isPartLoading('summary')">
+          <div class="bg-white rounded-2xl shadow-sm p-6"><p-skeleton width="60%" height="1rem"
+              class="mb-3"></p-skeleton><p-skeleton width="40%" height="2rem"></p-skeleton></div>
+          <div class="bg-white rounded-2xl shadow-sm p-6"><p-skeleton width="60%" height="1rem"
+              class="mb-3"></p-skeleton><p-skeleton width="40%" height="2rem"></p-skeleton></div>
+          <div class="bg-white rounded-2xl shadow-sm p-6"><p-skeleton width="60%" height="1rem"
+              class="mb-3"></p-skeleton><p-skeleton width="40%" height="2rem"></p-skeleton></div>
+        </ng-container>
 
-        <!-- Card 2 -->
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-gray-500 text-sm mb-3">Vehicles Charged</p>
-          <h3 class="text-2xl font-semibold text-gray-800">
-            {{ stationDetailsData?.vehiclesCharged }}
-            <span class="text-gray-400 text-base">##</span>
-          </h3>
-        </div>
+        <!-- Actual Cards -->
+        <ng-container *ngIf="!isPartLoading('summary')">
+          <div class="bg-white rounded-2xl shadow-sm p-6">
+            <p class="text-gray-500 text-sm mb-3">Gas Volume Sold</p>
+            <h3 class="text-2xl font-semibold text-gray-800">
+              {{ stationDetailsData?.gasVolumeSold }} <span class="text-gray-400 text-base">L</span>
+            </h3>
+          </div>
 
-        <!-- Card 3 -->
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-          <p class="text-gray-500 text-sm mb-3">Total Revenue</p>
-          <p class="text-gray-500 text-sm mb-3">Pressure</p>
-          <h3 class="text-2xl font-semibold text-gray-800">
-            {{ stationDetailsData?.totalRevenue }} <span class="text-gray-400 text-base">##</span>
-            {{ stationDetailsData?.pressure }} <span class="text-gray-400 text-base">##</span>
-          </h3>
-        </div>
+          <div class="bg-white rounded-2xl shadow-sm p-6">
+            <p class="text-gray-500 text-sm mb-3">Vehicles Charged</p>
+            <h3 class="text-2xl font-semibold text-gray-800">
+              {{ stationDetailsData?.vehiclesCharged }}
+              <span class="text-gray-400 text-base">##</span>
+            </h3>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-sm p-6">
+            <p class="text-gray-500 text-sm mb-3">Total Revenue</p>
+            <h3 class="text-2xl font-semibold text-gray-800">
+              {{ stationDetailsData?.totalRevenue }} <span class="text-gray-400 text-base">EGP</span>
+            </h3>
+          </div>
+        </ng-container>
       </div>
     </div>
 
-    <!-- Right Section - Alarms -->
+    <!-- Right Section - Alarms with Skeleton -->
     <div class="bg-white rounded-2xl shadow-sm p-6 flex flex-col h-[270px]">
       <div class="flex justify-between items-center mb-4 shrink-0">
         <h3 class="font-semibold text-gray-800">Alarms</h3>
-        <!-- <span class="text-sm text-gray-500">1/6</span> -->
       </div>
 
-      <div class="flex-1 overflow-y-auto space-y-4 pr-2">
+      <!-- Skeleton for Alarms -->
+      <div *ngIf="isPartLoading('alarms')" class="space-y-4">
+        <div *ngFor="let item of [1,2,3]" class="flex items-start gap-3">
+          <p-skeleton width="12px" height="12px" borderRadius="50%"></p-skeleton>
+          <div class="flex flex-col w-full">
+            <p-skeleton width="70%" height="1rem" class="mb-1"></p-skeleton>
+            <p-skeleton width="50%" height="0.75rem"></p-skeleton>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actual Alarms -->
+      <div *ngIf="!isPartLoading('alarms')" class="flex-1 overflow-y-auto space-y-4 pr-2">
         <div class="flex items-start gap-3" *ngFor="let alarm of stationDetailsDataAlarm">
-          <span
-            class="w-3 h-3 rounded-full mt-2"
-            [ngClass]="{
+          <span class="w-3 h-3 rounded-full mt-2" [ngClass]="{
               'bg-red-600': alarm.name?.includes('High'),
               'bg-yellow-400': alarm.name?.includes('Low'),
               'bg-green-600': alarm.name?.includes('Medium')
-            }"
-          ></span>
+            }"></span>
 
           <div class="flex flex-col">
             <p class="text-sm text-gray-700 font-medium">
@@ -130,73 +154,86 @@
 
             <p class="text-xs text-gray-400">
               {{ alarm?.stationName }} • {{ alarm?.timeStamp | date : 'short' }}
-              {{ alarm.stationName }} • {{ alarm.timeStamp | date : 'short' }}
             </p>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Chart Section with Skeleton -->
   <div class="mt-6 bg-white rounded-2xl shadow-sm p-4">
-    <!-- Header -->
     <div class="mt-6 p-6">
       <div class="flex items-center justify-between mb-6">
         <h3 class="text-lg font-semibold text-gray-800">Gas consumption</h3>
         <div class="flex items-center gap-4">
-          <p-select
-            [options]="timeOptions"
-            [(ngModel)]="selectedTime"
-            (onChange)="onTimeChange()"
-            optionLabel="label"
-            optionValue="value"
-            class="w-40"
-          >
+          <p-select [options]="timeOptions" [(ngModel)]="selectedTime" (onChange)="onTimeChange()" optionLabel="label"
+            optionValue="value" class="w-40">
           </p-select>
 
           <div *ngIf="selectedTime === 5" class="flex items-center gap-3">
-            <p-datepicker
-              [(ngModel)]="dateRange"
-              selectionMode="range"
-              dateFormat="yy-mm-dd"
-              placeholder="Select Date Range"
-            ></p-datepicker>
-            <button
-              (click)="onGetAllGasConsumption()"
-              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-white rounded-lg text-blue-500 border-blue-500 border-1"
-            >
+            <p-datepicker [(ngModel)]="dateRange" selectionMode="range" dateFormat="yy-mm-dd"
+              placeholder="Select Date Range"></p-datepicker>
+            <button (click)="onGetAllGasConsumption()"
+              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-white rounded-lg text-blue-500 border-blue-500 border-1">
               Apply
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Loading indicator -->
-      <div *ngIf="isLoading" class="text-center py-16 text-gray-500">Loading chart data...</div>
-      <div *ngIf="!isLoading && noGasData" class="text-center py-20 text-gray-500">No Data</div>
+      <!-- Skeleton for Chart -->
+      <div *ngIf="isPartLoading('chart')" class="flex flex-col items-center justify-center py-10">
+        <p-skeleton width="100%" height="350px"></p-skeleton>
+      </div>
+
+      <!-- No Data State -->
+      <div *ngIf="!isPartLoading('chart') && noGasData" class="text-center py-20 text-gray-500">No Data</div>
+
       <!-- Chart -->
-      <apx-chart
-        *ngIf="!isLoading"
-        [series]="chartOptions?.series"
-        [chart]="chartOptions?.chart"
-        [xaxis]="chartOptions?.xaxis"
-        [dataLabels]="chartOptions?.dataLabels"
-        [grid]="chartOptions?.grid"
-        [stroke]="chartOptions?.stroke"
-      >
+      <apx-chart *ngIf="!isPartLoading('chart') && !noGasData" [series]="chartOptions?.series"
+        [chart]="chartOptions?.chart" [xaxis]="chartOptions?.xaxis" [dataLabels]="chartOptions?.dataLabels"
+        [grid]="chartOptions?.grid" [stroke]="chartOptions?.stroke">
       </apx-chart>
     </div>
   </div>
+
+  <!-- Compressor Table Section with Skeleton -->
   <div class="mt-6 bg-white rounded-2xl shadow-sm p-6">
-    <!-- Header -->
     <div class="mb-4">
       <h3 class="text-lg font-semibold text-gray-800">Compressor</h3>
       <p class="text-xs text-gray-400">total {{ comproserTableData.length }} Compressor</p>
     </div>
 
-    <!-- Table -->
-    <div class="overflow-x-auto" *ngIf="comproserTableData!.length > 0">
+    <!-- Skeleton for Table -->
+    <div *ngIf="isPartLoading('table')" class="overflow-x-auto">
       <table class="w-full text-sm">
-        <!-- Table Head -->
+        <thead class="text-left text-gray-400">
+          <tr>
+            <th class="py-3"><p-skeleton width="80px" height="1rem"></p-skeleton></th>
+            <th class="py-3"><p-skeleton width="60px" height="1rem"></p-skeleton></th>
+            <th class="py-3"><p-skeleton width="70px" height="1rem"></p-skeleton></th>
+            <th class="py-3"><p-skeleton width="50px" height="1rem"></p-skeleton></th>
+            <th><p-skeleton width="90px" height="1rem"></p-skeleton></th>
+            <th class="py-3"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of [1,2,3]">
+            <td class="py-4"><p-skeleton width="100px" height="1.25rem"></p-skeleton></td>
+            <td class="py-4"><p-skeleton width="80px" height="1rem"></p-skeleton></td>
+            <td class="py-4"><p-skeleton width="40px" height="1rem"></p-skeleton></td>
+            <td class="py-4"><p-skeleton width="80px" height="24px" borderRadius="16px"></p-skeleton></td>
+            <td class="py-4"><p-skeleton width="120px" height="1rem"></p-skeleton></td>
+            <td class="py-4"><p-skeleton width="60px" height="1.5rem"></p-skeleton></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Actual Table -->
+    <div class="overflow-x-auto" *ngIf="!isPartLoading('table') && comproserTableData!.length > 0">
+      <table class="w-full text-sm">
         <thead class="text-left text-gray-400">
           <tr>
             <th class="py-3">Compressor</th>
@@ -208,88 +245,43 @@
           </tr>
         </thead>
 
-        <!-- Table Body -->
         <tbody class="text-gray-700">
-          <!-- Row -->
-          <tr class="" *ngFor="let compressor of comproserTableData">
+          <tr *ngFor="let compressor of comproserTableData">
             <td class="py-4">
               <div class="font-medium">{{ compressor.name }}</div>
             </td>
-
             <td>{{ compressor.model }}</td>
-
             <td>{{ compressor.dispensersCount }}</td>
-
             <td>
               <span [ngClass]="statusColors[compressor.status] + ' text-xs px-3 py-1 rounded-full'">
                 {{ compressor.status }}
               </span>
             </td>
             <td>{{ compressor.lastSignalTimestamp | date : 'short' }}</td>
-
             <td class="text-right">
               <div class="flex justify-end gap-4 text-gray-400">
-                <!-- arrow -->
-
                 <button (click)="openMoveDialog(compressor)" class="cursor-pointer">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <path
-                      d="M19 12L4 12"
-                      stroke="#2D31A6"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M19 12L4 12" stroke="#2D31A6" stroke-width="1.5" stroke-linecap="round"
+                      stroke-linejoin="round" />
                     <path
                       d="M15 7L19.2929 11.2929C19.6262 11.6262 19.7929 11.7929 19.7929 12C19.7929 12.2071 19.6262 12.3738 19.2929 12.7071L15 17"
-                      stroke="#2D31A6"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
+                      stroke="#2D31A6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
                 </button>
 
                 <button (click)="openUnlinkDialog(compressor)">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path
                       d="M10 13.229C10.1416 13.4609 10.3097 13.6804 10.5042 13.8828C11.7117 15.1395 13.5522 15.336 14.9576 14.4722C15.218 14.3121 15.4634 14.1157 15.6872 13.8828L18.9266 10.5114C20.3578 9.02184 20.3578 6.60676 18.9266 5.11718C17.4953 3.6276 15.1748 3.62761 13.7435 5.11718L13.03 5.85978"
-                      stroke="#D92D20"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                    />
+                      stroke="#D92D20" stroke-width="1.5" stroke-linecap="round" />
                     <path
                       d="M10.9703 18.14L10.2565 18.8828C8.82526 20.3724 6.50471 20.3724 5.07345 18.8828C3.64218 17.3932 3.64218 14.9782 5.07345 13.4886L8.31287 10.1172C9.74413 8.62761 12.0647 8.6276 13.4959 10.1172C13.6904 10.3195 13.8584 10.539 14 10.7708"
-                      stroke="#D92D20"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                    />
-                    <path
-                      d="M21 16H18.9211M16 21L16 18.9211"
-                      stroke="#D92D20"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M3 8H5.07889M8 3L8 5.07889"
-                      stroke="#D92D20"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
+                      stroke="#D92D20" stroke-width="1.5" stroke-linecap="round" />
+                    <path d="M21 16H18.9211M16 21L16 18.9211" stroke="#D92D20" stroke-width="1.5" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                    <path d="M3 8H5.07889M8 3L8 5.07889" stroke="#D92D20" stroke-width="1.5" stroke-linecap="round"
+                      stroke-linejoin="round" />
                   </svg>
                 </button>
               </div>
@@ -300,25 +292,13 @@
     </div>
 
     <!-- Empty State -->
-    <div
-      *ngIf="!comproserTableData || comproserTableData.length === 0"
-      class="flex flex-col items-center justify-center py-12 bg-gray-50 border border-dashed border-gray-200 rounded-xl mt-4"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="48"
-        height="48"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="text-gray-300 mb-4"
-      >
+    <div *ngIf="!isPartLoading('table') && (!comproserTableData || comproserTableData.length === 0)"
+      class="flex flex-col items-center justify-center py-12 bg-gray-50 border border-dashed border-gray-200 rounded-xl mt-4">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+        class="text-gray-300 mb-4">
         <path
-          d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16"
-        />
+          d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16" />
         <path d="M10 12h4" />
       </svg>
       <p class="text-gray-700 font-medium">No Compressor Linked</p>
@@ -328,16 +308,9 @@
     </div>
   </div>
 
-  <app-move-comproser
-    [(visible)]="moveDialogVisible"
-    [compressor]="selectedCompressorToMove"
-    [currentStationName]="currentStation?.stationName || ''"
-    [assets]="availableAssets"
-    (onConfirmMove)="handleMove($event)"
-  ></app-move-comproser>
-  <app-unlink-comproser
-    [(visible)]="unlinkDialogVisible"
-    [compressor]="selectedCompressorToUnlink"
-    (onConfirmUnlink)="handleUnlink($event)"
-  ></app-unlink-comproser>
+  <app-move-comproser [(visible)]="moveDialogVisible" [compressor]="selectedCompressorToMove"
+    [currentStationName]="currentStation?.stationName || ''" [assets]="availableAssets"
+    (onConfirmMove)="handleMove($event)"></app-move-comproser>
+  <app-unlink-comproser [(visible)]="unlinkDialogVisible" [compressor]="selectedCompressorToUnlink"
+    (onConfirmUnlink)="handleUnlink($event)"></app-unlink-comproser>
 </div>

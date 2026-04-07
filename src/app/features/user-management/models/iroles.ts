@@ -12,11 +12,20 @@ export interface Claim {
   value: string;
 }
 
+// export interface Area {
+//   areas: any;
+//   zoneId: number;
+//   name: string;
+//   areaId: number;
+//   areaName: string;
+// }
 export interface Area {
   zoneId: number;
   name: string;
-  areaId: number;
-  areaName: string;
+  areas?: {
+    areaId: number;
+    name: string;
+  }[];
 }
 export interface IAddRole {
   roleName: string;

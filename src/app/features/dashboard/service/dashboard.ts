@@ -56,6 +56,9 @@ export class dashboardService {
       params: { stationId, severity, from, to },
     });
   }
+  StationAlarmById(stationId: any): Observable<any> {
+    return this.http.get(environment.url + 'Alarms/history', { params: { stationId } });
+  }
   dashboardMap(): Observable<any> {
     return this.http.get(environment.url + 'Dashboard/stations-map');
   }

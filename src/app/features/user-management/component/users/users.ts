@@ -101,7 +101,15 @@ export class Users implements OnInit {
   }
 
   getAreaNames(areas: Area[]): string {
-    return areas?.map((a) => a.areaName).join(', ') || '';
+    if (!areas) return '';
+
+    return areas
+      .map((zone) => {
+        const zoneName = zone.name;
+        const subAreas = zone.areas?.map((a: { name: any }) => a.name).join(', ') || '';
+        return `${zoneName}: ${subAreas}`;
+      })
+      .join(' | ');
   }
 
   onTabChange(event: any) {
