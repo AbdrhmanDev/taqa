@@ -24,6 +24,8 @@ export class Dispensers implements OnInit {
   private subscription!: Subscription;
   DispenserDetails!: any;
   isLoading: boolean = true;
+  selectedStatus: string = '';
+  filteredDispensers: any[] = [];
   constructor(
     private _stationDetails: StationDetails,
     private _Router: Router,
@@ -39,6 +41,10 @@ export class Dispensers implements OnInit {
     });
     this.onStartConnection();
   }
+  allStatus: any[] = [
+    { label: 'Online', value: 'Online' },
+    { label: 'Offline', value: 'Offline' },
+  ];
   getAllDispensers() {
     this._stationDetails.getDispenserById(this.stationId).subscribe({
       next: (res) => {
@@ -59,6 +65,7 @@ export class Dispensers implements OnInit {
         next: (data) => {
           console.log('Received dispenser data:', data);
           this.DispenserDetails = data;
+          this.filteredDispensers = data;
           this.isLoading = false;
           this.cdr.detectChanges();
         },
@@ -69,6 +76,16 @@ export class Dispensers implements OnInit {
     } catch (error) {
       console.error('Error starting connection:', error);
     }
+  }
+  getComputedStatus(dispenser: any): string {
+    if (!dispenser.lastTimeStamp) return 'Offline';
+
+    const lastTime = new Date(dispenser.lastTimeStamp).getTime();
+    const now = new Date().getTime();
+
+    const diffInHours = (now - lastTime) / (1000 * 60 * 60);
+
+    return diffInHours <= 3 ? 'Online' : 'Offline';
   }
   formatTimestamp(isoString: string): string {
     if (!isoString) return '--:--:---- -- --';
@@ -86,6 +103,15 @@ export class Dispensers implements OnInit {
       return `${hours}:${minutes}:${seconds} ${year}-${month}-${day}`;
     } catch {
       return isoString;
+    }
+  }
+  filterDispensers() {
+    if (!this.selectedStatus) {
+      this.filteredDispensers = this.DispenserDetails;
+    } else {
+      this.filteredDispensers = this.DispenserDetails.filter(
+        (d: any) => this.getComputedStatus(d) === this.selectedStatus,
+      );
     }
   }
   ngOnDestroy(): void {
