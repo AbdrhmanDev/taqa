@@ -1,71 +1,146 @@
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-2 mt-4 ms-3 me-3 justify-between">
+<div
+  class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-2 mt-4 ms-3 me-3 justify-between"
+>
+  <!-- Card 1: Total Stations - Skeleton -->
+  <div *ngIf="isLoadingSummary" class="relative w-full bg-white p-5 rounded-3xl shadow-sm">
+    <div class="flex items-center justify-between">
+      <p-skeleton width="100px" height="24px"></p-skeleton>
+      <p-skeleton shape="circle" size="48px"></p-skeleton>
+    </div>
+    <div class="flex items-baseline space-x-2 mt-2">
+      <p-skeleton width="60px" height="36px"></p-skeleton>
+      <p-skeleton width="120px" height="20px"></p-skeleton>
+    </div>
+  </div>
 
-  <!-- Card 1: Total Stations -->
-  <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all">
+  <!-- Card 1: Total Stations - Actual Data -->
+  <div
+    *ngIf="!isLoadingSummary"
+    class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all"
+  >
     <div class="flex items-center justify-between">
       <h5 class="text-lg font-medium text-gray-500">Total Stations</h5>
       <div class="w-12 h-12 bg-gray-200 rounded-xl flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 15 15" fill="none">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 15 15"
+          fill="none"
+        >
           <path
             d="M1.16602 13.8333V3.83333C1.16602 2.26199 1.16602 1.47631 1.65417 0.988155C2.14233 0.5 2.928 0.5 4.49935 0.5H6.49935C8.0707 0.5 8.85637 0.5 9.34453 0.988155C9.83268 1.47631 9.83268 2.26199 9.83268 3.83333V13.8333"
-            stroke="#475467" />
+            stroke="#475467"
+          />
           <path d="M0.5 13.8359H10.5" stroke="#475467" stroke-linecap="round" />
           <path d="M1.16602 6.5H9.83268" stroke="#475467" stroke-linecap="round" />
           <path
             d="M13.1673 4.85368L13.4655 4.7062C13.6448 4.6175 13.7344 4.57315 13.7842 4.49346C13.834 4.41376 13.834 4.3146 13.834 4.11626V3.65351C13.834 3.22433 13.834 3.00975 13.7176 2.91104C13.6808 2.87981 13.6375 2.8569 13.5909 2.84392C13.4433 2.80288 13.2628 2.92191 12.9019 3.15998C12.4388 3.46544 12.2072 3.61817 12.0597 3.836C12.0107 3.90836 11.969 3.98534 11.9353 4.06582C11.834 4.3081 11.834 4.58344 11.834 5.13412V6.22242C11.834 6.37716 11.9608 6.5026 12.1172 6.5026C12.3488 6.5026 12.5571 6.3631 12.6431 6.15035L13.1673 4.85368Z"
-            stroke="#475467" stroke-linejoin="round" />
+            stroke="#475467"
+            stroke-linejoin="round"
+          />
           <path
             d="M12.1525 6.5C12.2866 7.42417 12.5975 8.4799 12.471 9.41993C12.3565 10.2713 11.6823 10.9584 10.7957 11.1275C10.5902 11.1667 10.3381 11.1667 9.83398 11.1667"
-            stroke="#475467" stroke-linejoin="round" />
+            stroke="#475467"
+            stroke-linejoin="round"
+          />
         </svg>
       </div>
     </div>
     <div class="flex items-baseline space-x-2 mt-2">
-      <p class="text-3xl font-bold">{{stationSummary.totalStations }}</p>
-      <!-- <span class="text-sm text-gray-500 ml-2">
-        <span class="text-green-600">{{stationSummary.onlineStations }}</span> Online,
-        <span class="text-red-600">{{stationSummary.offlineStations }}</span> Offline
-      </span> -->
+      <p class="text-3xl font-bold">{{ stationSummary.totalStations }}</p>
+      <span class="text-sm text-gray-500 ml-2">
+        <span class="text-green-600">{{ stationSummary.onlineStations }} Online, </span>
+        <span class="text-red-600">{{ stationSummary.offlineStations }} Offline</span>
+      </span>
     </div>
   </div>
 
-  <!-- Card 2: Total Compressors -->
-  <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all">
+  <!-- Card 2: Total Compressors - Skeleton -->
+  <div *ngIf="isLoadingSummary" class="relative w-full bg-white p-5 rounded-3xl shadow-sm">
+    <div class="flex items-center justify-between">
+      <p-skeleton width="130px" height="24px"></p-skeleton>
+      <p-skeleton shape="circle" size="48px"></p-skeleton>
+    </div>
+    <div class="mt-2">
+      <p-skeleton width="50px" height="36px"></p-skeleton>
+    </div>
+  </div>
+
+  <!-- Card 2: Total Compressors - Actual Data -->
+  <div
+    *ngIf="!isLoadingSummary"
+    class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all"
+  >
     <div class="flex items-center justify-between">
       <h5 class="text-lg font-medium text-gray-500">Total Compressors</h5>
       <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
           <circle cx="12" cy="18" r="3" stroke="#2D31A6" stroke-width="1.5" />
           <path d="M12 15V10" stroke="#2D31A6" stroke-width="1.5" stroke-linecap="round" />
-          <path d="M22 13C22 7.47715 17.5228 3 12 3C6.47715 3 2 7.47715 2 13" stroke="#2D31A6" stroke-width="1.5"
-            stroke-linecap="round" />
+          <path
+            d="M22 13C22 7.47715 17.5228 3 12 3C6.47715 3 2 7.47715 2 13"
+            stroke="#2D31A6"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
         </svg>
       </div>
     </div>
     <div class="flex items-baseline space-x-2 mt-2">
-      <p class="text-3xl font-bold">{{stationSummary.totalCompressors}}</p>
+      <p class="text-3xl font-bold">{{ stationSummary.totalCompressors }}</p>
     </div>
   </div>
 
-  <!-- Card 3: Total Dispensers -->
-  <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all">
+  <!-- Card 3: Total Dispensers - Skeleton -->
+  <div *ngIf="isLoadingSummary" class="relative w-full bg-white p-5 rounded-3xl shadow-sm">
+    <div class="flex items-center justify-between">
+      <p-skeleton width="120px" height="24px"></p-skeleton>
+      <p-skeleton shape="circle" size="48px"></p-skeleton>
+    </div>
+    <div class="mt-2">
+      <p-skeleton width="50px" height="36px"></p-skeleton>
+    </div>
+  </div>
+
+  <!-- Card 3: Total Dispensers - Actual Data -->
+  <div
+    *ngIf="!isLoadingSummary"
+    class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all"
+  >
     <div class="flex items-center justify-between">
       <h5 class="text-lg font-medium text-gray-500">Total Dispensers</h5>
       <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="21"
+          height="21"
+          viewBox="0 0 21 21"
+          fill="none"
+        >
           <g clip-path="url(#clip0_14235_14945)">
             <path
               d="M12.3736 18.4387C12.4103 18.6835 12.5591 18.897 12.776 19.016C12.9929 19.1352 13.2529 19.1463 13.479 19.0458L16.8261 17.5673C16.9919 17.4943 17.0744 17.3069 17.0164 17.1351L15.3369 12.1449C15.0681 11.3576 14.2668 10.8828 13.4472 11.0251L12.9222 11.1193C12.0233 11.2761 11.4159 12.1247 11.5576 13.0264L12.3736 18.4387ZM13.1966 18.4054C13.17 18.4179 13.1391 18.4166 13.1137 18.4019C13.0872 18.3879 13.0691 18.3618 13.0654 18.332L12.2472 12.9242C12.2304 12.8078 12.2344 12.6892 12.2592 12.5742L12.851 13.0418C13.1367 13.2646 13.3499 13.5674 13.4633 13.9118L14.7458 17.723L13.1966 18.4054ZM13.0441 11.8108L13.5689 11.7166C13.6253 11.7065 13.6825 11.7015 13.7398 11.7015C14.1613 11.7027 14.5358 11.9708 14.6726 12.3695L16.2512 17.0586L15.388 17.4397L14.1263 13.6909C13.97 13.217 13.6765 12.8002 13.2831 12.4935L12.6416 11.986C12.7608 11.8979 12.8984 11.838 13.0441 11.8108Z"
-              fill="#912018" />
+              fill="#912018"
+            />
             <path
               d="M0.896678 3.32541L6.12204 4.8651C6.19269 4.88609 6.25836 4.92117 6.31491 4.96826L8.15798 6.50378L8.45513 6.75223L10.8632 19.2689C10.9849 19.9051 11.3902 20.4512 11.9641 20.7517C12.5381 21.052 13.2177 21.0741 13.8099 20.8116L17.1675 19.3283C17.4946 19.7158 18.0343 19.8481 18.5036 19.6559L20.2746 18.9294C20.871 18.685 21.1563 18.0036 20.9122 17.4072L17.6869 9.53415L17.9262 9.25767C18.3726 8.7406 18.3164 7.95986 17.8006 7.51198L14.1103 4.31471C13.8618 4.09958 13.5381 3.9921 13.2105 4.0158C12.8828 4.03951 12.5779 4.19249 12.363 4.44093L11.7661 5.13133L10.4248 4.01372H10.4227L7.93821 1.99284C7.81087 1.88904 7.66398 1.81183 7.50636 1.7657L1.84593 0.0973804C1.19046 -0.0951609 0.502785 0.27967 0.309443 0.934983L0.058915 1.78572C-0.0346325 2.10096 0.00124869 2.44039 0.158389 2.72937C0.31553 3.01818 0.581115 3.23266 0.896678 3.32541ZM12.0708 5.85039L12.8925 4.90002C12.9859 4.79206 13.1184 4.72558 13.261 4.71517C13.4034 4.70492 13.5442 4.75169 13.6521 4.84508L17.3425 8.04107C17.5667 8.2357 17.5911 8.57497 17.3971 8.7997L17.0171 9.23909C16.9306 9.33888 16.9076 9.47888 16.9575 9.60095L20.2647 17.6707C20.3624 17.9092 20.2482 18.1818 20.0097 18.2796L18.2381 19.0057C18.1234 19.0526 17.9947 19.0521 17.8804 19.0042C17.7661 18.9563 17.6756 18.8649 17.6287 18.7502C17.593 18.6627 17.5235 18.5934 17.4357 18.558C17.3481 18.5226 17.2499 18.524 17.1634 18.5623L13.5272 20.1688C13.1299 20.3443 12.6744 20.3291 12.2898 20.1276C11.905 19.9261 11.6332 19.5602 11.5512 19.1337L9.11957 6.49465C9.10419 6.41536 9.0619 6.34376 8.99991 6.29202L8.89003 6.2004L10.2306 4.7629L11.5827 5.889C11.7291 6.01074 11.9462 5.99296 12.0708 5.84911V5.85039ZM0.730087 1.98451L0.979974 1.13313C1.02018 0.996013 1.11341 0.880681 1.23883 0.812282C1.36426 0.744044 1.51162 0.728346 1.64858 0.768872L7.30549 2.43415C7.37404 2.45433 7.4378 2.48781 7.49306 2.53282L9.68919 4.31743L8.35181 5.7522L6.76278 4.42764C6.63303 4.31919 6.48246 4.23862 6.32019 4.19105L1.09402 2.65248C0.809057 2.56838 0.64631 2.26948 0.730087 1.98451Z"
-              fill="#912018" />
+              fill="#912018"
+            />
             <path
               d="M10.0332 6.57328C9.9432 6.59635 9.86583 6.65418 9.81841 6.73411C9.771 6.8142 9.75738 6.90983 9.78061 6.99985L9.95553 7.68512C9.99526 7.83986 10.1346 7.94815 10.2943 7.94831C10.3236 7.94847 10.3528 7.94478 10.3811 7.93741C10.5684 7.88968 10.6815 7.69906 10.6338 7.5118L10.4588 6.82638C10.4359 6.73635 10.3783 6.65914 10.2985 6.61173C10.2187 6.56431 10.1232 6.55038 10.0332 6.57328Z"
-              fill="#912018" />
+              fill="#912018"
+            />
             <path
               d="M10.3316 8.82814L10.8275 10.9277C10.8649 11.0855 11.0058 11.1971 11.1679 11.1971C11.1952 11.1973 11.2221 11.1941 11.2485 11.1877C11.4362 11.1434 11.5528 10.9555 11.5091 10.7677L11.0133 8.66812C10.9845 8.54638 10.893 8.44915 10.7732 8.41326C10.6534 8.37722 10.5235 8.40798 10.4324 8.49368C10.3414 8.57954 10.3029 8.70736 10.3316 8.8291V8.82814Z"
-              fill="#912018" />
+              fill="#912018"
+            />
           </g>
           <defs>
             <clipPath id="clip0_14235_14945">
@@ -76,173 +151,303 @@
       </div>
     </div>
     <div class="flex items-baseline space-x-2 mt-2">
-      <p class="text-3xl font-bold">{{stationSummary.totalDispensers }}</p>
+      <p class="text-3xl font-bold">{{ stationSummary.totalDispensers }}</p>
     </div>
   </div>
 
-  <!-- Card 4: Total Government -->
-  <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all">
+  <!-- Card 4: Total Government - Skeleton -->
+  <div *ngIf="isLoadingSummary" class="relative w-full bg-white p-5 rounded-3xl shadow-sm">
+    <div class="flex items-center justify-between">
+      <p-skeleton width="120px" height="24px"></p-skeleton>
+      <p-skeleton shape="circle" size="48px"></p-skeleton>
+    </div>
+    <div class="mt-2">
+      <p-skeleton width="50px" height="36px"></p-skeleton>
+    </div>
+  </div>
+
+  <!-- Card 4: Total Government - Actual Data -->
+  <div
+    *ngIf="!isLoadingSummary"
+    class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all"
+  >
     <div class="flex items-center justify-between">
       <h5 class="text-lg font-medium text-gray-500">Total Government</h5>
       <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
           <path
             d="M22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12Z"
-            stroke="#0078A4" stroke-width="1.5" stroke-linejoin="round" />
+            stroke="#0078A4"
+            stroke-width="1.5"
+            stroke-linejoin="round"
+          />
           <path
             d="M20 5.69899C19.0653 5.76636 17.8681 6.12824 17.0379 7.20277C15.5385 9.14361 14.039 9.30556 13.0394 8.65861C11.5399 7.6882 12.8 6.11636 11.0401 5.26215C9.89313 4.70542 9.73321 3.19045 10.3716 2"
-            stroke="#0078A4" stroke-width="1.5" stroke-linejoin="round" />
+            stroke="#0078A4"
+            stroke-width="1.5"
+            stroke-linejoin="round"
+          />
           <path
             d="M2 11C2.7625 11.6621 3.83046 12.2682 5.08874 12.2682C7.68843 12.2682 8.20837 12.7649 8.20837 14.7518C8.20837 16.7387 8.20837 16.7387 8.72831 18.2288C9.06651 19.1981 9.18472 20.1674 8.5106 21"
-            stroke="#0078A4" stroke-width="1.5" stroke-linejoin="round" />
+            stroke="#0078A4"
+            stroke-width="1.5"
+            stroke-linejoin="round"
+          />
           <path
             d="M22 13.4523C21.1129 12.9411 20 12.7308 18.8734 13.5405C16.7177 15.0898 15.2314 13.806 14.5619 15.0889C13.5765 16.9775 17.0957 17.5711 14 22"
-            stroke="#0078A4" stroke-width="1.5" stroke-linejoin="round" />
+            stroke="#0078A4"
+            stroke-width="1.5"
+            stroke-linejoin="round"
+          />
         </svg>
       </div>
     </div>
     <div class="flex items-baseline space-x-2 mt-2">
-      <p class="text-3xl font-bold">{{stationSummary.totalZones }}</p>
+      <p class="text-3xl font-bold">{{ stationSummary.totalZones }}</p>
     </div>
   </div>
 
-  <!-- Card 5: Total Locations (Number of Cities) -->
-  <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all">
+  <!-- Card 5: Total Locations - Skeleton -->
+  <div *ngIf="isLoadingSummary" class="relative w-full bg-white p-5 rounded-3xl shadow-sm">
+    <div class="flex items-center justify-between">
+      <p-skeleton width="110px" height="24px"></p-skeleton>
+      <p-skeleton shape="circle" size="48px"></p-skeleton>
+    </div>
+    <div class="flex items-baseline space-x-2 mt-2">
+      <p-skeleton width="50px" height="36px"></p-skeleton>
+      <p-skeleton width="100px" height="20px"></p-skeleton>
+    </div>
+  </div>
+
+  <!-- Card 5: Total Locations - Actual Data -->
+  <div
+    *ngIf="!isLoadingSummary"
+    class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all"
+  >
     <div class="flex items-center justify-between">
       <h5 class="text-lg font-medium text-gray-500">Total Locations</h5>
       <div class="w-12 h-12 bg-[#74d0d769] rounded-xl flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M22 9.99883V4.99902H15L8.01175 2L2 5.08199V18.999L8.01175 16.999L12 18.711" stroke="#127E86"
-            stroke-width="1.5" stroke-linejoin="round" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M22 9.99883V4.99902H15L8.01175 2L2 5.08199V18.999L8.01175 16.999L12 18.711"
+            stroke="#127E86"
+            stroke-width="1.5"
+            stroke-linejoin="round"
+          />
           <path d="M8 2L8 17" stroke="#127E86" stroke-width="1.5" stroke-linejoin="round" />
           <path d="M15 5V10" stroke="#127E86" stroke-width="1.5" stroke-linejoin="round" />
           <path
             d="M18 12C15.7909 12 14 13.8089 14 16.0404C14 17.3163 14.5 18.3084 15.5 19.1945C16.2049 19.8192 17.4873 21.159 18 22C18.5386 21.1757 19.7951 19.8192 20.5 19.1945C21.5 18.3084 22 17.3163 22 16.0404C22 13.8089 20.2091 12 18 12Z"
-            stroke="#127E86" stroke-width="1.5" stroke-linejoin="round" />
-          <path d="M17.998 16H18.007" stroke="#127E86" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round" />
+            stroke="#127E86"
+            stroke-width="1.5"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M17.998 16H18.007"
+            stroke="#127E86"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
       </div>
     </div>
     <div class="flex items-baseline space-x-2 mt-2">
-      <p class="text-3xl font-bold">{{stationSummary.totalLocations}}</p>
+      <p class="text-3xl font-bold">{{ stationSummary.totalLocations }}</p>
       <span class="text-sm text-gray-500">Number of Cities</span>
     </div>
   </div>
-
 </div>
+
 <!-- table -->
 <div class="bg-white rounded-xl shadow-sm p-6 ms-3 me-3 mt-8">
   <form class="space-y-6">
-
-
     <div class="flex flex-col gap-4">
-
-
       <div class="grid grid-cols-12 gap-4 items-end">
-
         <!-- Search -->
         <div class="col-span-6 md:col-span-6 lg:col-span-4">
           <div class="relative">
             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              <svg
+                class="w-5 h-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
               </svg>
             </div>
-            <input name="searchTerm" [(ngModel)]="searchTerm" (input)="onSearch()" type="text"
-              placeholder="Search stations..." class="w-full pl-10 pr-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg bg-white
-                 focus:ring-1 focus:ring-green-300 focus:border-green-700 outline-none transition-all" />
+            <input
+              name="searchTerm"
+              [(ngModel)]="searchTerm"
+              (input)="onSearch()"
+              type="text"
+              placeholder="Search stations..."
+              class="w-full pl-10 pr-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg bg-white focus:ring-1 focus:ring-green-300 focus:border-green-700 outline-none transition-all"
+            />
           </div>
         </div>
 
         <!-- Zones -->
         <div class="col-span-12 sm:col-span-6 md:col-span-3 lg:col-span-2">
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            All Zones
-          </label>
-          <p-select [options]="zone" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedZoneId"
-            (onChange)="filterZone($event.value)" optionLabel="name" optionValue="zoneId" placeholder="All"
-            class="w-full">
+          <label class="block text-sm font-medium text-gray-700 mb-1"> All Zones </label>
+          <p-select
+            [options]="zone"
+            [ngModelOptions]="{ standalone: true }"
+            [(ngModel)]="selectedZoneId"
+            (onChange)="filterZone($event.value)"
+            optionLabel="name"
+            optionValue="zoneId"
+            placeholder="All"
+            class="w-full"
+          >
           </p-select>
         </div>
 
         <!-- Status -->
         <div class="col-span-12 sm:col-span-6 md:col-span-3 lg:col-span-2">
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Status
-          </label>
-          <p-select [options]="status" (onChange)="filterStatus($event.value)" optionLabel="label" optionValue="value"
-            placeholder="All" class="w-full">
+          <label class="block text-sm font-medium text-gray-700 mb-1"> Status </label>
+          <p-select
+            [options]="status"
+            (onChange)="filterStatus($event.value)"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="All"
+            class="w-full"
+          >
           </p-select>
         </div>
 
-
         <div class="col-span-12 md:col-span-6 lg:col-span-4 flex justify-end gap-3">
-          <button [disabled]="!allSation" (click)="exportCSV()"
-            class="flex items-center gap-2 px-5 py-3 text-sm bg-gray-200 rounded-lg hover:bg-gray-50 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <button
+            [disabled]="!allSation"
+            (click)="exportCSV()"
+            class="flex items-center gap-2 px-5 py-3 text-sm bg-gray-200 rounded-lg hover:bg-gray-50 transition"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+            >
               <path
                 d="M2.33464 8.66406V8.12826C2.33464 6.15001 2.33464 5.16088 2.64726 4.37089C3.14985 3.10087 4.21273 2.0991 5.56021 1.6254C6.39839 1.33075 7.44784 1.33075 9.54676 1.33075C10.7461 1.33075 11.3458 1.33075 11.8248 1.49912C12.5948 1.7698 13.2021 2.34225 13.4893 3.06797C13.668 3.5194 13.668 4.08461 13.668 5.21504V8.00687V8.66406"
-                stroke="#101828" stroke-linecap="round" stroke-linejoin="round" />
+                stroke="#101828"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
               <path
                 d="M2.33529 7.99219C2.33529 6.76489 3.33021 5.76997 4.55751 5.76997C5.00136 5.76997 5.52464 5.84774 5.9562 5.7321C6.33963 5.62936 6.63913 5.32987 6.74187 4.94643C6.8575 4.51488 6.77973 3.9916 6.77973 3.54774C6.77973 2.32044 7.77465 1.32552 9.00195 1.32552"
-                stroke="#101828" stroke-linecap="round" stroke-linejoin="round" />
+                stroke="#101828"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
               <path
                 d="M5.00065 11.4771C4.9637 10.6835 4.41501 10.6641 3.67068 10.6641C2.52408 10.6641 2.33398 10.9348 2.33398 11.9974V13.3307C2.33398 14.3934 2.52408 14.6641 3.67068 14.6641C4.41501 14.6641 4.9637 14.6446 5.00065 13.851M13.6673 10.6641L12.4826 13.7939C12.263 14.374 12.1532 14.664 11.9793 14.664C11.8054 14.664 11.6956 14.374 11.476 13.7939L10.2913 10.6641M8.58462 10.6641H7.79736C7.48275 10.6641 7.32544 10.6641 7.20136 10.7148C6.77879 10.8876 6.78454 11.2939 6.78454 11.6641C6.78454 12.0342 6.77879 12.4405 7.20136 12.6133C7.32544 12.6641 7.48275 12.6641 7.79736 12.6641C8.11197 12.6641 8.26927 12.6641 8.39336 12.7148C8.81592 12.8876 8.81017 13.2939 8.81017 13.6641C8.81017 14.0342 8.81592 14.4405 8.39336 14.6133C8.26927 14.6641 8.11197 14.6641 7.79736 14.6641H6.9399"
-                stroke="#101828" stroke-linecap="round" stroke-linejoin="round" />
+                stroke="#101828"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
             Export CSV
           </button>
 
-          <button (click)="exportPDF()"
-            class="flex items-center gap-2 px-5 py-3 text-sm bg-gray-200 rounded-lg hover:bg-gray-50 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <button
+            (click)="exportPDF()"
+            class="flex items-center gap-2 px-5 py-3 text-sm bg-gray-200 rounded-lg hover:bg-gray-50 transition"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+            >
               <path
                 d="M2.33464 8.66406V8.12826C2.33464 6.15001 2.33464 5.16088 2.64726 4.37089C3.14985 3.10087 4.21273 2.0991 5.56021 1.6254C6.39839 1.33075 7.44784 1.33075 9.54676 1.33075C10.7461 1.33075 11.3458 1.33075 11.8248 1.49912C12.5948 1.7698 13.2021 2.34225 13.4893 3.06797C13.668 3.5194 13.668 4.08461 13.668 5.21504V8.00687V8.66406"
-                stroke="#101828" stroke-linecap="round" stroke-linejoin="round" />
+                stroke="#101828"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
               <path
                 d="M2.33529 7.99219C2.33529 6.76489 3.33021 5.76997 4.55751 5.76997C5.00136 5.76997 5.52464 5.84774 5.9562 5.7321C6.33963 5.62936 6.63913 5.32987 6.74187 4.94643C6.8575 4.51488 6.77973 3.9916 6.77973 3.54774C6.77973 2.32044 7.77465 1.32552 9.00195 1.32552"
-                stroke="#101828" stroke-linecap="round" stroke-linejoin="round" />
+                stroke="#101828"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
               <path
                 d="M2.33398 14.6641V12.6641M2.33398 12.6641V11.4641C2.33398 11.0869 2.33398 10.8984 2.45114 10.7812C2.5683 10.6641 2.75686 10.6641 3.13398 10.6641H3.66732C4.2196 10.6641 4.66732 11.1118 4.66732 11.6641C4.66732 12.2163 4.2196 12.6641 3.66732 12.6641H2.33398ZM13.6673 10.6641H12.6673C12.0388 10.6641 11.7245 10.6641 11.5292 10.8593C11.334 11.0546 11.334 11.3689 11.334 11.9974V12.6641M11.334 14.6641V12.6641M11.334 12.6641H13.0007M9.33398 12.6641C9.33398 13.7686 8.43855 14.6641 7.33398 14.6641C7.08475 14.6641 6.96014 14.6641 6.86732 14.6105C6.64508 14.4822 6.66732 14.2224 6.66732 13.9974V11.3307C6.66732 11.1057 6.64508 10.846 6.86732 10.7177C6.96014 10.6641 7.08475 10.6641 7.33398 10.6641C8.43855 10.6641 9.33398 11.5595 9.33398 12.6641Z"
-                stroke="#101828" stroke-linecap="round" stroke-linejoin="round" />
+                stroke="#101828"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
             Export PDF
           </button>
         </div>
-
       </div>
-
     </div>
-    <!-- [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5,10,20] -->
-    <p-table #dt class="mt-8" [value]="allSation" styleClass="p-datatable-sm" [paginator]="true" [rows]="pageSize"
-      [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadStations($event)">
 
+    <!-- Table with Skeleton Loading -->
+    <p-table
+      #dt
+      class="mt-8"
+      [value]="allSation"
+      styleClass="p-datatable-sm"
+      [paginator]="true"
+      [rows]="pageSize"
+      [totalRecords]="totalRecords"
+      [lazy]="true"
+      [loading]="isLoading"
+      (onLazyLoad)="loadStations($event)"
+    >
       <!-- Header -->
       <ng-template pTemplate="header">
         <tr class="bg-gray-50 text-gray-500 text-sm">
           <th class="px-4 py-3 text-left">Station</th>
           <th>Zone</th>
-
           <th>Dispensers</th>
           <th>Status</th>
-
           <th>Last update</th>
           <th></th>
+        </tr>
+      </ng-template>
+
+      <!-- Skeleton Loading State -->
+      <ng-template pTemplate="loading" let-columns>
+        <tr *ngFor="let item of skeletonRows" class="text-sm">
+          <td *ngFor="let col of columns" class="px-4 py-4">
+            <p-skeleton></p-skeleton>
+          </td>
         </tr>
       </ng-template>
 
       <!-- Body -->
       <ng-template pTemplate="body" let-allSation>
         <tr class="text-sm hover:bg-gray-50 transition">
-
           <!-- Station -->
           <td class="px-4 py-4">
             <div class="font-medium text-gray-800">
               {{ allSation.stationName }}
             </div>
-
           </td>
 
           <!-- Zone -->
@@ -250,46 +455,57 @@
             {{ allSation.zoneName }}
           </td>
 
-
           <td>{{ allSation.dispensersTotal }}</td>
 
-
           <td>
-            <span class="px-3 py-1 text-xs rounded-full font-medium" [ngClass]="{
-            'bg-green-100 text-green-700': allSation.status === 'Active',
-            'bg-red-100 text-red-600': allSation.status === 'Inactive'
-          }">
+            <span
+              class="px-3 py-1 text-xs rounded-full font-medium"
+              [ngClass]="{
+                'bg-green-100 text-green-700': allSation.status === 'Active',
+                'bg-red-100 text-red-600': allSation.status === 'Inactive'
+              }"
+            >
               {{ allSation.status }}
             </span>
           </td>
 
-
-
-
           <td class="text-gray-500 text-sm">
-            {{ allSation.lastUpdate | date: 'short' }}
+            {{ allSation.lastUpdate | date : 'short' }}
           </td>
-
 
           <td>
-            <button (click)="openDetails(allSation)"
-              class="cursor-pointer w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-500 transition">
-
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M2 8C2 8 6.47715 3 12 3C17.5228 3 22 8 22 8" stroke="#141B34" stroke-width="1.5"
-                  stroke-linecap="round" />
+            <button
+              (click)="openDetails(allSation)"
+              class="cursor-pointer w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-500 transition"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M2 8C2 8 6.47715 3 12 3C17.5228 3 22 8 22 8"
+                  stroke="#141B34"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
                 <path
                   d="M21.544 13.045C21.848 13.4713 22 13.6845 22 14C22 14.3155 21.848 14.5287 21.544 14.955C20.1779 16.8706 16.6892 21 12 21C7.31078 21 3.8221 16.8706 2.45604 14.955C2.15201 14.5287 2 14.3155 2 14C2 13.6845 2.15201 13.4713 2.45604 13.045C3.8221 11.1294 7.31078 7 12 7C16.6892 7 20.1779 11.1294 21.544 13.045Z"
-                  stroke="#141B34" stroke-width="1.5" />
+                  stroke="#141B34"
+                  stroke-width="1.5"
+                />
                 <path
                   d="M15 14C15 12.3431 13.6569 11 12 11C10.3431 11 9 12.3431 9 14C9 15.6569 10.3431 17 12 17C13.6569 17 15 15.6569 15 14Z"
-                  stroke="#141B34" stroke-width="1.5" />
+                  stroke="#141B34"
+                  stroke-width="1.5"
+                />
               </svg>
-
             </button>
           </td>
-
         </tr>
       </ng-template>
-
     </p-table>
+  </form>
+</div>

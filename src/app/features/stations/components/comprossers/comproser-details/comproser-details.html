@@ -157,7 +157,7 @@
       </div>
 
       <div *ngIf="!isLoadingRealtime" class="grid grid-cols-3 gap-4">
-        <div *ngFor="let stage of stages" class="card flex flex-col items-center">
+        <div *ngFor="let stage of stages; let i = index" class="card flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity" (click)="openPressureHistory(i + 1)">
           <!-- Gauge SVG -->
           <svg width="160" height="90" viewBox="0 0 160 90">
             <!-- Background arc -->
@@ -276,8 +276,9 @@
 
     <div *ngIf="!isLoadingRealtime" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div
-        *ngFor="let sensor of temperatureStages"
-        class="bg-white rounded-xl shadow p-5 flex flex-col items-center gap-2"
+        *ngFor="let sensor of temperatureStages; let i = index"
+        class="bg-white rounded-xl shadow p-5 flex flex-col items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+        (click)="openTemperatureHistory(i + 1)"
       >
         <p class="text-sm font-semibold text-gray-600">{{ sensor.label }}</p>
 
@@ -497,6 +498,192 @@
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+</div>
+
+<!-- Pressure History Popup Modal -->
+<div *ngIf="showPressureHistoryPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" (click)="closePressureHistory()">
+  <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-800">Pressure History - Stage {{ selectedStage }}</h2>
+      <button (click)="closePressureHistory()" class="text-gray-400 hover:text-gray-600">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Filter Form -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+        <input 
+          type="date" 
+          [(ngModel)]="pressureHistoryParams.date" 
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        >
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Time From</label>
+        <input 
+          type="time" 
+          [(ngModel)]="pressureHistoryParams.timeFrom" 
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        >
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Time To</label>
+        <input 
+          type="time" 
+          [(ngModel)]="pressureHistoryParams.timeTo" 
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        >
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Interval (minutes)</label>
+        <input 
+          type="number" 
+          [(ngModel)]="pressureHistoryParams.intervalMinutes" 
+          min="1"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        >
+      </div>
+    </div>
+
+    <!-- Update Button -->
+    <div class="mb-6">
+      <button 
+        (click)="updatePressureHistory()" 
+        [disabled]="isLoadingPressureHistory"
+        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:bg-blue-300 transition-colors"
+      >
+        <span *ngIf="!isLoadingPressureHistory">Update Chart</span>
+        <span *ngIf="isLoadingPressureHistory">Loading...</span>
+      </button>
+    </div>
+
+    <!-- Chart -->
+    <div class="bg-gray-50 rounded-lg p-4" style="min-height: 400px;">
+      <div *ngIf="isLoadingPressureHistory" class="flex items-center justify-center h-96">
+        <div class="text-center">
+          <p-progressSpinner styleClass="w-10 h-10"></p-progressSpinner>
+          <p class="text-gray-500 mt-3">Loading pressure history data...</p>
+        </div>
+      </div>
+      
+      <div *ngIf="!isLoadingPressureHistory" style="height: 400px;">
+        <apx-chart
+          #pressureHistoryChart
+          [series]="pressureHistoryChartOptions.series"
+          [chart]="pressureHistoryChartOptions.chart"
+          [xaxis]="pressureHistoryChartOptions.xaxis"
+          [yaxis]="pressureHistoryChartOptions.yaxis"
+          [stroke]="pressureHistoryChartOptions.stroke"
+          [tooltip]="pressureHistoryChartOptions.tooltip"
+          [grid]="pressureHistoryChartOptions.grid"
+          [dataLabels]="pressureHistoryChartOptions.dataLabels"
+          [colors]="pressureHistoryChartOptions.colors"
+          [fill]="pressureHistoryChartOptions.fill"
+          [responsive]="pressureHistoryChartOptions.responsive"
+        >
+        </apx-chart>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Temperature History Popup Modal -->
+<div *ngIf="showTemperatureHistoryPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" (click)="closeTemperatureHistory()">
+  <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-800">Temperature History - Stage {{ selectedTemperatureStage }}</h2>
+      <button (click)="closeTemperatureHistory()" class="text-gray-400 hover:text-gray-600">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Filter Form -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+        <input 
+          type="date" 
+          [(ngModel)]="temperatureHistoryParams.date" 
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+        >
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Time From</label>
+        <input 
+          type="time" 
+          [(ngModel)]="temperatureHistoryParams.timeFrom" 
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+        >
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Time To</label>
+        <input 
+          type="time" 
+          [(ngModel)]="temperatureHistoryParams.timeTo" 
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+        >
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Interval (minutes)</label>
+        <input 
+          type="number" 
+          [(ngModel)]="temperatureHistoryParams.intervalMinutes" 
+          min="1"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+        >
+      </div>
+    </div>
+
+    <!-- Update Button -->
+    <div class="mb-6">
+      <button 
+        (click)="updateTemperatureHistory()" 
+        [disabled]="isLoadingTemperatureHistory"
+        class="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 disabled:bg-orange-300 transition-colors"
+      >
+        <span *ngIf="!isLoadingTemperatureHistory">Update Chart</span>
+        <span *ngIf="isLoadingTemperatureHistory">Loading...</span>
+      </button>
+    </div>
+
+    <!-- Chart -->
+    <div class="bg-gray-50 rounded-lg p-4" style="min-height: 400px;">
+      <div *ngIf="isLoadingTemperatureHistory" class="flex items-center justify-center h-96">
+        <div class="text-center">
+          <p-progressSpinner styleClass="w-10 h-10"></p-progressSpinner>
+          <p class="text-gray-500 mt-3">Loading temperature history data...</p>
+        </div>
+      </div>
+      
+      <div *ngIf="!isLoadingTemperatureHistory" style="height: 400px;">
+        <apx-chart
+          #temperatureHistoryChart
+          [series]="temperatureHistoryChartOptions.series"
+          [chart]="temperatureHistoryChartOptions.chart"
+          [xaxis]="temperatureHistoryChartOptions.xaxis"
+          [yaxis]="temperatureHistoryChartOptions.yaxis"
+          [stroke]="temperatureHistoryChartOptions.stroke"
+          [tooltip]="temperatureHistoryChartOptions.tooltip"
+          [grid]="temperatureHistoryChartOptions.grid"
+          [dataLabels]="temperatureHistoryChartOptions.dataLabels"
+          [colors]="temperatureHistoryChartOptions.colors"
+          [fill]="temperatureHistoryChartOptions.fill"
+          [responsive]="temperatureHistoryChartOptions.responsive"
+        >
+        </apx-chart>
+      </div>
     </div>
   </div>
 </div>

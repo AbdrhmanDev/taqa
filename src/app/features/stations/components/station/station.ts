@@ -13,9 +13,21 @@ import { Router } from '@angular/router';
 import { AllStation } from '../../service/all-station';
 import { ChangeDetectorRef } from '@angular/core';
 import { IZone } from '../../model/zone';
+
+// أضف import للسكلتون
+import { SkeletonModule } from 'primeng/skeleton';
+
 @Component({
   selector: 'app-station',
-  imports: [SelectModule, DatePickerModule, CommonModule, FormsModule, TableModule, RouterLink],
+  imports: [
+    SelectModule,
+    DatePickerModule,
+    CommonModule,
+    FormsModule,
+    TableModule,
+    RouterLink,
+    SkeletonModule,
+  ],
   templateUrl: './station.html',
   styleUrl: './station.scss',
 })
@@ -23,7 +35,7 @@ export class Station implements OnInit {
   constructor(
     private router: Router,
     private Station: AllStation,
-    private changeDetectorRef: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
   @ViewChild('dt', { static: false }) dt!: Table;
 
@@ -39,11 +51,18 @@ export class Station implements OnInit {
   selectedZoneId: number | null = null;
   status: any[] = [];
   searchTerm: string = '';
+
+  // أضف هذه المتغيرات للسكلتون
+  isLoading: boolean = true;
+  isLoadingSummary: boolean = true;
+  skeletonRows: number[] = [1, 2, 3, 4, 5]; // عدد صفوف السكلتون في الجدول
+
   ngOnInit(): void {
     this.onGetSummaryStation();
     this.onGetAllStation();
     this.onGetAllZone();
   }
+
   exportPDF() {
     const doc = new jsPDF();
 
@@ -62,6 +81,7 @@ export class Station implements OnInit {
 
     doc.save('stations.pdf');
   }
+
   exportCSV() {
     if (!this.allSation?.length) return;
 
@@ -84,28 +104,35 @@ export class Station implements OnInit {
     link.download = 'stations.csv';
     link.click();
   }
+
   openDetails(station: any) {
     this.router.navigate(['/dashboard/station-details', station.id]);
   }
+
   onGetSummaryStation() {
+    this.isLoadingSummary = true;
     this.Station.getStationSummary().subscribe({
       next: (res) => {
         this.stationSummary = res;
+        this.isLoadingSummary = false;
         this.changeDetectorRef.detectChanges();
         console.log(this.stationSummary);
       },
       error: (err) => {
         console.log(err);
+        this.isLoadingSummary = false;
       },
     });
   }
+
   loadStations(event: any) {
     this.pageSize = event.rows;
     this.page = event.first / event.rows + 1;
-
     this.onGetAllStation();
   }
+
   onGetAllStation() {
+    this.isLoading = true;
     this.Station.getAllStations(this.page, this.pageSize, this.searchTerm).subscribe({
       next: (res) => {
         this.allSation = res.items;
@@ -120,14 +147,17 @@ export class Station implements OnInit {
         }));
 
         console.log('status:', this.status);
+        this.isLoading = false;
         this.changeDetectorRef.detectChanges();
         console.log(this.allSation);
       },
       error: (err) => {
         console.log(err);
+        this.isLoading = false;
       },
     });
   }
+
   filterStatus(status: any) {
     this.allSation = this.allStationsCopy.filter((x) => x.status === status);
   }
@@ -136,7 +166,6 @@ export class Station implements OnInit {
     this.Station.getAllZones().subscribe({
       next: (res) => {
         this.zone = res;
-
         console.log(res);
       },
       error: (err) => {
@@ -144,6 +173,7 @@ export class Station implements OnInit {
       },
     });
   }
+
   filterZone(zoneId: number | null) {
     if (!zoneId) {
       this.filteredStations = this.allSation;
@@ -152,6 +182,7 @@ export class Station implements OnInit {
 
     this.filteredStations = this.allSation.filter((s) => s.zoneId === zoneId);
   }
+
   onSearch() {
     this.page = 1;
     this.onGetAllStation();

@@ -70,8 +70,12 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 })
 export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterViewInit {
   @ViewChild('timelineChart', { static: false }) timelineChart: ChartComponent | any;
+  @ViewChild('pressureHistoryChart', { static: false }) pressureHistoryChart: ChartComponent | any;
+  @ViewChild('temperatureHistoryChart', { static: false }) temperatureHistoryChart: ChartComponent | any;
   public chartOptions: Partial<ChartOptions> | any;
   timelineChartOptions: any;
+  pressureHistoryChartOptions: any;
+  temperatureHistoryChartOptions: any;
   timeLineChart: any = {};
   selectedTime: any;
   station: any;
@@ -82,6 +86,28 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
   isLoadingCompressor: boolean = false;
   isLoadingTimeline: boolean = false;
   isLoadingRealtime: boolean = true;
+  isLoadingPressureHistory: boolean = false;
+  isLoadingTemperatureHistory: boolean = false;
+
+  // Pressure history popup properties
+  showPressureHistoryPopup: boolean = false;
+  selectedStage: number = 1;
+  pressureHistoryParams = {
+    date: '',
+    timeFrom: '',
+    timeTo: '',
+    intervalMinutes: 15
+  };
+
+  // Temperature history popup properties
+  showTemperatureHistoryPopup: boolean = false;
+  selectedTemperatureStage: number = 1;
+  temperatureHistoryParams = {
+    date: '',
+    timeFrom: '',
+    timeTo: '',
+    intervalMinutes: 15
+  };
 
   timeOptions = [
     { label: 'Last Hour', value: 'hour' },
@@ -210,6 +236,222 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
           options: {},
         },
       ],
+    };
+
+    // Initialize pressure history chart options
+    this.pressureHistoryChartOptions = {
+      series: [],
+      chart: {
+        type: 'line',
+        height: 400,
+        zoom: {
+          enabled: true,
+          type: 'x',
+          autoScaleYaxis: true
+        },
+        toolbar: {
+          show: true,
+          tools: {
+            download: true,
+            selection: true,
+            zoom: true,
+            zoomin: true,
+            zoomout: true,
+            pan: true,
+            reset: true
+          }
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        curve: 'smooth',
+        width: 3
+      },
+      colors: ['#3B82F6'],
+      title: {
+        text: 'Pressure History',
+        align: 'left',
+        style: {
+          fontSize: '16px',
+          fontWeight: 'bold',
+          color: '#374151'
+        }
+      },
+      grid: {
+        borderColor: '#E5E7EB',
+        row: {
+          colors: ['#F9FAFB', 'transparent'],
+          opacity: 0.5
+        }
+      },
+      xaxis: {
+        type: 'datetime',
+        title: {
+          text: 'Time',
+          style: {
+            fontSize: '14px',
+            fontWeight: 500,
+            color: '#6B7280'
+          }
+        },
+        labels: {
+          format: 'HH:mm'
+        }
+      },
+      yaxis: {
+        title: {
+          text: 'Pressure (bar)',
+          style: {
+            fontSize: '14px',
+            fontWeight: 500,
+            color: '#6B7280'
+          }
+        },
+        labels: {
+          formatter: function (val: number) {
+            return val.toFixed(2);
+          }
+        }
+      },
+      tooltip: {
+        x: {
+          format: 'yyyy-MM-dd HH:mm:ss'
+        },
+        y: {
+          formatter: function (val: number) {
+            return val.toFixed(2) + ' bar';
+          }
+        }
+      },
+      fill: {
+        type: 'gradient',
+        gradient: {
+          shadeIntensity: 1,
+          opacityFrom: 0.7,
+          opacityTo: 0.3,
+          stops: [0, 90, 100]
+        }
+      },
+      responsive: [
+        {
+          breakpoint: 768,
+          options: {
+            chart: {
+              height: 300
+            }
+          }
+        }
+      ]
+    };
+
+    // Initialize temperature history chart options
+    this.temperatureHistoryChartOptions = {
+      series: [],
+      chart: {
+        type: 'line',
+        height: 400,
+        zoom: {
+          enabled: true,
+          type: 'x',
+          autoScaleYaxis: true
+        },
+        toolbar: {
+          show: true,
+          tools: {
+            download: true,
+            selection: true,
+            zoom: true,
+            zoomin: true,
+            zoomout: true,
+            pan: true,
+            reset: true
+          }
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        curve: 'smooth',
+        width: 3
+      },
+      colors: ['#F97316'],
+      title: {
+        text: 'Temperature History',
+        align: 'left',
+        style: {
+          fontSize: '16px',
+          fontWeight: 'bold',
+          color: '#374151'
+        }
+      },
+      grid: {
+        borderColor: '#E5E7EB',
+        row: {
+          colors: ['#F9FAFB', 'transparent'],
+          opacity: 0.5
+        }
+      },
+      xaxis: {
+        type: 'datetime',
+        title: {
+          text: 'Time',
+          style: {
+            fontSize: '14px',
+            fontWeight: 500,
+            color: '#6B7280'
+          }
+        },
+        labels: {
+          format: 'HH:mm'
+        }
+      },
+      yaxis: {
+        title: {
+          text: 'Temperature (°C)',
+          style: {
+            fontSize: '14px',
+            fontWeight: 500,
+            color: '#6B7280'
+          }
+        },
+        labels: {
+          formatter: function (val: number) {
+            return val.toFixed(1);
+          }
+        }
+      },
+      tooltip: {
+        x: {
+          format: 'yyyy-MM-dd HH:mm:ss'
+        },
+        y: {
+          formatter: function (val: number) {
+            return val.toFixed(1) + ' °C';
+          }
+        }
+      },
+      fill: {
+        type: 'gradient',
+        gradient: {
+          shadeIntensity: 1,
+          opacityFrom: 0.7,
+          opacityTo: 0.3,
+          stops: [0, 90, 100]
+        }
+      },
+      responsive: [
+        {
+          breakpoint: 768,
+          options: {
+            chart: {
+              height: 300
+            }
+          }
+        }
+      ]
     };
   }
 
@@ -412,5 +654,137 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
   ngOnDestroy(): void {
     if (this.subscription) this.subscription.unsubscribe();
     this.realTime.stopConnectionCompressor();
+  }
+
+  // Pressure history methods
+  openPressureHistory(stage: number) {
+    this.selectedStage = stage;
+    this.showPressureHistoryPopup = true;
+    
+    // Set default date to today
+    const today = new Date();
+    this.pressureHistoryParams.date = today.toISOString().split('T')[0];
+    this.pressureHistoryParams.timeFrom = '08:00';
+    this.pressureHistoryParams.timeTo = '12:00';
+    this.pressureHistoryParams.intervalMinutes = 15;
+    
+    // Load initial data
+    this.updatePressureHistory();
+  }
+
+  closePressureHistory() {
+    this.showPressureHistoryPopup = false;
+  }
+
+  updatePressureHistory() {
+    this.isLoadingPressureHistory = true;
+    
+    this.stationDetails.getPressureHistory(
+      this.stationId,
+      this.selectedStage,
+      this.pressureHistoryParams.date,
+      this.pressureHistoryParams.timeFrom,
+      this.pressureHistoryParams.timeTo,
+      this.pressureHistoryParams.intervalMinutes
+    ).subscribe({
+      next: (data) => {
+        console.log('Pressure history data:', data);
+        
+        // Transform data for ApexCharts
+        const chartData = data.map((item: any) => ({
+          x: new Date(item.time).getTime(),
+          y: item.averageValue
+        }));
+        
+        this.pressureHistoryChartOptions = {
+          ...this.pressureHistoryChartOptions,
+          series: [{
+            name: `Stage ${this.selectedStage} Pressure`,
+            data: chartData
+          }]
+        };
+        
+        this.isLoadingPressureHistory = false;
+        this.cdr.detectChanges();
+        
+        // Force chart re-render
+        setTimeout(() => {
+          if (this.pressureHistoryChart) {
+            this.pressureHistoryChart.updateOptions(this.pressureHistoryChartOptions, true, true);
+          }
+        }, 100);
+      },
+      error: (err) => {
+        console.error('Error fetching pressure history:', err);
+        this.isLoadingPressureHistory = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  // Temperature history methods
+  openTemperatureHistory(stage: number) {
+    this.selectedTemperatureStage = stage;
+    this.showTemperatureHistoryPopup = true;
+    
+    // Set default date to today
+    const today = new Date();
+    this.temperatureHistoryParams.date = today.toISOString().split('T')[0];
+    this.temperatureHistoryParams.timeFrom = '08:00';
+    this.temperatureHistoryParams.timeTo = '12:00';
+    this.temperatureHistoryParams.intervalMinutes = 15;
+    
+    // Load initial data
+    this.updateTemperatureHistory();
+  }
+
+  closeTemperatureHistory() {
+    this.showTemperatureHistoryPopup = false;
+  }
+
+  updateTemperatureHistory() {
+    this.isLoadingTemperatureHistory = true;
+    
+    this.stationDetails.getTemperatureHistory(
+      this.stationId,
+      this.selectedTemperatureStage,
+      this.temperatureHistoryParams.date,
+      this.temperatureHistoryParams.timeFrom,
+      this.temperatureHistoryParams.timeTo,
+      this.temperatureHistoryParams.intervalMinutes
+    ).subscribe({
+      next: (data) => {
+        console.log('Temperature history data:', data);
+        
+        // Transform data for ApexCharts
+        const chartData = data.map((item: any) => ({
+          x: new Date(item.time).getTime(),
+          y: item.averageValue
+        }));
+        
+        this.temperatureHistoryChartOptions = {
+          ...this.temperatureHistoryChartOptions,
+          series: [{
+            name: `Stage ${this.selectedTemperatureStage} Temperature`,
+            data: chartData
+          }]
+        };
+        
+        this.isLoadingTemperatureHistory = false;
+        this.cdr.detectChanges();
+        
+        // Force chart re-render
+        setTimeout(() => {
+          if (this.temperatureHistoryChart) {
+            this.temperatureHistoryChart.updateOptions(this.temperatureHistoryChartOptions, true, true);
+          }
+        }, 100);
+      },
+      error: (err) => {
+        console.error('Error fetching temperature history:', err);
+        this.isLoadingTemperatureHistory = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 }

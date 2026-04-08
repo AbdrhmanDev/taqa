@@ -74,4 +74,26 @@ export class StationDetails {
       userId,
     });
   }
+
+  getPressureHistory(stationId: number, stage: number, date?: string, timeFrom?: string, timeTo?: string, intervalMinutes?: number): Observable<any> {
+    const params: any = {};
+    
+    if (date) params.date = date;
+    if (timeFrom) params.timeFrom = timeFrom;
+    if (timeTo) params.timeTo = timeTo;
+    if (intervalMinutes) params.intervalMinutes = intervalMinutes;
+
+    return this.http.get(`${environment.url}Compressor/${stationId}/pressure/${stage}`, { params });
+  }
+
+  getTemperatureHistory(stationId: number, stage: number, date?: string, timeFrom?: string, timeTo?: string, intervalMinutes?: number): Observable<any> {
+    const params: any = {};
+    
+    if (date) params.date = date;
+    if (timeFrom) params.timeFrom = timeFrom;
+    if (timeTo) params.timeTo = timeTo;
+    if (intervalMinutes) params.intervalMinutes = intervalMinutes;
+
+    return this.http.get(`${environment.url}Compressor/${stationId}/temperature/${stage}`, { params });
+  }
 }
