@@ -207,7 +207,7 @@
         <p class="text-xs text-gray-400">total {{ comproserTableData.length }} Compressor</p>
       </div>
 
-      <button (click)="openLinkComproser()"
+      <button (click)="openLinkComproser()" *ngIf="comproserTableData.length === 0"
         class="flex items-center gap-2 bg-indigo-700 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-indigo-800 transition">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
           <path
@@ -218,7 +218,7 @@
             stroke="#F5F8FF" stroke-width="1.5" stroke-linecap="round" />
         </svg>
 
-        <span>Link Dispenser</span>
+        <span>Link Comprosser</span>
       </button>
     </div>
 

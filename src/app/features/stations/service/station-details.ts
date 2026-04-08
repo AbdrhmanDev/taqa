@@ -1,3 +1,4 @@
+import { LinkComprosser } from './../components/over-view/link-comprosser/link-comprosser';
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -50,10 +51,27 @@ export class StationDetails {
     });
   }
 
-  getAvailableAssets(): Observable<any> {
+  getAvailableAssetsComproser(): Observable<any> {
     return this.http.get(`${environment.url}compressors/available-assets`);
   }
   getComroserById(compressorId: number): Observable<any> {
     return this.http.get(`${environment.url}Compressor/${compressorId}`);
+  }
+  getAvaliavleAssets(): Observable<any> {
+    return this.http.get(`${environment.url}Asset/available`);
+  }
+  getAvailableStations(): Observable<any> {
+    return this.http.get(`${environment.url}Stations/All-Stations`);
+  }
+
+  addAsset(body: { name: string; serialNumber: string; stationId: number }): Observable<any> {
+    return this.http.post(`${environment.url}Asset`, body);
+  }
+  linkComproser(compressorId: number, assetId: number, userId: number = 0): Observable<any> {
+    return this.http.post(`${environment.url}compressors/${compressorId}/link`, {
+      assetId,
+
+      userId,
+    });
   }
 }

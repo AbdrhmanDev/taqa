@@ -2,19 +2,17 @@
   <p-dialog (onHide)="visibleChange.emit(false)" [modal]="true" [(visible)]="visible" [style]="{ width: '35rem' }"
     [showHeader]="false">
 
-    <!-- Custom Header -->
     <div class="dialog-header p-4 flex justify-between items-center bg-gray-50 rounded-t-lg border-b border-gray-200">
-      <div class="header-title flex items-center gap-2">
-        <span class="header-text font-bold text-gray-800 text-lg">Add Compressor</span>
-      </div>
-      <button class="close-btn text-gray-500 hover:text-gray-800" (click)="visibleChange.emit(false)">✕</button>
+      <span class="font-bold text-gray-800 text-lg">Add Compressor</span>
+      <button class="text-gray-500 hover:text-gray-800" (click)="visibleChange.emit(false)">✕</button>
     </div>
 
     <div class="p-6">
+
       <!-- Compressor Selection -->
-      <div class="compressor-section mb-6">
-        <label class="compressor-label block text-gray-700 text-sm font-semibold mb-2">
-          Compressor <span class="required-star text-red-500">*</span>
+      <div class="mb-6">
+        <label class="block text-gray-700 text-sm font-semibold mb-2">
+          Compressor <span class="text-red-500">*</span>
         </label>
         <p-select [options]="allComprosers" [(ngModel)]="selectedCompressor" optionLabel="brokerId" optionValue="id"
           placeholder="Select Compressor" class="w-full" [style]="{'width': '100%'}">
@@ -22,37 +20,98 @@
       </div>
 
       <!-- Asset Selection -->
-      <div class="asset-section mb-6">
-        <label class="asset-label block text-gray-700 text-sm font-semibold mb-2">
-          Asset ID <span class="required-star text-red-500">*</span>
+      <div class="mb-6">
+        <label class="block text-gray-700 text-sm font-semibold mb-2">
+          Asset ID <span class="text-red-500">*</span>
         </label>
-        <p-select [options]="availableAssets" [(ngModel)]="selectedAsset" optionLabel="name" placeholder="Select Asset"
-          class="w-full" [style]="{'width': '100%'}">
-        </p-select>
+
+        <ng-container *ngIf="availableAssets && availableAssets.length > 0; else noAssets">
+          <p-select [options]="availableAssets" [(ngModel)]="selectedAsset" optionLabel="name" optionValue="id"
+            placeholder="Select Asset" class="w-full" [style]="{'width': '100%'}">
+          </p-select>
+        </ng-container>
+
+        <ng-template #noAssets>
+          <div class="flex items-center justify-between p-3 rounded border border-gray-200 bg-gray-50">
+            <div class="flex items-center gap-2">
+              <span class="text-red-500 font-bold text-sm">!</span>
+              <span class="text-sm text-gray-500">No assets available</span>
+            </div>
+            <button type="button" (click)="openAddAssetDialog()"
+              class="px-3 py-1 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 transition">
+              + Add Asset
+            </button>
+          </div>
+        </ng-template>
       </div>
 
-      <!-- Optional Reason Section -->
-      <div class="reason-section mb-6">
-        <label class="reason-label block text-gray-700 text-sm font-semibold mb-2">
+      <!-- Reason -->
+      <div class="mb-6">
+        <label class="block text-gray-700 text-sm font-semibold mb-2">
           Reason for Addition (Optional)
         </label>
         <textarea pInputTextarea [(ngModel)]="reason" placeholder="Enter reason for adding this compressor (optional)"
           rows="3"
-          class="reason-textarea w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            </textarea>
+          class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </textarea>
       </div>
 
-      <!-- Footer Buttons -->
+      <!-- Footer -->
       <div class="flex justify-end gap-3">
         <button (click)="visibleChange.emit(false)"
-          class="cancel-btn px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 transition">
+          class="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 transition">
           Cancel
         </button>
         <button (click)="confirmLink()" [disabled]="!isFormValid()"
-          class="add-btn px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed">
+          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed">
           + Add
         </button>
       </div>
     </div>
   </p-dialog>
 </div>
+
+
+<p-dialog [(visible)]="addAssetVisible" [modal]="true" [style]="{ width: '30rem' }" [showHeader]="false">
+
+  <div class="dialog-header p-4 flex justify-between items-center bg-gray-50 border-b border-gray-200">
+    <span class="font-bold text-gray-800 text-lg">Add New Asset</span>
+    <button class="text-gray-500 hover:text-gray-800" (click)="addAssetVisible = false">✕</button>
+  </div>
+
+  <div class="p-6">
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-semibold mb-2">
+        Name <span class="text-red-500">*</span>
+      </label>
+      <input pInputText [(ngModel)]="newAsset.name" placeholder="Enter asset name" class="w-full" />
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-semibold mb-2">
+        Serial Number <span class="text-red-500">*</span>
+      </label>
+      <input pInputText [(ngModel)]="newAsset.serialNumber" placeholder="Enter serial number" class="w-full" />
+    </div>
+
+    <div class="mb-6">
+      <label class="block text-gray-700 text-sm font-semibold mb-2">
+        Station <span class="text-red-500">*</span>
+      </label>
+      <p-select [options]="availableStations" [(ngModel)]="newAsset.stationId" optionLabel="stationName"
+        optionValue="id" placeholder="Select Station" class="w-full" [style]="{'width': '100%'}">
+      </p-select>
+    </div>
+
+    <div class="flex justify-end gap-3">
+      <button (click)="addAssetVisible = false"
+        class="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 transition">
+        Cancel
+      </button>
+      <button (click)="confirmAddAsset()" [disabled]="!isNewAssetValid()"
+        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed">
+        + Add Asset
+      </button>
+    </div>
+  </div>
+</p-dialog>

@@ -153,7 +153,7 @@ export class OverView implements OnInit, OnDestroy {
 
   openMoveDialog(compressor: any) {
     this.selectedCompressorToMove = compressor;
-    this.stationDetails.getAvailableAssets().subscribe({
+    this.stationDetails.getAvailableAssetsComproser().subscribe({
       next: (assets) => {
         this.availableAssets = assets;
         this.moveDialogVisible = true;
