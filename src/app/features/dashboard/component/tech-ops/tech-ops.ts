@@ -71,18 +71,17 @@ export class TechOps implements OnInit {
   get selectedStation(): any {
     return this.techOpsData.find((s) => s.stationId === this.selectedStationId) ?? null;
   }
-  openTemperatureDialog(station: any) {
+  openDispenserDialog(station: any) {
     this.selectedStationId = station.stationId;
     this.isTemperatureDialogOpen = true;
   }
-  openPressureDialog(station: any) {
+  openCompressorDialog(station: any) {
     this.selectedStationId = station.stationId;
     this.isPressureDialogOpen = true;
   }
   async onStartConection() {
     await this._TechOpsRealtime.startConnection();
-    //because the data is coming as an array of objects, we need to subscribe to the observable and update the techOpsData variable with the received data
-    //and if i want use this subscribtion in another function i need to store it in a variable and unsubscribe from it when the component is destroyed to avoid memory leaks
+
     this.subscription = this._TechOpsRealtime.getTechOps().subscribe({
       next: (data) => {
         this.techOpsData = data;
