@@ -12,13 +12,21 @@
       <div class="col-span-12 md:col-span-4">
         <label class="label block mb-2">Claims</label>
         <p-multiselect formControlName="claims" [options]="allClaims" optionLabel="claimName"
-          placeholder="Select claims" [maxSelectedLabels]="3" class="w-full"></p-multiselect>
+          placeholder="Select claims" [maxSelectedLabels]="3" [appendTo]="'body'" class="w-full">
+        </p-multiselect>
       </div>
+      <div class="col-span-12 md:col-span-4">
+        <label class="label block mb-2">Areas</label>
+        <p-multiselect formControlName="areaIds" [options]="allAreas" optionLabel="name" optionValue="areaId"
+          placeholder="Select Areas" [maxSelectedLabels]="3" [appendTo]="'body'" class="w-full">
+        </p-multiselect>
 
+      </div>
       <div class="col-span-12 md:col-span-4">
         <label class="label block mb-2">Zones</label>
         <p-multiselect formControlName="zoneIds" [options]="allZones" optionLabel="name" optionValue="zoneId"
-          placeholder="Select zones" [maxSelectedLabels]="3" class="w-full"></p-multiselect>
+          placeholder="Select zones" [maxSelectedLabels]="3" [appendTo]="'body'" class="w-full">
+        </p-multiselect>
       </div>
 
     </div>

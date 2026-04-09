@@ -21,16 +21,18 @@
       <div class="flex flex-col gap-2">
         <label class="text-sm font-medium text-gray-700">Claims</label>
         <p-multiselect [options]="allClaims" formControlName="claims" optionLabel="claimName" optionValue="claimName"
-          placeholder=" Select claims" [maxSelectedLabels]="3" class="w-full" [filter]="true"
-          [showClear]="true"></p-multiselect>
+          placeholder="Select claims" [maxSelectedLabels]="3" class="w-full" [filter]="true" [showClear]="true"
+          [appendTo]="'body'">
+        </p-multiselect>
       </div>
 
       <!-- Zones -->
       <div class="flex flex-col gap-2">
         <label class="text-sm font-medium text-gray-700">Zones</label>
         <p-multiselect [options]="allZones" formControlName="zones" optionLabel="name" optionValue="zoneId"
-          placeholder="Select zones" [maxSelectedLabels]="3" class="w-full" [filter]="true"
-          [showClear]="true"></p-multiselect>
+          placeholder="Select zones" [maxSelectedLabels]="3" class="w-full" [filter]="true" [showClear]="true"
+          [appendTo]="'body'">
+        </p-multiselect>
       </div>
 
     </form>

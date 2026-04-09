@@ -65,7 +65,12 @@ export class Dispensers implements OnInit {
         next: (data) => {
           console.log('Received dispenser data:', data);
           this.DispenserDetails = data;
-          this.filteredDispensers = data;
+          this.allDispensers = data;
+          if (this.selectedStatus) {
+            this.filterDispensers();
+          } else {
+            this.filteredDispensers = data;
+          }
           this.isLoading = false;
           this.cdr.detectChanges();
         },
@@ -110,7 +115,7 @@ export class Dispensers implements OnInit {
       this.filteredDispensers = this.DispenserDetails;
     } else {
       this.filteredDispensers = this.DispenserDetails.filter(
-        (d: any) => this.getComputedStatus(d) === this.selectedStatus,
+        (d: any) => (d: any) => d.status === this.selectedStatus,
       );
     }
   }
