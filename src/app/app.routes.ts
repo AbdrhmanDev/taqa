@@ -151,6 +151,13 @@ export const routes: Routes = [
         title: 'Stations',
       },
       {
+        path: 'dispensers-history',
+        loadComponent: () =>
+          import('./features/stations/components/dispensers/dispenser-history/dispenser-history').then(
+            (m) => m.DispenserHistory,
+          ),
+      },
+      {
         path: 'station-alarm',
         loadComponent: () =>
           import('./features/stations/components/station-alarm/station-alarm').then(
@@ -315,7 +322,9 @@ export const routes: Routes = [
       {
         path: 'station-hierarchy',
         loadComponent: () =>
-          import('./features/station-hierarchy/station-hierarchy').then((m) => m.StationHierarchyComponent),
+          import('./features/station-hierarchy/station-hierarchy').then(
+            (m) => m.StationHierarchyComponent,
+          ),
         title: 'Station Hierarchy',
       },
     ],
