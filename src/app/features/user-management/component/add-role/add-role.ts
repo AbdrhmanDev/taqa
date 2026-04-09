@@ -16,7 +16,7 @@ import { MessageService } from 'primeng/api';
 })
 export class AddRole implements OnInit {
   allClaims: Claim[] = [];
-
+  allAreas: Area[] = [];
   allZones: Area[] = [];
   selectedZones: any;
   selectedClaim: any;
@@ -27,11 +27,13 @@ export class AddRole implements OnInit {
   ngOnInit(): void {
     this.onGetAllClaims();
     this.onGetAllZones();
+    this.onGetAllAreas();
   }
   addRoleForm = new FormGroup({
     roleName: new FormControl('', Validators.required),
     claims: new FormControl([], Validators.required),
     zoneIds: new FormControl([], Validators.required),
+    areaIds: new FormControl([], Validators.required),
   });
   onAddRole() {
     const formValue = this.addRoleForm.value;
@@ -43,12 +45,24 @@ export class AddRole implements OnInit {
         value: c.claimName,
       })),
       zoneIds: formValue.zoneIds,
+      areaIds: formValue.areaIds,
     };
     console.log(payload);
     this._Role.addRole(payload).subscribe({
       next: (res) => {
         console.log(res);
         this.showSuccess('Add Role Successfully');
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+  onGetAllAreas() {
+    this._Role.getAllAreas().subscribe({
+      next: (res: any) => {
+        this.allAreas = res;
+        console.log(res);
       },
       error: (err) => {
         console.log(err);

@@ -10,22 +10,17 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       let message = 'Unexpected error occurred';
 
-      switch (error.status) {
-        case 400:
-          message = error.error?.message || 'Bad Request';
-          break;
-        case 401:
-          message = 'Unauthorized';
-          break;
-        case 403:
-          message = "Don't have permission to access";
-          break;
-        case 404:
-          message = 'Not Found';
-          break;
-        case 500:
-          message = 'Server error';
-          break;
+      if (error.error) {
+        if (typeof error.error === 'string') {
+          try {
+            const parsed = JSON.parse(error.error);
+            message = parsed.message || error.error;
+          } catch {
+            message = error.error;
+          }
+        } else if (typeof error.error === 'object') {
+          message = error.error.message || message;
+        }
       }
 
       messageService.add({

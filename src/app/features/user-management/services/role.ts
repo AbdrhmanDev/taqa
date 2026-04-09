@@ -23,6 +23,9 @@ export class Role {
       responseType: 'text',
     });
   }
+  getAllAreas(): Observable<any> {
+    return this.http.get(environment.url + 'Area/GetAllAreas');
+  }
   addRole(data: IAddRole | any): Observable<string> {
     return this.http.post<string>(environment.url + 'auth/AddRoles', data);
   }
