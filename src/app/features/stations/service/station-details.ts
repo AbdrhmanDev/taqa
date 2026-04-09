@@ -96,4 +96,19 @@ export class StationDetails {
 
     return this.http.get(`${environment.url}Compressor/${stationId}/temperature/${stage}`, { params });
   }
+
+  getMachinesByStation(stationId: number): Observable<any> {
+    return this.http.get(`${environment.url}Machine/station/${stationId}`);
+  }
+
+  linkMachine(machineId: number, assetId: number, userId: number = 0): Observable<any> {
+    return this.http.post(`${environment.url}machines/${machineId}/link`, {
+      assetId,
+      userId,
+    });
+  }
+
+  unlinkMachine(machineId: number, userId: number = 0): Observable<any> {
+    return this.http.post(`${environment.url}machines/${machineId}/unlink`, { userId });
+  }
 }

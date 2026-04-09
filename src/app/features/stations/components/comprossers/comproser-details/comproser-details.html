@@ -367,7 +367,7 @@
       <!-- Title -->
       <div>
         <h3 class="text-lg font-semibold text-gray-800">Dispensers</h3>
-        <p class="text-xs text-gray-400">total 4 Dispensers</p>
+        <p class="text-xs text-gray-400">total {{ machines.length }} Dispensers</p>
       </div>
 
       <!-- Button -->
@@ -415,27 +415,44 @@
 
         <!-- Table Body -->
         <tbody class="text-gray-700">
-          <!-- Row -->
-          <tr class="">
+          <tr *ngIf="isLoadingMachines">
+            <td colspan="5" class="py-8 text-center">
+              <p-progressSpinner styleClass="w-8 h-8"></p-progressSpinner>
+              <p class="text-gray-400 mt-2 text-xs">Loading dispensers...</p>
+            </td>
+          </tr>
+          
+          <tr *ngIf="!isLoadingMachines && machines.length === 0">
+            <td colspan="5" class="py-8 text-center text-gray-400">
+              No dispensers found for this station.
+            </td>
+          </tr>
+
+          <!-- Dynamic Rows -->
+          <tr *ngFor="let machine of machines" class="border-t border-gray-50">
             <td class="py-4">
-              <div class="font-medium">Alpha_1</div>
-              <div class="text-xs text-gray-400">ID-S-78</div>
+              <div class="font-medium">{{ machine.name }}</div>
+              <div class="text-xs text-gray-400">{{ machine.code || machine.id }}</div>
             </td>
 
-            <td>SR-31314</td>
+            <td>{{ machine.model || 'N/A' }}</td>
 
-            <td>3</td>
+            <td>{{ machine.dispenserNum1 || 1 }}</td>
 
             <td>
-              <span class="bg-green-100 text-green-600 text-xs px-3 py-1 rounded-full">
-                Active
+              <span 
+                [ngClass]="(machine.dispId1 || machine.dispId2) ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600'"
+                class="text-xs px-3 py-1 rounded-full"
+              >
+                {{ (machine.dispId1 || machine.dispId2) ? 'Linked' : 'Unlinked' }}
               </span>
             </td>
 
             <td class="text-right">
               <div class="flex justify-end gap-4 text-gray-400">
-                <!-- arrow -->
+                <!-- arrow (details) -->
                 <svg
+                  class="cursor-pointer hover:opacity-70"
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
                   height="24"
@@ -458,8 +475,42 @@
                   />
                 </svg>
 
-                <!-- settings -->
+                <!-- settings (Link/Unlink) -->
                 <svg
+                  *ngIf="!(machine.dispId1 || machine.dispId2)"
+                  (click)="openLinkModal(machine)"
+                  class="cursor-pointer hover:opacity-70"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M10 13.229C10.1416 13.4609 10.3097 13.6804 10.5042 13.8828C11.7117 15.1395 13.5522 15.336 14.9576 14.4722C15.218 14.3121 15.4634 14.1157 15.6872 13.8828L18.9266 10.5114C20.3578 9.02184 20.3578 6.60676 18.9266 5.11718C17.4953 3.6276 15.1748 3.62761 13.7435 5.11718L13.03 5.85978"
+                    stroke="#2D31A6"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M10.9703 18.14L10.2565 18.8828C8.82526 20.3724 6.50471 20.3724 5.07345 18.8828C3.64218 17.3932 3.64218 14.9782 5.07345 13.4886L8.31287 10.1172C9.74413 8.62761 12.0647 8.6276 13.4959 10.1172C13.6904 10.3195 13.8584 10.539 14 10.7708"
+                    stroke="#2D31A6"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M21 16H18.9211M16 21L16 18.9211"
+                    stroke="#2D31A6"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+
+                <svg
+                  *ngIf="machine.dispId1 || machine.dispId2"
+                  (click)="onUnlinkMachine(machine.id)"
+                  class="cursor-pointer hover:opacity-70"
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
                   height="24"
@@ -480,13 +531,6 @@
                   />
                   <path
                     d="M21 16H18.9211M16 21L16 18.9211"
-                    stroke="#D92D20"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M3 8H5.07889M8 3L8 5.07889"
                     stroke="#D92D20"
                     stroke-width="1.5"
                     stroke-linecap="round"
@@ -684,6 +728,51 @@
         >
         </apx-chart>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Link Machine Modal -->
+<div *ngIf="showLinkModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" (click)="closeLinkModal()">
+  <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md" (click)="$event.stopPropagation()">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-xl font-bold text-gray-800">Link Dispenser</h2>
+      <button (click)="closeLinkModal()" class="text-gray-400 hover:text-gray-600">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="mb-6">
+      <p class="text-gray-600 mb-2">Linking dispenser: <span class="font-bold text-gray-800">{{ selectedMachine?.name }}</span></p>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Select Asset</label>
+      <p-select 
+        [options]="availableAssets" 
+        [(ngModel)]="selectedAssetId" 
+        optionLabel="label" 
+        optionValue="value"
+        placeholder="Select an asset"
+        appendTo="body"
+        class="w-full"
+      ></p-select>
+    </div>
+
+    <div class="flex gap-4">
+      <button 
+        (click)="closeLinkModal()" 
+        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+      >
+        Cancel
+      </button>
+      <button 
+        (click)="confirmLink()" 
+        [disabled]="!selectedAssetId"
+        class="flex-1 px-4 py-2 bg-indigo-700 text-white rounded-lg hover:bg-indigo-800 disabled:bg-indigo-300 transition-colors"
+      >
+        Confirm Link
+      </button>
     </div>
   </div>
 </div>
