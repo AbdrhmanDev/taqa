@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { TabsModule } from 'primeng/tabs';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -10,15 +10,26 @@ import { StationDetails } from '../../service/station-details';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RealtimeStationDetails } from '../../service/realtime-station-details';
 import { Subscription } from 'rxjs';
-
+import { DialogModule } from 'primeng/dialog';
+import { DispenserHistory } from './dispenser-history/dispenser-history';
 @Component({
   selector: 'app-dispensers',
-  imports: [TabsModule, SelectModule, DatePickerModule, CommonModule, FormsModule, TableModule],
+  imports: [
+    TabsModule,
+    SelectModule,
+    DatePickerModule,
+    CommonModule,
+    FormsModule,
+    TableModule,
+    DialogModule,
+    DispenserHistory,
+  ],
   templateUrl: './dispensers.html',
   styleUrl: './dispensers.scss',
 })
 export class Dispensers implements OnInit {
   stationId!: number;
+  @Input() stations: any;
   allDispensers: any[] = [];
   status: string = '';
   private subscription!: Subscription;
@@ -26,6 +37,17 @@ export class Dispensers implements OnInit {
   isLoading: boolean = true;
   selectedStatus: string = '';
   filteredDispensers: any[] = [];
+  machineId: any;
+  dispenserNo: any;
+  paramName: any;
+  timeFrom: any;
+  date: any;
+  timeTo: any;
+  intervalMinutes: any;
+  dialogVisible = false;
+  selectedMachineId: any;
+  selectedDispenserNo: any;
+  selectedParamName: any;
   constructor(
     private _stationDetails: StationDetails,
     private _Router: Router,
@@ -57,6 +79,7 @@ export class Dispensers implements OnInit {
       },
     });
   }
+
   async onStartConnection() {
     try {
       await this.realTime.startConnectionDispenser();
@@ -118,6 +141,27 @@ export class Dispensers implements OnInit {
         (d: any) => (d: any) => d.status === this.selectedStatus,
       );
     }
+  }
+
+  openDialog(machineId: any, dispenserNo: any, paramName: string) {
+    console.log('Opening dialog with:', { machineId, dispenserNo, paramName });
+
+    this.selectedMachineId = machineId;
+    this.selectedDispenserNo = dispenserNo;
+    this.selectedParamName = paramName;
+    this.dialogVisible = true;
+  }
+  onGetDispenserHistory() {
+    this._stationDetails
+      .getHistoryDispenser(this.machineId, this.dispenserNo, this.paramName)
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();

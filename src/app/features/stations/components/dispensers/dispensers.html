@@ -1,6 +1,6 @@
 <div class="mt-8">
   <!-- Search & Filter -->
-  <div class="mb-4 bg-white p-4 rounded-xl border border-gray-200">
+  <!-- <div class="mb-4 bg-white p-4 rounded-xl border border-gray-200">
     <div class="flex items-center gap-4">
       <h2 class="text-2xl text-gray-600 font-medium font-bold flex items-center gap-2">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -18,7 +18,7 @@
         optionValue="value" placeholder="Select Status" class="w-full mt-3" [style]="{'width': '20%'}">
       </p-select>
     </div>
-  </div>
+  </div> -->
   <!-- Loader -->
   <div *ngIf="isLoading" class="m-3 flex justify-center items-center min-h-40">
     <div class="flex flex-col items-center gap-3">
@@ -61,6 +61,7 @@
 
           <div>
             <h3 class="font-semibold text-gray-800 text-sm">{{ dispenser.dispenserName }}</h3>
+
             <p class="text-xs text-gray-400">{{ dispenser.compressorName }}</p>
           </div>
         </div>
@@ -94,21 +95,34 @@
           <div class="space-y-2">
 
             <!-- Charge Volume -->
-            <div class="border border-orange-200 rounded-lg px-3 py-1.5 flex justify-between items-center text-xs">
+            <div
+              class=" border-green-200 bg-green-200 rounded-lg px-3 py-1.5 flex justify-between items-center  text-xs cursor-pointer  transition-colors "
+              (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'chargeVolume')">
+
               <span class="text-gray-500 flex items-center gap-1.5">
-                <!-- Circle icon -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                   stroke="#f97316" stroke-width="2">
                   <circle cx="12" cy="12" r="10" />
                   <path d="M12 8v4l3 3" />
                 </svg>
                 Charge(Volum)
+
+
+                <span *ngIf="dispenser.left?.connectionStatus === 'Online'" class="relative flex h-2 w-2">
+                  <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
+
               </span>
+
               <span class="font-semibold text-gray-800">{{ dispenser.left?.chargeVolume }} m³</span>
             </div>
 
             <!-- Charging Time -->
-            <div class="flex justify-between items-center text-xs px-1">
+            <div
+              class="flex justify-between items-center text-xs px-1 cursor-pointer rounded-lg py-1.5 transition-colors"
+              (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'chargingTime')">
               <span class="text-gray-500 flex items-center gap-1.5">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                   stroke="#9ca3af" stroke-width="2">
@@ -121,15 +135,19 @@
             </div>
 
             <!-- Throughput -->
-            <div class="border border-orange-200 rounded-lg px-3 py-1.5 flex justify-between items-center text-xs">
-              <span class="text-gray-500 flex items-center gap-1.5">
+            <div
+              class="bg-green-200 rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer  transition-colors">
+              <span class="text-gray-500 flex items-center gap-1.5"
+                (click)="openDialog(dispenser.machineId, dispenser.dispenserNo, 'chargeVolume')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                   stroke="#f97316" stroke-width="2">
                   <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                 </svg>
                 Throughput
               </span>
-              <span class="font-semibold">{{ dispenser.left?.throughput }} m³/min</span>
+              <span class="font-semibold"
+                (click)="openDialog(dispenser.machineId, dispenser.left?.dispenserNo, 'throughput')">{{
+                dispenser.left?.throughput }} m³/min</span>
             </div>
 
             <!-- Waiting Time -->
@@ -163,8 +181,10 @@
 
           <div class="space-y-2">
 
-            <div class="border border-orange-200 rounded-lg px-3 py-1.5 flex justify-between items-center text-xs">
-              <span class="text-gray-500 flex items-center gap-1.5">
+            <div
+              class=" border-green-200 bg-green-200 rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer  transition-colors">
+              <span class="text-gray-500 flex items-center gap-1.5"
+                (click)="openDialog(dispenser.machineId, dispenser.dispenserNo, 'chargeVolume')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                   stroke="#f97316" stroke-width="2">
                   <circle cx="12" cy="12" r="10" />
@@ -176,7 +196,8 @@
             </div>
 
             <div class="flex justify-between items-center text-xs px-1">
-              <span class="text-gray-500 flex items-center gap-1.5">
+              <span class="text-gray-500 flex items-center gap-1.5"
+                (click)="openDialog(dispenser.machineId,dispenser.right?.dispenserNo, 'chargingTime')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                   stroke="#9ca3af" stroke-width="2">
                   <circle cx="12" cy="12" r="10" />
@@ -187,15 +208,18 @@
               <span class="font-semibold">{{ dispenser.right?.chargingTime }} min</span>
             </div>
 
-            <div class="border border-orange-200 rounded-lg px-3 py-1.5 flex justify-between items-center text-xs">
-              <span class="text-gray-500 flex items-center gap-1.5">
+            <div
+              class=" bg-green-200 rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer  transition-colors">
+              <span class="text-gray-500 flex items-center gap-1.5"
+                (click)="openDialog(dispenser.machineId, dispenser.right?.dispenserNo, 'throughput')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                   stroke="#f97316" stroke-width="2">
                   <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                 </svg>
                 Throughput
               </span>
-              <span class="font-semibold">{{ dispenser.right?.throughput }} m³/min</span>
+              <span class="font-semibold">{{
+                dispenser.right?.throughput }} m³/min</span>
             </div>
 
             <div class="flex justify-between items-center text-xs px-1">
@@ -228,3 +252,8 @@
     </div>
   </div>
 </div>
+<p-dialog header="Dispenser History" [modal]="true" [(visible)]="dialogVisible" [style]="{ width: '60vw' }">
+  <app-dispenser-history [machineId]="selectedMachineId" [dispenserNo]="selectedDispenserNo"
+    [paramName]="selectedParamName">
+  </app-dispenser-history>
+</p-dialog>

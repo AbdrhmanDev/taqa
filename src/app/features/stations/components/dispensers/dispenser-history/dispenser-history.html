@@ -1,1 +1,43 @@
-<p>dispenser-history works!</p>
+<!-- dispenser-history.component.html -->
+<div class="p-2">
+  <!-- Filters -->
+  <div class="grid grid-cols-4 gap-4 mb-4">
+    <div>
+      <label class="text-xs text-gray-500 mb-1 block">Date</label>
+      <input type="date" [(ngModel)]="date" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+    </div>
+    <div>
+      <label class="text-xs text-gray-500 mb-1 block">Time From</label>
+      <input type="time" [(ngModel)]="timeFrom" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+    </div>
+    <div>
+      <label class="text-xs text-gray-500 mb-1 block">Time To</label>
+      <input type="time" [(ngModel)]="timeTo" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+    </div>
+    <div>
+      <label class="text-xs text-gray-500 mb-1 block">Interval (minutes)</label>
+      <input type="number" [(ngModel)]="intervalMinutes"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+    </div>
+  </div>
+
+  <!-- Update Button -->
+  <button (click)="loadHistory()"
+    class="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium mb-4 hover:bg-blue-700">
+    Update Chart
+  </button>
+
+  <!-- Loader -->
+  <div *ngIf="isLoading" class="flex justify-center items-center h-40">
+    <div class="w-8 h-8 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+  </div>
+
+  <!-- Chart placeholder - replace with your chart component -->
+  <div *ngIf="!isLoading && chartOptions">
+    <apx-chart #chart [series]="chartOptions.series!" [chart]="chartOptions.chart!" [xaxis]="chartOptions.xaxis!"
+      [yaxis]="chartOptions.yaxis!" [stroke]="chartOptions.stroke!" [fill]="chartOptions.fill!"
+      [title]="chartOptions.title!" [dataLabels]="chartOptions.dataLabels!" [tooltip]="chartOptions.tooltip!"
+      [colors]="chartOptions.colors!" [grid]="chartOptions.grid!" [noData]="chartOptions.noData!">
+    </apx-chart>
+  </div>
+</div>

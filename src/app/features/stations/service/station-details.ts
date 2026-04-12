@@ -75,9 +75,16 @@ export class StationDetails {
     });
   }
 
-  getPressureHistory(stationId: number, stage: number, date?: string, timeFrom?: string, timeTo?: string, intervalMinutes?: number): Observable<any> {
+  getPressureHistory(
+    stationId: number,
+    stage: number,
+    date?: string,
+    timeFrom?: string,
+    timeTo?: string,
+    intervalMinutes?: number,
+  ): Observable<any> {
     const params: any = {};
-    
+
     if (date) params.date = date;
     if (timeFrom) params.timeFrom = timeFrom;
     if (timeTo) params.timeTo = timeTo;
@@ -86,14 +93,45 @@ export class StationDetails {
     return this.http.get(`${environment.url}Compressor/${stationId}/pressure/${stage}`, { params });
   }
 
-  getTemperatureHistory(stationId: number, stage: number, date?: string, timeFrom?: string, timeTo?: string, intervalMinutes?: number): Observable<any> {
+  getTemperatureHistory(
+    stationId: number,
+    stage: number,
+    date?: string,
+    timeFrom?: string,
+    timeTo?: string,
+    intervalMinutes?: number,
+  ): Observable<any> {
     const params: any = {};
-    
+
     if (date) params.date = date;
     if (timeFrom) params.timeFrom = timeFrom;
     if (timeTo) params.timeTo = timeTo;
     if (intervalMinutes) params.intervalMinutes = intervalMinutes;
 
-    return this.http.get(`${environment.url}Compressor/${stationId}/temperature/${stage}`, { params });
+    return this.http.get(`${environment.url}Compressor/${stationId}/temperature/${stage}`, {
+      params,
+    });
+  }
+  getHistoryDispenser(
+    machineId: any,
+    dispenserNo?: any,
+    paramName?: any,
+    date?: any,
+    timeFrom?: any,
+    timeTo?: any,
+    intervalMinutes?: any,
+  ) {
+    const params: any = {};
+    if (date) params['date'] = date;
+    if (timeFrom) params['timeFrom'] = timeFrom;
+    if (timeTo) params['timeTo'] = timeTo;
+    if (intervalMinutes) params['intervalMinutes'] = intervalMinutes;
+
+    console.log('Service params:', params); // ← check this in console
+
+    return this.http.get(
+      `${environment.url}Dispenser/history/${machineId}/${dispenserNo}/${paramName}`,
+      { params },
+    );
   }
 }
