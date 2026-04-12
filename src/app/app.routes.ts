@@ -327,8 +327,21 @@ export const routes: Routes = [
           ),
         title: 'Station Hierarchy',
       },
+      {
+        path: '**',
+        loadComponent: () =>
+          import('./shared/components/coming-soon/coming-soon.component').then(
+            (m) => m.ComingSoonComponent,
+          ),
+      },
     ],
   },
 
-  { path: '**', redirectTo: 'login' },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./shared/components/coming-soon/coming-soon.component').then(
+        (m) => m.ComingSoonComponent,
+      ),
+  },
 ];

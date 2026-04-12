@@ -337,6 +337,7 @@
 
         <div class="col-span-12 md:col-span-6 lg:col-span-4 flex justify-end gap-3">
           <button
+            type="button"
             [disabled]="!allSation"
             (click)="exportCSV()"
             class="flex items-center gap-2 px-5 py-3 text-sm bg-gray-200 rounded-lg hover:bg-gray-50 transition"
@@ -371,6 +372,7 @@
           </button>
 
           <button
+            type="button"
             (click)="exportPDF()"
             class="flex items-center gap-2 px-5 py-3 text-sm bg-gray-200 rounded-lg hover:bg-gray-50 transition"
           >

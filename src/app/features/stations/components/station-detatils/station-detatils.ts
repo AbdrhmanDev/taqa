@@ -11,6 +11,7 @@ import { StationDetails } from '../../service/station-details';
 import { IStationDetails } from '../../model/station-details';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComproserDetails } from '../comprossers/comproser-details/comproser-details';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-station-detatils',
@@ -35,9 +36,10 @@ export class StationDetatils implements OnInit {
     private activateRoute: ActivatedRoute,
     private stationDetails: StationDetails,
     private cdr: ChangeDetectorRef,
+    private location: Location
   ) {}
   goBack() {
-    this._Router.navigate(['/dashboard/station']);
+    this.location.back();
   }
   ngOnInit(): void {
     this.activateRoute.paramMap.subscribe((params) => {

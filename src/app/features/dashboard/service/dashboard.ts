@@ -49,12 +49,17 @@ export class dashboardService {
   dashboardAlarms(
     stationId?: any,
     severity?: any,
-    from: string = '',
-    to: string = '',
+    from?: string,
+    to?: string,
   ): Observable<any> {
-    return this.http.get(environment.url + 'Alarms/history', {
-      params: { stationId, severity, from, to },
-    });
+    let params: any = {};
+    if (stationId !== undefined && stationId !== null && stationId !== '')
+      params.stationId = stationId;
+    if (severity !== undefined && severity !== null && severity !== '') params.severity = severity;
+    if (from) params.from = from;
+    if (to) params.to = to;
+
+    return this.http.get(environment.url + 'Alarms/history', { params });
   }
   StationAlarmById(stationId: any): Observable<any> {
     return this.http.get(environment.url + 'Alarms/history', { params: { stationId } });

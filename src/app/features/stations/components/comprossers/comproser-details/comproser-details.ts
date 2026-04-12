@@ -88,6 +88,13 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
   isLoadingRealtime: boolean = true;
   isLoadingPressureHistory: boolean = false;
   isLoadingTemperatureHistory: boolean = false;
+  isLoadingMachines: boolean = false;
+
+  machines: any[] = [];
+  availableAssets: any[] = [];
+  showLinkModal: boolean = false;
+  selectedMachine: any = null;
+  selectedAssetId: any = null;
 
   // Pressure history popup properties
   showPressureHistoryPopup: boolean = false;
@@ -132,6 +139,8 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
         this.onStartConnection();
         this.onGetTimeLineChart();
         this.onGetCompressorData();
+        this.onGetMachines();
+        this.onGetAvailableAssets();
       }
     });
   }
@@ -178,9 +187,7 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
       chart: {
         height: 160,
         width: '100%',
-        type: 'bar',
-        stacked: true,
-        stackType: '100%',
+        type: 'rangeBar',
         toolbar: { show: false },
         animations: { enabled: true, easing: 'easeinout', speed: 800 },
         background: 'transparent',
@@ -188,26 +195,34 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
       plotOptions: {
         bar: {
           horizontal: true,
-          barHeight: '50%',
-          borderRadius: 8,
-          borderRadiusApplication: 'end',
-          dataLabels: {
-            position: 'top',
-          },
+          barHeight: '80%',
+          borderRadius: 0,
+          rangeBarGroupRows: true
         },
       },
-      colors: ['#3E4A60'],
+      colors: [],
       xaxis: {
-        categories: ['Status Distribution'],
-        labels: { show: false },
+        type: 'datetime',
+        labels: {
+          show: true,
+          datetimeUTC: false,
+          style: { colors: '#9CA3AF' }
+        },
         axisBorder: { show: false },
         axisTicks: { show: false },
       },
       yaxis: {
         labels: { show: false },
       },
-      grid: { show: false },
+      grid: {
+        show: true,
+        borderColor: '#f3f4f6',
+        xaxis: {
+          lines: { show: true }
+        }
+      },
       legend: {
+        show: true,
         position: 'top',
         horizontalAlign: 'left',
         fontSize: '12px',
@@ -218,22 +233,40 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
         enabled: false,
       },
       tooltip: {
-        y: {
-          formatter: (val: number) => val.toFixed(2) + '%',
-        },
+        custom: ({ series, seriesIndex, dataPointIndex, w }: any) => {
+          const data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+          const start = new Date(data.y[0]).toLocaleTimeString();
+          const end = new Date(data.y[1]).toLocaleTimeString();
+          return `
+            <div class="p-2 shadow-lg border-0 bg-white rounded-lg">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="w-3 h-3 rounded-full" style="background-color: ${w.globals.colors[seriesIndex]}"></span>
+                <span class="font-bold text-gray-800">${w.config.series[seriesIndex].name}</span>
+              </div>
+              <div class="text-xs text-gray-500">
+                ${start} - ${end}
+              </div>
+            </div>
+          `;
+        }
       },
       fill: {
         opacity: 1,
         type: 'solid',
       },
       stroke: {
-        show: false,
-        width: 0,
+        show: true,
+        width: 2,
+        colors: ['#fff']
       },
       responsive: [
         {
-          breakpoint: undefined,
-          options: {},
+          breakpoint: 768,
+          options: {
+            chart: {
+              height: 200
+            }
+          },
         },
       ],
     };
@@ -497,7 +530,10 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
           ...this.timelineChartOptions,
           series: this.timeLineChart.map((s: any) => ({
             name: s.name,
-            data: [Number((s.data[0] * 100).toFixed(2))],
+            data: s.data.map((d: any) => ({
+              x: 'Status',
+              y: [new Date(d[0]).getTime(), new Date(d[1]).getTime()],
+            })),
           })),
           colors: colors,
         };
@@ -537,6 +573,75 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
         this.cdr.detectChanges();
       },
     });
+  }
+
+  onGetMachines() {
+    this.isLoadingMachines = true;
+    this.stationDetails.getMachinesByStation(this.stationId).subscribe({
+      next: (res) => {
+        this.machines = res;
+        this.isLoadingMachines = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error fetching machines:', err);
+        this.isLoadingMachines = false;
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  onGetAvailableAssets() {
+    this.stationDetails.getAvaliavleAssets().subscribe({
+      next: (res) => {
+        this.availableAssets = res.map((asset: any) => ({
+          label: asset.name,
+          value: asset.id,
+        }));
+      },
+      error: (err) => {
+        console.error('Error fetching available assets:', err);
+      },
+    });
+  }
+
+  openLinkModal(machine: any) {
+    this.selectedMachine = machine;
+    this.showLinkModal = true;
+    this.selectedAssetId = null;
+  }
+
+  closeLinkModal() {
+    this.showLinkModal = false;
+    this.selectedMachine = null;
+    this.selectedAssetId = null;
+  }
+
+  confirmLink() {
+    if (!this.selectedMachine || !this.selectedAssetId) return;
+
+    this.stationDetails.linkMachine(this.selectedMachine.id, this.selectedAssetId).subscribe({
+      next: () => {
+        this.onGetMachines();
+        this.closeLinkModal();
+      },
+      error: (err) => {
+        console.error('Error linking machine:', err);
+      },
+    });
+  }
+
+  onUnlinkMachine(machineId: number) {
+    if (confirm('Are you sure you want to unlink this machine?')) {
+      this.stationDetails.unlinkMachine(machineId).subscribe({
+        next: () => {
+          this.onGetMachines();
+        },
+        error: (err) => {
+          console.error('Error unlinking machine:', err);
+        },
+      });
+    }
   }
 
   get temperatureStages() {
