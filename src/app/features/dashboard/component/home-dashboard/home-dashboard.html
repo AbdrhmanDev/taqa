@@ -13,7 +13,7 @@
       <h5 class="text-sm font-medium text-gray-500">Total Revenue</h5>
     </div>
     <div class="flex items-baseline gap-2">
-      <p class="text-2xl font-bold" *ngIf="!isPartLoading('summary')">{{dashboardData?.totalRevenue?.value}}</p>
+      <p class="text-2xl font-bold" *ngIf="!isPartLoading('summary')">{{dashboardData?.totalRevenue?.value | number:'1.0-0'}}</p>
       <p class="text-sm text-gray-400" *ngIf="!isPartLoading('summary')">EGP</p>
       <p-skeleton width="60%" height="2rem" *ngIf="isPartLoading('summary')"></p-skeleton>
     </div>
@@ -23,7 +23,6 @@
   <div class="relative w-full bg-white text-black p-5 rounded-3xl shadow-sm hover:shadow-xl transition-all h-[140px]">
     <div class="flex items-center space-x-3 mb-3">
       <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
-        <!-- SVG content remains same as before -->
         <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none">
           <g clip-path="url(#clip0_14235_23172)">
             <path
@@ -49,7 +48,7 @@
       <h5 class="text-sm font-medium text-gray-500">Gas Volume Sold</h5>
     </div>
     <div class="flex items-baseline gap-2">
-      <p class="text-2xl font-bold" *ngIf="!isPartLoading('gas')">{{dashboardData?.gasVolumeSold?.value}}</p>
+      <p class="text-2xl font-bold" *ngIf="!isPartLoading('gas')">{{dashboardData?.gasVolumeSold?.value | number:'1.0-0'}}</p>
       <p class="text-sm text-gray-400" *ngIf="!isPartLoading('gas')">L</p>
       <p-skeleton width="60%" height="2rem" *ngIf="isPartLoading('gas')"></p-skeleton>
     </div>
@@ -81,7 +80,7 @@
       <h5 class="text-sm font-medium text-gray-500">Vehicles Charged</h5>
     </div>
     <div class="flex items-baseline gap-2">
-      <p class="text-2xl font-bold">{{dashboardData?.vehiclesCharged?.value}}</p>
+      <p class="text-2xl font-bold">{{dashboardData?.vehiclesCharged?.value | number:'1.0-0'}}</p>
       <span class="text-sm text-gray-400">Cars</span>
     </div>
   </div>
@@ -100,7 +99,7 @@
       <h5 class="text-sm font-medium text-gray-500">Active Compressors</h5>
     </div>
     <div class="flex items-baseline gap-2">
-      <p class="text-2xl font-bold" *ngIf="!isPartLoading('summary')">{{dashboardData?.activeCompressors?.value}}</p>
+      <p class="text-2xl font-bold" *ngIf="!isPartLoading('summary')">{{dashboardData?.activeCompressors?.value | number:'1.0-0'}}</p>
       <p class="text-sm text-gray-400" *ngIf="!isPartLoading('summary')">Compressors</p>
       <p-skeleton width="60%" height="2rem" *ngIf="isPartLoading('summary')"></p-skeleton>
     </div>
@@ -127,14 +126,13 @@
       <h5 class="text-sm font-medium text-gray-500">Active Stations</h5>
     </div>
     <div class="flex items-baseline gap-2">
-      <p class="text-2xl font-bold" *ngIf="!isPartLoading('summary')">{{dashboardData?.activeStations?.value}}</p>
+      <p class="text-2xl font-bold" *ngIf="!isPartLoading('summary')">{{dashboardData?.activeStations?.value | number:'1.0-0'}}</p>
       <p class="text-sm text-gray-400" *ngIf="!isPartLoading('summary')">Stations</p>
       <p-skeleton width="60%" height="2rem" *ngIf="isPartLoading('summary')"></p-skeleton>
     </div>
   </div>
 
 </div>
-
 <!-- Chart Dashboard -->
 <app-chart-dashboard></app-chart-dashboard>
 <!-- Recent Alarms - Horizontal row -->
