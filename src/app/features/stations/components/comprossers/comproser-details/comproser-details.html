@@ -159,22 +159,46 @@
       <div *ngIf="!isLoadingRealtime" class="grid grid-cols-3 gap-4">
         <div *ngFor="let stage of stages; let i = index" class="card flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity" (click)="openPressureHistory(i + 1)">
           <!-- Gauge SVG -->
-          <svg width="160" height="90" viewBox="0 0 160 90">
+          <svg width="160" height="130" viewBox="0 0 160 130">
+            <defs>
+              <linearGradient [id]="'gaugeGradient' + i" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#16A34A;stop-opacity:1" />
+                <stop offset="60%" style="stop-color:#16A34A;stop-opacity:1" />
+                <stop offset="80%" style="stop-color:#EAB308;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#DC2626;stop-opacity:1" />
+              </linearGradient>
+            </defs>
             <!-- Background arc -->
             <path
-              d="M 20 80 A 60 60 0 0 1 140 80"
+              d="M 28 110 A 60 60 0 1 1 132 110"
               fill="none"
               stroke="#EEEEEE"
-              stroke-width="12"
+              stroke-width="14"
               stroke-linecap="round"
             />
+
+            <!-- Gradient background arc (faded) -->
+            <path
+              d="M 28 110 A 60 60 0 1 1 132 110"
+              fill="none"
+              [attr.stroke]="'url(#gaugeGradient' + i + ')'"
+              stroke-width="14"
+              stroke-linecap="round"
+              stroke-opacity="0.25"
+            />
+
+            <!-- Graduation Ticks -->
+            <line *ngFor="let tick of getTicks()"
+              x1="80" y1="10" x2="80" y2="18"
+              stroke="#9CA3AF" stroke-width="2"
+              [attr.transform]="'rotate(' + getTickRotation(tick) + ', 80, 80)'" />
 
             <!-- Value arc -->
             <path
               [attr.d]="getArcPath(stage.value)"
               fill="none"
               [attr.stroke]="getColor(stage.value)"
-              stroke-width="12"
+              stroke-width="14"
               stroke-linecap="round"
             />
 
@@ -184,8 +208,8 @@
               y1="80"
               x2="80"
               y2="28"
-              stroke="#333"
-              stroke-width="2"
+              [attr.stroke]="getColor(stage.value)"
+              stroke-width="3"
               stroke-linecap="round"
               [attr.transform]="'rotate(' + getNeedleRotation(stage.value) + ', 80, 80)'"
             />

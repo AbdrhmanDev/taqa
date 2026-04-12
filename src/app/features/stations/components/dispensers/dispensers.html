@@ -22,34 +22,44 @@
   <!-- Loader -->
   <div *ngIf="isLoading" class="m-3 flex justify-center items-center min-h-40">
     <div class="flex flex-col items-center gap-3">
-      <div class="w-10 h-10 border-4 border-gray-200 border-t-blue-900 rounded-full animate-spin"></div>
+      <div
+        class="w-10 h-10 border-4 border-gray-200 border-t-blue-900 rounded-full animate-spin"
+      ></div>
       <p class="text-gray-400 text-sm">Loading Dispensers...</p>
     </div>
   </div>
 
-
-
   <!-- Dispensers Grid -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-    <div *ngFor="let dispenser of filteredDispensers" class="bg-white rounded-2xl p-5 border-l-4 shadow-sm" [ngClass]="{
+    <div
+      *ngFor="let dispenser of filteredDispensers"
+      class="bg-white rounded-2xl p-5 border-l-4 shadow-sm"
+      [ngClass]="{
         'border-green-500': getComputedStatus(dispenser) === 'Online',
         'border-orange-400': getComputedStatus(dispenser) === 'Warning',
         'border-red-500': getComputedStatus(dispenser) === 'Offline'
-      }">
-
+      }"
+    >
       <!-- Header -->
       <div class="flex justify-between items-start mb-4">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-full bg-[#FEE4E2] flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 28 28" fill="none">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 28 28"
+              fill="none"
+            >
               <g clip-path="url(#clip0_14460_42380)">
                 <path
                   d="M16.1231 24.0205C16.1709 24.3394 16.3648 24.6177 16.6474 24.7727C16.93 24.928 17.2688 24.9424 17.5635 24.8116L21.9246 22.8851C22.1406 22.7899 22.2481 22.5458 22.1725 22.322L19.9841 15.8199C19.6339 14.7941 18.5899 14.1755 17.5219 14.3608L16.838 14.4835C15.6667 14.6879 14.8752 15.7936 15.0599 16.9685L16.1231 24.0205ZM17.1955 23.9771C17.1609 23.9934 17.1206 23.9917 17.0874 23.9725C17.053 23.9544 17.0294 23.9203 17.0246 23.8815L15.9585 16.8353C15.9365 16.6836 15.9418 16.5291 15.9741 16.3793L16.7451 16.9885C17.1175 17.2788 17.3953 17.6733 17.543 18.122L19.214 23.088L17.1955 23.9771ZM16.9968 15.3845L17.6806 15.2618C17.754 15.2487 17.8285 15.2422 17.9033 15.2422C18.4524 15.2437 18.9404 15.5931 19.1186 16.1125L21.1755 22.2222L20.0507 22.7188L18.4069 17.8342C18.2032 17.2169 17.8208 16.6738 17.3082 16.2741L16.4723 15.6129C16.6276 15.4981 16.8069 15.42 16.9968 15.3845Z"
-                  fill="#912018" />
+                  fill="#912018"
+                />
                 <path
                   d="M1.16793 4.33432L7.9764 6.34048C8.06845 6.36783 8.15402 6.41353 8.2277 6.4749L10.6292 8.47563L11.0163 8.79935L14.1539 25.1081C14.3126 25.9371 14.8406 26.6486 15.5884 27.0402C16.3363 27.4315 17.2218 27.4603 17.9934 27.1182L22.3683 25.1855C22.7945 25.6904 23.4977 25.8628 24.1092 25.6123L26.4167 24.6658C27.1938 24.3473 27.5655 23.4595 27.2474 22.6824L23.045 12.4241L23.3568 12.0639C23.9385 11.3901 23.8652 10.3728 23.1932 9.78928L18.3848 5.62334C18.0611 5.34304 17.6393 5.20299 17.2124 5.23388C16.7854 5.26477 16.3882 5.46409 16.1081 5.78781L15.3305 6.68737L13.5827 5.23117H13.58L10.3428 2.59803C10.1769 2.46278 9.98549 2.36218 9.78011 2.30207L2.40477 0.128307C1.55071-0.122568 0.654698 0.365824 0.40278 1.21967L0.0763505 2.32816C-0.0455388 2.73891 0.00121321 3.18117 0.205962 3.55769C0.410711 3.93401 0.75676 4.21348 1.16793 4.33432ZM15.7274 7.62429L16.7981 6.38598C16.9198 6.24531 17.0924 6.15869 17.2782 6.14513C17.4637 6.13177 17.6472 6.19271 17.7879 6.31439L22.5962 10.4787C22.8884 10.7323 22.9202 11.1743 22.6674 11.4671L22.1723 12.0396C22.0596 12.1697 22.0296 12.3521 22.0947 12.5111L26.4038 23.0257C26.5311 23.3365 26.3823 23.6918 26.0715 23.8191L23.7631 24.7652C23.6137 24.8263 23.4461 24.8257 23.2971 24.7633C23.1483 24.7009 23.0304 24.5817 22.9692 24.4323C22.9227 24.3183 22.8321 24.2279 22.7177 24.1818C22.6035 24.1357 22.4756 24.1376 22.3629 24.1875L17.6251 26.2806C17.1075 26.5094 16.5139 26.4896 16.0127 26.227C15.5114 25.9644 15.1572 25.4877 15.0504 24.9319L11.8821 8.46374C11.862 8.36042 11.8069 8.26713 11.7262 8.19971L11.583 8.08033L13.3297 6.20732L15.0915 7.67459C15.2822 7.83321 15.5651 7.81004 15.7274 7.62262V7.62429ZM0.950864 2.58717L1.27646 1.47785C1.32885 1.2992 1.45032 1.14892 1.61374 1.0598C1.77716 0.970887 1.96918 0.950433 2.14763 1.00324L9.51839 3.17303C9.60772 3.19933 9.69078 3.24295 9.76279 3.3016L12.6243 5.62689L10.8817 7.49635L8.81126 5.77049C8.6422 5.62919 8.44601 5.5242 8.23458 5.46221L1.42506 3.45751C1.05376 3.34794 0.841707 2.95848 0.950864 2.58717Z"
-                  fill="#912018" />
+                  fill="#912018"
+                />
               </g>
               <defs>
                 <clipPath id="clip0_14460_42380">
@@ -78,42 +88,54 @@
 
       <!-- Nozzles -->
       <div class="grid grid-cols-2 gap-4">
-
         <!-- Left Nozzle -->
         <div>
           <div class="flex justify-between items-center mb-3">
             <span class="text-xs font-semibold text-gray-700">Left-Nozzle</span>
-            <span class="px-2 py-0.5 text-xs rounded-full" [ngClass]="{
+            <span
+              class="px-2 py-0.5 text-xs rounded-full"
+              [ngClass]="{
                 'bg-green-100 text-green-600': dispenser.left?.connectionStatus === 'Online',
                 'bg-orange-100 text-orange-500': dispenser.left?.connectionStatus === 'Warning',
                 'bg-red-100 text-red-500': dispenser.left?.connectionStatus === 'Offline'
-              }">
+              }"
+            >
               {{ dispenser.left?.connectionStatus }}
             </span>
           </div>
 
           <div class="space-y-2">
-
             <!-- Charge Volume -->
             <div
-              class=" border-green-200 bg-green-200 rounded-lg px-3 py-1.5 flex justify-between items-center  text-xs cursor-pointer  transition-colors "
-              (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'chargeVolume')">
-
+              class="border-green-200 rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer transition-colors"
+              (click)="
+                openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'chargeVolume')
+              "
+            >
               <span class="text-gray-500 flex items-center gap-1.5">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                  stroke="#f97316" stroke-width="2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#f97316"
+                  stroke-width="2"
+                >
                   <circle cx="12" cy="12" r="10" />
                   <path d="M12 8v4l3 3" />
                 </svg>
                 Charge(Volum)
 
-
-                <span *ngIf="dispenser.left?.connectionStatus === 'Online'" class="relative flex h-2 w-2">
+                <span
+                  *ngIf="dispenser.left?.connectionStatus === 'Online'"
+                  class="relative flex h-2 w-2"
+                >
                   <span
-                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"
+                  ></span>
                   <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                 </span>
-
               </span>
 
               <span class="font-semibold text-gray-800">{{ dispenser.left?.chargeVolume }} m³</span>
@@ -122,10 +144,20 @@
             <!-- Charging Time -->
             <div
               class="flex justify-between items-center text-xs px-1 cursor-pointer rounded-lg py-1.5 transition-colors"
-              (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'chargingTime')">
+              (click)="
+                openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'chargingTime')
+              "
+            >
               <span class="text-gray-500 flex items-center gap-1.5">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                  stroke="#9ca3af" stroke-width="2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#9ca3af"
+                  stroke-width="2"
+                >
                   <circle cx="12" cy="12" r="10" />
                   <path d="M12 6v6l4 2" />
                 </svg>
@@ -136,25 +168,53 @@
 
             <!-- Throughput -->
             <div
-              class="bg-green-200 rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer  transition-colors">
-              <span class="text-gray-500 flex items-center gap-1.5"
-                (click)="openDialog(dispenser.machineId, dispenser.dispenserNo, 'chargeVolume')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                  stroke="#f97316" stroke-width="2">
+              class="rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer transition-colors"
+            >
+              <span
+                class="text-gray-500 flex items-center gap-1.5"
+                (click)="openDialog(dispenser.machineId, dispenser.dispenserNo, 'chargeVolume')"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#f97316"
+                  stroke-width="2"
+                >
                   <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                 </svg>
                 Throughput
+                <span
+                  *ngIf="dispenser.left?.connectionStatus === 'Online'"
+                  class="relative flex h-2 w-2"
+                >
+                  <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"
+                  ></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
               </span>
-              <span class="font-semibold"
-                (click)="openDialog(dispenser.machineId, dispenser.left?.dispenserNo, 'throughput')">{{
-                dispenser.left?.throughput }} m³/min</span>
+              <span
+                class="font-semibold"
+                (click)="openDialog(dispenser.machineId, dispenser.left?.dispenserNo, 'throughput')"
+                >{{ dispenser.left?.throughput }} m³/min</span
+              >
             </div>
 
             <!-- Waiting Time -->
             <div class="flex justify-between items-center text-xs px-1">
               <span class="text-gray-500 flex items-center gap-1.5">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                  stroke="#9ca3af" stroke-width="2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#9ca3af"
+                  stroke-width="2"
+                >
                   <circle cx="12" cy="12" r="10" />
                   <path d="M12 6v6l4 2" />
                 </svg>
@@ -162,7 +222,6 @@
               </span>
               <span class="font-semibold">{{ dispenser.left?.waitingTime }} min</span>
             </div>
-
           </div>
         </div>
 
@@ -170,36 +229,61 @@
         <div>
           <div class="flex justify-between items-center mb-3">
             <span class="text-xs font-semibold text-gray-700">Right-Nozzle</span>
-            <span class="px-2 py-0.5 text-xs rounded-full" [ngClass]="{
+            <span
+              class="px-2 py-0.5 text-xs rounded-full"
+              [ngClass]="{
                 'bg-green-100 text-green-600': dispenser.right?.connectionStatus === 'Online',
                 'bg-orange-100 text-orange-500': dispenser.right?.connectionStatus === 'Warning',
                 'bg-red-100 text-red-500': dispenser.right?.connectionStatus === 'Offline'
-              }">
+              }"
+            >
               {{ dispenser.right?.connectionStatus }}
             </span>
           </div>
 
           <div class="space-y-2">
-
             <div
-              class=" border-green-200 bg-green-200 rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer  transition-colors">
-              <span class="text-gray-500 flex items-center gap-1.5"
-                (click)="openDialog(dispenser.machineId, dispenser.dispenserNo, 'chargeVolume')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                  stroke="#f97316" stroke-width="2">
+              class="border-green-200 rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer transition-colors"
+            >
+              <span
+                class="text-gray-500 flex items-center gap-1.5"
+                (click)="openDialog(dispenser.machineId, dispenser.dispenserNo, 'chargeVolume')"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#f97316"
+                  stroke-width="2"
+                >
                   <circle cx="12" cy="12" r="10" />
                   <path d="M12 8v4l3 3" />
                 </svg>
                 Charge(Volum)
               </span>
-              <span class="font-semibold text-gray-800">{{ dispenser.right?.chargeVolume }} m³</span>
+              <span class="font-semibold text-gray-800"
+                >{{ dispenser.right?.chargeVolume }} m³</span
+              >
             </div>
 
             <div class="flex justify-between items-center text-xs px-1">
-              <span class="text-gray-500 flex items-center gap-1.5"
-                (click)="openDialog(dispenser.machineId,dispenser.right?.dispenserNo, 'chargingTime')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                  stroke="#9ca3af" stroke-width="2">
+              <span
+                class="text-gray-500 flex items-center gap-1.5"
+                (click)="
+                  openDialog(dispenser.machineId, dispenser.right?.dispenserNo, 'chargingTime')
+                "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#9ca3af"
+                  stroke-width="2"
+                >
                   <circle cx="12" cy="12" r="10" />
                   <path d="M12 6v6l4 2" />
                 </svg>
@@ -209,23 +293,50 @@
             </div>
 
             <div
-              class=" bg-green-200 rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer  transition-colors">
-              <span class="text-gray-500 flex items-center gap-1.5"
-                (click)="openDialog(dispenser.machineId, dispenser.right?.dispenserNo, 'throughput')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                  stroke="#f97316" stroke-width="2">
+              class="rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer transition-colors"
+            >
+              <span
+                class="text-gray-500 flex items-center gap-1.5"
+                (click)="
+                  openDialog(dispenser.machineId, dispenser.right?.dispenserNo, 'throughput')
+                "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#f97316"
+                  stroke-width="2"
+                >
                   <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                 </svg>
                 Throughput
+                <span
+                  *ngIf="dispenser.left?.connectionStatus === 'Online'"
+                  class="relative flex h-2 w-2"
+                >
+                  <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"
+                  ></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
               </span>
-              <span class="font-semibold">{{
-                dispenser.right?.throughput }} m³/min</span>
+              <span class="font-semibold">{{ dispenser.right?.throughput }} m³/min</span>
             </div>
 
             <div class="flex justify-between items-center text-xs px-1">
               <span class="text-gray-500 flex items-center gap-1.5">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                  stroke="#9ca3af" stroke-width="2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#9ca3af"
+                  stroke-width="2"
+                >
                   <circle cx="12" cy="12" r="10" />
                   <path d="M12 6v6l4 2" />
                 </svg>
@@ -233,27 +344,39 @@
               </span>
               <span class="font-semibold">{{ dispenser.right?.waitingTime }} min</span>
             </div>
-
           </div>
         </div>
-
       </div>
 
       <!-- Footer -->
       <div class="mt-4 pt-3 border-t text-xs text-gray-400 flex items-center gap-1.5">
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
           <circle cx="12" cy="12" r="10" />
           <path d="M12 6v6l4 2" />
         </svg>
         {{ formatTimestamp(dispenser.lastTimeStamp) }}
       </div>
-
     </div>
   </div>
 </div>
-<p-dialog header="Dispenser History" [modal]="true" [(visible)]="dialogVisible" [style]="{ width: '60vw' }">
-  <app-dispenser-history [machineId]="selectedMachineId" [dispenserNo]="selectedDispenserNo"
-    [paramName]="selectedParamName">
+<p-dialog
+  header="Dispenser History"
+  [modal]="true"
+  [(visible)]="dialogVisible"
+  [style]="{ width: '60vw' }"
+>
+  <app-dispenser-history
+    [machineId]="selectedMachineId"
+    [dispenserNo]="selectedDispenserNo"
+    [paramName]="selectedParamName"
+  >
   </app-dispenser-history>
 </p-dialog>
