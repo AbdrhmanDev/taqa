@@ -667,11 +667,7 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
 
   getColorS(value: number | null): string {
     if (this.isInvalidValue(value)) return '#DDDDDD';
-    const v = value as number;
-    if (v <= 50) return '#FF3400';
-    if (v <= 100) return '#FF3400';
-    if (v <= 200) return '#FF3400';
-    return '#FF3400';
+    return '#B42318';
   }
 
   readonly minPressure = 0.1;
@@ -698,7 +694,7 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
   }
 
   getNeedleRotation(value: number | null): number {
-    return -90 + this.getRatio(value) * 180;
+    return -120 + this.getRatio(value) * 240;
   }
 
   getArcPath(value: number | null): string {
@@ -707,13 +703,18 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
     const cx = 80,
       cy = 80,
       r = 60;
-    const startX = cx - r;
-    const startY = cy;
-    const angleRad = Math.PI - ratio * Math.PI;
-    const endX = cx + r * Math.cos(angleRad);
-    const endY = cy + r * Math.sin(angleRad);
-    const largeArc = ratio > 0.5 ? 1 : 0;
-    return `M ${startX} ${startY} A ${r} ${r} 0 ${largeArc} 1 ${endX.toFixed(2)} ${endY.toFixed(
+    // Start at 150 degrees (bottom-left)
+    const startAngle = (150 * Math.PI) / 180;
+    const startX = cx + r * Math.cos(startAngle);
+    const startY = cy + r * Math.sin(startAngle);
+
+    // Current angle based on ratio (sweep 240 degrees)
+    const currentAngle = (150 + ratio * 240) * Math.PI / 180;
+    const endX = cx + r * Math.cos(currentAngle);
+    const endY = cy + r * Math.sin(currentAngle);
+
+    const largeArc = (ratio * 240) > 180 ? 1 : 0;
+    return `M ${startX.toFixed(2)} ${startY.toFixed(2)} A ${r} ${r} 0 ${largeArc} 1 ${endX.toFixed(2)} ${endY.toFixed(
       2
     )}`;
   }
@@ -721,11 +722,22 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
   getColor(value: number | null): string {
     if (this.isInvalidValue(value)) return '#DDDDDD';
     const v = value as number;
-    if (v >= 0.1 && v <= 50) return '#38d3fa';
-    if (v >= 51 && v <= 150) return '#0663f9';
-    if (v >= 151 && v <= 300) return '#2c26d9';
-    if (v >= 301 && v <= 486) return '#4426d9';
+    if (v >= 0 && v <= 300) return '#16A34A'; // Vibrant Green
+    if (v > 300 && v <= 400) return '#EAB308'; // Vibrant Yellow/Orange
+    if (v > 400) return '#DC2626'; // Vibrant Red
     return '#DDDDDD';
+  }
+
+  getTicks() {
+    const ticks = [];
+    for (let i = 0; i <= 8; i++) {
+      ticks.push(i);
+    }
+    return ticks;
+  }
+
+  getTickRotation(index: number): number {
+    return -120 + index * 30; // 240 degrees / 8 segments = 30 degrees per tick
   }
 
   ngOnChanges(changes: SimpleChanges) {
