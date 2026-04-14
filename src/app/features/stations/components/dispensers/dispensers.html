@@ -91,6 +91,7 @@
             <!-- Charge Volume -->
             <div
               class=" border-green-200 bg-green-200 rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer hover:bg-orange-50 transition-colors"
+              [class.value-changed]="dispenser.left?.chargeVolumeChanged"
               (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'chargeVolume')">
 
               <span class="text-gray-500 flex items-center gap-1.5">
@@ -108,12 +109,13 @@
                 </span>
               </span>
 
-              <span class="font-semibold text-gray-800">{{ dispenser.left?.chargeVolume }} m³</span>
+              <span class="font-semibold text-gray-800">{{ dispenser.left?.chargeVolume | number : '1.0-2' }} m³</span>
             </div>
 
             <!-- Charging Time -->
             <div
               class="flex justify-between items-center text-xs px-1 cursor-pointer rounded-lg py-1.5 transition-colors"
+              [class.value-changed]="dispenser.left?.chargingTimeChanged"
               (click)="
                 openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'chargingTime')
               ">
@@ -125,11 +127,12 @@
                 </svg>
                 Charging Time
               </span>
-              <span class="font-semibold">{{ dispenser.left?.chargingTime }} min</span>
+              <span class="font-semibold">{{ dispenser.left?.chargingTime | number : '1.0-1' }} min</span>
             </div>
 
             <div
-              class="rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer transition-colors">
+              class="rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer transition-colors"
+              [class.value-changed]="dispenser.left?.throughputChanged">
               <span class="text-gray-500 flex items-center gap-1.5"
                 (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'throughput')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -145,12 +148,13 @@
               </span>
               <span class="font-semibold"
                 (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'throughput')">{{
-                dispenser.left?.throughput }} m³/min</span>
+                dispenser.left?.throughput | number : '1.0-2' }} m³/min</span>
             </div>
 
             <!-- Waiting Time -->
             <div
               class="flex justify-between items-center text-xs px-1 cursor-pointer rounded-lg py-1.5 transition-colors"
+              [class.value-changed]="dispenser.left?.waitingTimeChanged"
               (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'waitingTime')">
               <span class="text-gray-500 flex items-center gap-1.5">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -160,7 +164,7 @@
                 </svg>
                 Waiting Time
               </span>
-              <span class="font-semibold">{{ dispenser.left?.waitingTime }} min</span>
+              <span class="font-semibold">{{ dispenser.left?.waitingTime | number : '1.0-1' }} min</span>
             </div>
           </div>
         </div>
@@ -181,6 +185,7 @@
           <div class="space-y-2">
             <div
               class="border-green-200 rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer transition-colors"
+              [class.value-changed]="dispenser.right?.chargeVolumeChanged"
               (click)="openDialog(dispenser.dispenserName, dispenser.right?.dispenserNo, 'chargeVolume')">
               <span class="text-gray-500 flex items-center gap-1.5">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -190,10 +195,11 @@
                 </svg>
                 Charge(Volum)
               </span>
-              <span class="font-semibold text-gray-800">{{ dispenser.right?.chargeVolume }} m³</span>
+              <span class="font-semibold text-gray-800">{{ dispenser.right?.chargeVolume | number : '1.0-2' }} m³</span>
             </div>
 
             <div class="flex justify-between items-center text-xs px-1 cursor-pointer rounded-lg py-1.5 transition-colors"
+              [class.value-changed]="dispenser.right?.chargingTimeChanged"
               (click)="
                   openDialog(dispenser.dispenserName, dispenser.right?.dispenserNo, 'chargingTime')
                 ">
@@ -205,11 +211,12 @@
                 </svg>
                 Charging Time
               </span>
-              <span class="font-semibold">{{ dispenser.right?.chargingTime }} min</span>
+              <span class="font-semibold">{{ dispenser.right?.chargingTime | number : '1.0-1' }} min</span>
             </div>
 
             <div
               class="rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer transition-colors"
+              [class.value-changed]="dispenser.right?.throughputChanged"
               (click)="
                   openDialog(dispenser.dispenserName, dispenser.right?.dispenserNo, 'throughput')
                 ">
@@ -225,11 +232,12 @@
                   <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                 </span>
               </span>
-              <span class="font-semibold">{{ dispenser.right?.throughput }} m³/min</span>
+              <span class="font-semibold">{{ dispenser.right?.throughput | number : '1.0-2' }} m³/min</span>
             </div>
 
             <div
               class="flex justify-between items-center text-xs px-1 cursor-pointer rounded-lg py-1.5 transition-colors"
+              [class.value-changed]="dispenser.right?.waitingTimeChanged"
               (click)="openDialog(dispenser.dispenserName, dispenser.right?.dispenserNo, 'waitingTime')">
               <span class="text-gray-500 flex items-center gap-1.5">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -239,7 +247,7 @@
                 </svg>
                 Waiting Time
               </span>
-              <span class="font-semibold">{{ dispenser.right?.waitingTime }} min</span>
+              <span class="font-semibold">{{ dispenser.right?.waitingTime | number : '1.0-1' }} min</span>
             </div>
           </div>
         </div>
@@ -252,7 +260,7 @@
           <circle cx="12" cy="12" r="10" />
           <path d="M12 6v6l4 2" />
         </svg>
-        {{ formatTimestamp(dispenser.lastTimeStamp) }}
+        Last Updated: {{ formatTimestamp(dispenser.lastTimeStamp) }}
     </div>
   </div>
 </div>

@@ -83,7 +83,7 @@
               <div>
                 <p class="text-gray-400">Total Revenue</p>
                 <p class="font-medium text-gray-800">
-                  {{ stationDetailsData?.totalRevenue }}
+                  {{ stationDetailsData?.totalRevenue | number : '1.0-2' }}
                   <span class="text-gray-400 text-xs">EGP</span>
                 </p>
               </div>
@@ -128,14 +128,14 @@
           <div class="bg-white rounded-2xl shadow-sm p-6">
             <p class="text-gray-500 text-sm mb-3">Gas Volume Sold</p>
             <h3 class="text-2xl font-semibold text-gray-800">
-              {{ stationDetailsData?.gasVolumeSold }} <span class="text-gray-400 text-base">L</span>
+              {{ stationDetailsData?.gasVolumeSold | number : '1.0-2' }} <span class="text-gray-400 text-base">L</span>
             </h3>
           </div>
 
           <div class="bg-white rounded-2xl shadow-sm p-6">
             <p class="text-gray-500 text-sm mb-3">Vehicles Charged</p>
             <h3 class="text-2xl font-semibold text-gray-800">
-              {{ stationDetailsData?.vehiclesCharged }}
+              {{ stationDetailsData?.vehiclesCharged | number : '1.0-0' }}
               <span class="text-gray-400 text-base">##</span>
             </h3>
           </div>
@@ -143,7 +143,7 @@
           <div class="bg-white rounded-2xl shadow-sm p-6">
             <p class="text-gray-500 text-sm mb-3">Total Revenue</p>
             <h3 class="text-2xl font-semibold text-gray-800">
-              {{ stationDetailsData?.totalRevenue }}
+              {{ stationDetailsData?.totalRevenue | number : '1.0-2' }}
               <span class="text-gray-400 text-base">EGP</span>
             </h3>
           </div>
@@ -369,7 +369,7 @@
               <div class="font-medium">{{ compressor.name }}</div>
             </td>
             <td>{{ compressor.model }}</td>
-            <td>{{ compressor.dispensersCount }}</td>
+            <td>{{ compressor.dispensersCount | number : '1.0-0' }}</td>
             <td>
               <span [ngClass]="statusColors[compressor.status] + ' text-xs px-3 py-1 rounded-full'">
                 {{ compressor.status }}

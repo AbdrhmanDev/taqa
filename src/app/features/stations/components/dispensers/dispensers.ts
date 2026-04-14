@@ -86,7 +86,9 @@ export class Dispensers implements OnInit {
 
       this.subscription = this.realTime.getDispenserDetails().subscribe({
         next: (data) => {
-          console.log('Received dispenser data:', data);
+          if (this.allDispensers && this.allDispensers.length > 0) {
+            this.detectDataChanges(data);
+          }
           this.DispenserDetails = data;
           this.allDispensers = data;
           if (this.selectedStatus) {
@@ -138,9 +140,62 @@ export class Dispensers implements OnInit {
       this.filteredDispensers = this.DispenserDetails;
     } else {
       this.filteredDispensers = this.DispenserDetails.filter(
-        (d: any) => (d: any) => d.status === this.selectedStatus,
+        (d: any) => d.status === this.selectedStatus,
       );
     }
+  }
+
+  detectDataChanges(newData: any[]) {
+    newData.forEach((newDisp) => {
+      const oldDisp = this.allDispensers.find((d) => d.id === newDisp.id);
+      if (oldDisp) {
+        // Check Left Nozzle
+        if (newDisp.left && oldDisp.left) {
+          if (newDisp.left.chargeVolume !== oldDisp.left.chargeVolume)
+            newDisp.left.chargeVolumeChanged = true;
+          if (newDisp.left.chargingTime !== oldDisp.left.chargingTime)
+            newDisp.left.chargingTimeChanged = true;
+          if (newDisp.left.throughput !== oldDisp.left.throughput)
+            newDisp.left.throughputChanged = true;
+          if (newDisp.left.waitingTime !== oldDisp.left.waitingTime)
+            newDisp.left.waitingTimeChanged = true;
+        }
+        // Check Right Nozzle
+        if (newDisp.right && oldDisp.right) {
+          if (newDisp.right.chargeVolume !== oldDisp.right.chargeVolume)
+            newDisp.right.chargeVolumeChanged = true;
+          if (newDisp.right.chargingTime !== oldDisp.right.chargingTime)
+            newDisp.right.chargingTimeChanged = true;
+          if (newDisp.right.throughput !== oldDisp.right.throughput)
+            newDisp.right.throughputChanged = true;
+          if (newDisp.right.waitingTime !== oldDisp.right.waitingTime)
+            newDisp.right.waitingTimeChanged = true;
+        }
+      }
+    });
+
+    // Clear flags after 2.5 seconds (matching CSS animation)
+    setTimeout(() => {
+      this.clearChangeFlags();
+    }, 2500);
+  }
+
+  clearChangeFlags() {
+    this.allDispensers.forEach((d) => {
+      if (d.left) {
+        d.left.chargeVolumeChanged = false;
+        d.left.chargingTimeChanged = false;
+        d.left.throughputChanged = false;
+        d.left.waitingTimeChanged = false;
+      }
+      if (d.right) {
+        d.right.chargeVolumeChanged = false;
+        d.right.chargingTimeChanged = false;
+        d.right.throughputChanged = false;
+        d.right.waitingTimeChanged = false;
+      }
+    });
+    this.cdr.detectChanges();
   }
 
   openDialog(machineId: any, dispenserNo: any, paramName: string) {
