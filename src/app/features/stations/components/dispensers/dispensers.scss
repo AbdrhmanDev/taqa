@@ -365,3 +365,19 @@
     font-size: 0.7rem;
   }
 }
+
+@keyframes greenBlink {
+  0%,
+  100% {
+    background-color: #dcfce7;
+    color: #16a34a;
+  }
+  50% {
+    background-color: transparent;
+    color: #16a34a;
+  }
+}
+
+.green-blink {
+  animation: greenBlink 1s infinite;
+}
