@@ -19,9 +19,16 @@ export interface StationNode {
 export interface AreaNode {
   areaId: number;
   name: string;
-  zoneId: number;
-  zoneName: string;
   stations: StationNode[];
+  activeCount: number;
+  totalCount: number;
+  isExpanded?: boolean;
+}
+
+export interface ZoneNode {
+  zoneId: number;
+  name: string;
+  areas: AreaNode[];
   activeCount: number;
   totalCount: number;
   isExpanded?: boolean;
@@ -42,10 +49,8 @@ export class StationHierarchyComponent implements OnInit {
   private confirmationService = inject(ConfirmationService);
   private messageService = inject(MessageService);
   
-  allAreas: AreaNode[] = [];
-  filteredAreas: AreaNode[] = [];
-  areaOptions: any[] = [];
-  selectedArea: any = null;
+  allZones: ZoneNode[] = [];
+  filteredZones: ZoneNode[] = [];
   loading: boolean = false;
 
   ngOnInit() {
@@ -61,21 +66,15 @@ export class StationHierarchyComponent implements OnInit {
         try {
           console.log('API call success. Data received:', res);
           const data = res?.items || res?.data || (Array.isArray(res) ? res : []);
-          this.allAreas = this.mapToAreaNodes(data);
-          this.filteredAreas = [...this.allAreas];
+          this.allZones = this.mapToZoneNodes(data);
+          this.filteredZones = [...this.allZones];
           
-          this.areaOptions = [
-            { name: 'All Areas', value: null },
-            ...this.allAreas.map((a: AreaNode) => ({ name: a.name, value: a.areaId }))
-          ];
-          
-          console.log('Mapping completed. allAreas count:', this.allAreas.length);
+          console.log('Mapping completed. allZones count:', this.allZones.length);
         } catch (error) {
           console.error('Error in next block:', error);
         } finally {
           this.loading = false;
           this.cdr.detectChanges();
-          console.log('Loading set to false. Change detection triggered.');
         }
       },
       error: (err) => {
@@ -86,60 +85,82 @@ export class StationHierarchyComponent implements OnInit {
     });
   }
 
-  private mapToAreaNodes(zones: any[]): AreaNode[] {
-    const areas: AreaNode[] = [];
-    
-    zones.forEach((zone: any) => {
-      (zone.areas || []).forEach((area: any) => {
+  private mapToZoneNodes(zones: any[]): ZoneNode[] {
+    return (zones || []).map((zone: any) => {
+      const areas: AreaNode[] = (zone.areas || []).map((area: any) => {
         const stations: StationNode[] = (area.stations || []).map((s: any) => ({
           stationId: s.stationId,
           name: s.name,
           status: s.status || 'Active',
-          connectivity: s.status === 'Inactive' ? 'Offline' : 'Online',
+          connectivity: s.status === 'Inactive' ? 'Offline' : (s.status === 'Warning' ? 'Warning' : 'Online'),
           installation: s.installation || 'Installed'
         }));
 
-        areas.push({
+        return {
           areaId: area.areaId,
           name: area.name,
-          zoneId: zone.zoneId,
-          zoneName: zone.name,
           stations: stations,
           activeCount: stations.filter((s: StationNode) => s.status === 'Active').length,
           totalCount: stations.length,
           isExpanded: false
-        });
+        };
       });
+
+      return {
+        zoneId: zone.zoneId,
+        name: zone.name,
+        areas: areas,
+        activeCount: areas.reduce((acc, a) => acc + a.activeCount, 0),
+        totalCount: areas.reduce((acc, a) => acc + a.totalCount, 0),
+        isExpanded: true // Open by default
+      };
     });
-    
-    return areas;
   }
 
-  onAreaChange() {
-    if (this.selectedArea === null) {
-      this.filteredAreas = [...this.allAreas];
-    } else {
-      this.filteredAreas = this.allAreas.filter((a: AreaNode) => a.areaId === this.selectedArea);
+  onSearch(event: any) {
+    const query = event.target.value.toLowerCase();
+    if (!query) {
+      this.filteredZones = [...this.allZones];
+      return;
     }
+
+    this.filteredZones = this.allZones.map(zone => {
+      const filteredAreas = zone.areas.map(area => {
+        const filteredStations = area.stations.filter(s => 
+          s.name.toLowerCase().includes(query)
+        );
+        return { ...area, stations: filteredStations, isExpanded: filteredStations.length > 0 };
+      }).filter(area => area.stations.length > 0 || area.name.toLowerCase().includes(query));
+
+      return { 
+        ...zone, 
+        areas: filteredAreas, 
+        isExpanded: filteredAreas.length > 0 
+      };
+    }).filter(zone => zone.areas.length > 0 || zone.name.toLowerCase().includes(query));
   }
 
-  toggleExpand(area: AreaNode, event?: Event) {
+  toggleZone(zone: ZoneNode) {
+    zone.isExpanded = !zone.isExpanded;
+  }
+
+  toggleArea(area: AreaNode, event?: Event) {
     if (event) {
       event.stopPropagation();
     }
     area.isExpanded = !area.isExpanded;
   }
 
-  editZone(area: AreaNode, event: Event) {
+  editZone(zone: ZoneNode, event: Event) {
     if (event) {
       event.stopPropagation();
     }
-    const newName = window.prompt('Enter new Zone Name:', area.zoneName);
+    const newName = window.prompt('Enter new Zone Name:', zone.name);
     if (newName !== null && newName.trim() !== '') {
-      this.service.updateZone(area.zoneId, newName.trim()).subscribe({
+      this.service.updateZone(zone.zoneId, newName.trim()).subscribe({
         next: () => {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Zone updated successfully' });
-          this.loadHierarchy(); // reload to reflect changes globally
+          this.loadHierarchy();
         },
         error: () => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update Zone' });
@@ -148,16 +169,16 @@ export class StationHierarchyComponent implements OnInit {
     }
   }
 
-  deleteZone(area: AreaNode, event: Event) {
+  deleteZone(zone: ZoneNode, event: Event) {
     if (event) {
       event.stopPropagation();
     }
     this.confirmationService.confirm({
-      message: `Are you sure you want to delete Zone "${area.zoneName}"?`,
+      message: `Are you sure you want to delete Zone "${zone.name}"?`,
       header: 'Confirm Delete',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.service.deleteZone(area.zoneId).subscribe({
+        this.service.deleteZone(zone.zoneId).subscribe({
           next: () => {
             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Zone deleted successfully' });
             this.loadHierarchy();
@@ -180,7 +201,7 @@ export class StationHierarchyComponent implements OnInit {
       this.service.createZone(newName.trim()).subscribe({
         next: () => {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Zone created successfully' });
-          this.loadHierarchy(); // reload to reflect changes globally
+          this.loadHierarchy();
         },
         error: () => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to create Zone' });
@@ -190,7 +211,6 @@ export class StationHierarchyComponent implements OnInit {
   }
 
   addStationToArea(area: AreaNode) {
-    // The user requested to navigate to /dashboard/station-config
     this.router.navigate(['/dashboard/station-config']);
   }
 }

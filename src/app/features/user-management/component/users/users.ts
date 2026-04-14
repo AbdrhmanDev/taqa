@@ -96,22 +96,6 @@ export class Users implements OnInit {
       },
     });
   }
-  getClaimValues(claims: Claim[]): string {
-    return claims?.map((c) => c.value).join(', ') || '';
-  }
-
-  getAreaNames(areas: Area[]): string {
-    if (!areas) return '';
-
-    return areas
-      .map((zone) => {
-        const zoneName = zone.name;
-        const subAreas = zone.areas?.map((a: { name: any }) => a.name).join(', ') || '';
-        return `${zoneName}: ${subAreas}`;
-      })
-      .join(' | ');
-  }
-
   onTabChange(event: any) {
     this.currentTab = event;
   }
