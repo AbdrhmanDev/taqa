@@ -12,7 +12,7 @@
   </h1>
 </div>
 <div class="card">
-  <p-tabs value="0">
+  <p-tabs [(value)]="activeTab">
     <p-tablist>
       <p-tab value="0">Over View</p-tab>
       <p-tab value="1">Compressors</p-tab>
@@ -22,20 +22,19 @@
     </p-tablist>
     <p-tabpanels>
       <p-tabpanel value="0">
-        <app-over-view></app-over-view>
+        <app-over-view *ngIf="activeTab === '0'"></app-over-view>
       </p-tabpanel>
       <p-tabpanel value="1">
-        <app-comproser-details></app-comproser-details>
+        <app-comproser-details *ngIf="activeTab === '1'"></app-comproser-details>
       </p-tabpanel>
       <p-tabpanel value="2">
-        <app-dispensers></app-dispensers>
+        <app-dispensers *ngIf="activeTab === '2'"></app-dispensers>
       </p-tabpanel>
       <p-tabpanel value="3">
-        <app-station-alarm></app-station-alarm>
-
+        <app-station-alarm *ngIf="activeTab === '3'"></app-station-alarm>
       </p-tabpanel>
       <p-tabpanel value="4">
-        <app-station-tickets></app-station-tickets>
+        <app-station-tickets *ngIf="activeTab === '4'"></app-station-tickets>
       </p-tabpanel>
     </p-tabpanels>
   </p-tabs>

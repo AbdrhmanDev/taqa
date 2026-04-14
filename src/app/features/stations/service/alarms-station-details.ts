@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import * as signalR from '@microsoft/signalr';
+import { HttpClient } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { environment } from '../../../../env/environment';
 @Injectable({
   providedIn: 'root',
 })
 export class AlarmsStationDetails {
+  private http = inject(HttpClient);
   private hubConnection!: signalR.HubConnection;
   startConnection(): Promise<void> {
     this.hubConnection = new signalR.HubConnectionBuilder()
@@ -54,5 +58,11 @@ export class AlarmsStationDetails {
         .then(() => console.log('SignalR connection stopped'))
         .catch((err) => console.log('Error while stopping SignalR connection: ', err));
     }
+  }
+
+  getAlarmsHistory(stationId: number): Observable<any> {
+    return this.http.get(`${environment.url}Alarms/history`, {
+      params: { stationId },
+    });
   }
 }

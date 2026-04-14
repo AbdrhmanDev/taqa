@@ -4,29 +4,48 @@
     <p class="text-sm text-gray-500">Pressure Readings · 6 stages</p>
   </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-6">
     <div *ngFor="let sensor of stages" class="bg-white rounded-xl shadow p-5 flex flex-col items-center">
       <p class="text-sm font-semibold text-gray-600 mb-2">{{ sensor.label }}</p>
 
-      <svg viewBox="0 0 160 100" class="w-48 h-32">
+      <svg viewBox="0 0 160 120" class="w-48 h-32">
+        <!-- Definition for Gradient -->
+        <defs>
+          <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#22C55E" />
+            <stop offset="50%" stop-color="#EAB308" />
+            <stop offset="80%" stop-color="#F97316" />
+            <stop offset="100%" stop-color="#EF4444" />
+          </linearGradient>
+        </defs>
 
-        <path d="M 20 80 A 60 60 0 0 1 140 80" fill="none" stroke="#e2e8f0" stroke-width="14" stroke-linecap="round" />
+        <!-- Background Arc (240 degrees) -->
+        <path [attr.d]="describeArc(80, 80, 60, -120, 120)" fill="none" stroke="#f1f5f9" stroke-width="12"
+          stroke-linecap="round" />
 
+        <!-- Graduation Marks -->
+        <line *ngFor="let tick of getTickMarks()" [attr.x1]="tick.x1" [attr.y1]="tick.y1" [attr.x2]="tick.x2"
+          [attr.y2]="tick.y2" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round" />
 
+        <!-- Data Arc -->
         <path *ngIf="!isInvalidValue(sensor.value)" [attr.d]="getArcPath(sensor.value)" fill="none"
-          [attr.stroke]="getColor(sensor.value)" stroke-width="14" stroke-linecap="round" />
+          stroke="url(#gaugeGradient)" stroke-width="12" stroke-linecap="round" />
 
+        <!-- Needle -->
         <g
-          [attr.transform]="'rotate(' + (isInvalidValue(sensor.value) ? -90 : getNeedleRotation(sensor.value)) + ', 80, 80)'">
-          <line x1="80" y1="80" x2="80" y2="28" stroke="#1e293b" stroke-width="2.5" stroke-linecap="round" />
-          <circle cx="80" cy="80" r="5" fill="#1e293b" />
+          [attr.transform]="'rotate(' + (isInvalidValue(sensor.value) ? -120 : getNeedleRotation(sensor.value)) + ', 80, 80)'">
+          <line x1="80" y1="80" x2="80" y2="25" stroke="#1e293b" stroke-width="3" stroke-linecap="round" />
+          <circle cx="80" cy="80" r="6" fill="#1e293b" />
+          <circle cx="80" cy="80" r="2" fill="#fff" />
         </g>
 
-        <!-- Min / Max labels -->
-        <text x="16" y="96" font-size="9" fill="#94a3b8" text-anchor="middle">
+        <!-- Labels -->
+        <text [attr.x]="polarToCartesian(80, 80, 75, -120).x" [attr.y]="polarToCartesian(80, 80, 75, -120).y"
+          font-size="8" fill="#94a3b8" text-anchor="middle" font-weight="bold">
           {{ minPressure }}
         </text>
-        <text x="144" y="96" font-size="9" fill="#94a3b8" text-anchor="middle">
+        <text [attr.x]="polarToCartesian(80, 80, 75, 120).x" [attr.y]="polarToCartesian(80, 80, 75, 120).y" font-size="8"
+          fill="#94a3b8" text-anchor="middle" font-weight="bold">
           {{ maxPressure }}
         </text>
       </svg>
@@ -43,7 +62,7 @@
     <p class="text-sm text-gray-500 mt-3">Temperature Readings · 6 stages</p>
   </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-6">
     <div *ngFor="let sensor of Temp" class="bg-white rounded-xl shadow p-5 flex flex-col items-center gap-2">
       <p class="text-sm font-semibold text-gray-600">{{ sensor.label }}</p>
 

@@ -128,11 +128,10 @@
               <span class="font-semibold">{{ dispenser.left?.chargingTime }} min</span>
             </div>
 
-            <!-- Throughput -->
             <div
               class="rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer transition-colors">
               <span class="text-gray-500 flex items-center gap-1.5"
-                (click)="openDialog(dispenser.machineId, dispenser.dispenserNo, 'chargeVolume')">
+                (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'throughput')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                   stroke="#f97316" stroke-width="2">
                   <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
@@ -145,12 +144,14 @@
                 </span>
               </span>
               <span class="font-semibold"
-                (click)="openDialog(dispenser.machineId, dispenser.left?.dispenserNo, 'throughput')">{{
+                (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'throughput')">{{
                 dispenser.left?.throughput }} m³/min</span>
             </div>
 
             <!-- Waiting Time -->
-            <div class="flex justify-between items-center text-xs px-1">
+            <div
+              class="flex justify-between items-center text-xs px-1 cursor-pointer rounded-lg py-1.5 transition-colors"
+              (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'waitingTime')">
               <span class="text-gray-500 flex items-center gap-1.5">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                   stroke="#9ca3af" stroke-width="2">
@@ -179,9 +180,9 @@
 
           <div class="space-y-2">
             <div
-              class="border-green-200 rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer transition-colors">
-              <span class="text-gray-500 flex items-center gap-1.5"
-                (click)="openDialog(dispenser.machineId, dispenser.dispenserNo, 'chargeVolume')">
+              class="border-green-200 rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer transition-colors"
+              (click)="openDialog(dispenser.dispenserName, dispenser.right?.dispenserNo, 'chargeVolume')">
+              <span class="text-gray-500 flex items-center gap-1.5">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                   stroke="#f97316" stroke-width="2">
                   <circle cx="12" cy="12" r="10" />
@@ -192,10 +193,11 @@
               <span class="font-semibold text-gray-800">{{ dispenser.right?.chargeVolume }} m³</span>
             </div>
 
-            <div class="flex justify-between items-center text-xs px-1">
-              <span class="text-gray-500 flex items-center gap-1.5" (click)="
-                  openDialog(dispenser.machineId, dispenser.right?.dispenserNo, 'chargingTime')
+            <div class="flex justify-between items-center text-xs px-1 cursor-pointer rounded-lg py-1.5 transition-colors"
+              (click)="
+                  openDialog(dispenser.dispenserName, dispenser.right?.dispenserNo, 'chargingTime')
                 ">
+              <span class="text-gray-500 flex items-center gap-1.5">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                   stroke="#9ca3af" stroke-width="2">
                   <circle cx="12" cy="12" r="10" />
@@ -207,10 +209,11 @@
             </div>
 
             <div
-              class="rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer transition-colors">
-              <span class="text-gray-500 flex items-center gap-1.5" (click)="
-                  openDialog(dispenser.machineId, dispenser.right?.dispenserNo, 'throughput')
+              class="rounded-lg px-3 py-1.5 flex justify-between items-center text-xs cursor-pointer transition-colors"
+              (click)="
+                  openDialog(dispenser.dispenserName, dispenser.right?.dispenserNo, 'throughput')
                 ">
+              <span class="text-gray-500 flex items-center gap-1.5">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                   stroke="#f97316" stroke-width="2">
                   <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
@@ -225,7 +228,9 @@
               <span class="font-semibold">{{ dispenser.right?.throughput }} m³/min</span>
             </div>
 
-            <div class="flex justify-between items-center text-xs px-1">
+            <div
+              class="flex justify-between items-center text-xs px-1 cursor-pointer rounded-lg py-1.5 transition-colors"
+              (click)="openDialog(dispenser.dispenserName, dispenser.right?.dispenserNo, 'waitingTime')">
               <span class="text-gray-500 flex items-center gap-1.5">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                   stroke="#9ca3af" stroke-width="2">
@@ -248,7 +253,6 @@
           <path d="M12 6v6l4 2" />
         </svg>
         {{ formatTimestamp(dispenser.lastTimeStamp) }}
-      </div>
     </div>
   </div>
 </div>

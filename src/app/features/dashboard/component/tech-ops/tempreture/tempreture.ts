@@ -45,11 +45,25 @@ export class Tempreture {
     return Array.from(groupMap.values());
   }
 
-  getBars(value: number, maxValue: number): { filled: boolean }[] {
-    const totalBars = 10;
-    const filledCount = Math.round((value / maxValue) * totalBars);
-    return Array.from({ length: totalBars }, (_, i) => ({
-      filled: totalBars - i <= filledCount,
-    }));
+  getFillPercentage(value: number, maxValue: number): number {
+    if (!maxValue) return 0;
+    return Math.min(Math.max((value / maxValue) * 100, 0), 100);
+  }
+
+  readonly barIndices = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; // From top (0) to bottom (9)
+
+  getBars(value: number, maxValue: number) {
+    if (!maxValue) return this.barIndices.map(() => false);
+    const filledCount = Math.round((value / maxValue) * 10);
+    return this.barIndices.map((i) => (9 - i) < filledCount);
+  }
+
+  getBarClass(index: number, active: boolean): string {
+    if (!active) return 'bg-gray-200 opacity-20';
+
+    const level = 9 - index; // 0 is bottom, 9 is top
+    if (level < 5) return 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.4)]';
+    if (level < 8) return 'bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.4)]';
+    return 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.4)]';
   }
 }

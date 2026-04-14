@@ -11,7 +11,7 @@ import { StationDetails } from '../../service/station-details';
 import { IStationDetails } from '../../model/station-details';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComproserDetails } from '../comprossers/comproser-details/comproser-details';
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 
 @Component({
   selector: 'app-station-detatils',
@@ -23,6 +23,7 @@ import { Location } from '@angular/common';
     StationAlarm,
     StationTickets,
     ComproserDetails,
+    CommonModule,
   ],
   templateUrl: './station-detatils.html',
   styleUrl: './station-detatils.scss',
@@ -30,6 +31,7 @@ import { Location } from '@angular/common';
 export class StationDetatils implements OnInit {
   stationId!: number;
   allStationDetails!: IStationDetails;
+  activeTab: string = '0';
 
   constructor(
     private _Router: Router,
@@ -60,5 +62,9 @@ export class StationDetatils implements OnInit {
         console.log(err);
       },
     });
+  }
+  onTabChange(event: any) {
+    this.activeTab = event;
+    this.cdr.detectChanges();
   }
 }

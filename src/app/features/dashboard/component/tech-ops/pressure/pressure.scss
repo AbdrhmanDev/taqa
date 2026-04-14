@@ -1,0 +1,7 @@
+svg path, svg line, svg circle, svg g {
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gauge-needle {
+  transform-origin: 80px 80px;
+}

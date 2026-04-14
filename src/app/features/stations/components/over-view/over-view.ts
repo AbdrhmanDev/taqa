@@ -263,6 +263,22 @@ export class OverView implements OnInit, OnDestroy {
 
   async onStartConnectionAlarms() {
     this.loadingItems.add('alarms');
+
+    // Fetch historical alarms first
+    this.realtimeAlarmDetails.getAlarmsHistory(this.stationId).subscribe({
+      next: (history) => {
+        if (history && Array.isArray(history)) {
+          this.stationDetailsDataAlarm = history;
+        }
+        this.loadingItems.delete('alarms');
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error fetching alarm history:', err);
+        this.loadingItems.delete('alarms');
+      },
+    });
+
     try {
       await this.realtimeAlarmDetails.startConnection();
 
@@ -277,19 +293,16 @@ export class OverView implements OnInit, OnDestroy {
             data.className = data.className.trim();
           }
           this.stationDetailsDataAlarm.unshift(data);
-          this.loadingItems.delete('alarms');
           this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Error receiving alarm data:', err);
-          this.loadingItems.delete('alarms');
         },
       });
 
       await this.realtimeAlarmDetails.joinStation(this.stationId);
     } catch (error) {
       console.error('Error starting alarms connection:', error);
-      this.loadingItems.delete('alarms');
     }
   }
 

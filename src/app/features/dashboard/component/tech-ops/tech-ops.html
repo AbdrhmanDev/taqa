@@ -96,15 +96,6 @@
 
     </div>
 
-    <!-- Dialogs -->
-    <p-dialog header="Compressors" [(visible)]="isPressureDialogOpen" [modal]="true" [style]="{ width: '50vw' }">
-      <app-pressure [station]="selectedStation"></app-pressure>
-    </p-dialog>
-
-    <p-dialog header="Dispensers" [(visible)]="isTemperatureDialogOpen" [modal]="true" [style]="{ width: '50vw' }">
-      <app-tempreture [station]="selectedStation"></app-tempreture>
-    </p-dialog>
-
     <!-- Active Dispensers -->
     <div class="rounded-xl px-3 py-2 flex justify-between items-center" [ngClass]="station.dispenserActivity != null
         ? 'border border-yellow-400 bg-yellow-50'
@@ -123,5 +114,14 @@
     </p>
 
   </div>
+
+  <!-- Dialogs Moved outside the loop -->
+  <p-dialog header="Compressors" [(visible)]="isPressureDialogOpen" [modal]="true" [style]="{ width: '90vw' }">
+    <app-pressure [station]="selectedStation"></app-pressure>
+  </p-dialog>
+
+  <p-dialog header="Dispensers" [(visible)]="isTemperatureDialogOpen" [modal]="true" [style]="{ width: '90vw' }">
+    <app-tempreture [station]="selectedStation"></app-tempreture>
+  </p-dialog>
 
 </div>

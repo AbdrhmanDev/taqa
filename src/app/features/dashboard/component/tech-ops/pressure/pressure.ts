@@ -26,50 +26,59 @@ export class Pressure {
   isInvalidValue(value: any): boolean {
     return value === null || value === undefined || value === 0 || value === -1;
   }
+  getColor(value: number | null): string {
+    if (this.isInvalidValue(value)) return '#e2e8f0';
+    const v = value as number;
+    if (v < 100) return '#22C55E'; // Green
+    if (v < 250) return '#EAB308'; // Yellow
+    if (v < 400) return '#F97316'; // Orange
+    return '#EF4444'; // Red
+  }
+
   getRatio(value: number | null): number {
-    if (value === null || value === undefined) return 0;
+    if (this.isInvalidValue(value)) return 0;
     return Math.min(
-      Math.max((value - this.minPressure) / (this.maxPressure - this.minPressure), 0),
+      Math.max(((value as number) - this.minPressure) / (this.maxPressure - this.minPressure), 0),
       1,
     );
   }
 
   getNeedleRotation(value: number | null): number {
     const ratio = this.getRatio(value);
-    return -90 + ratio * 180;
+    return -120 + ratio * 240;
   }
 
   getArcPath(value: number | null): string {
     const ratio = this.getRatio(value);
     if (ratio <= 0) return '';
-
-    const cx = 80,
-      cy = 80,
-      r = 60;
-
-    const startX = cx - r; // = 20
-    const startY = cy; // = 80
-
-    const angleRad = Math.PI - ratio * Math.PI;
-    const endX = cx + r * Math.cos(angleRad);
-    const endY = cy + r * Math.sin(angleRad);
-
-    const largeArc = ratio > 0.5 ? 1 : 0;
-
-    return `M ${startX} ${startY} A ${r} ${r} 0 ${largeArc} 1 ${endX.toFixed(2)} ${endY.toFixed(2)}`;
+    return this.describeArc(80, 80, 60, -120, -120 + ratio * 240);
   }
 
-  getColor(value: number | null): string {
-    if (this.isInvalidValue(value)) return '#DDDDDD';
+  polarToCartesian(centerX: number, centerY: number, radius: number, angleInDegrees: number) {
+    const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
+    return {
+      x: centerX + radius * Math.cos(angleInRadians),
+      y: centerY + radius * Math.sin(angleInRadians),
+    };
+  }
 
-    const v = value as number;
+  describeArc(x: number, y: number, radius: number, startAngle: number, endAngle: number) {
+    if (endAngle <= startAngle) return '';
+    const start = this.polarToCartesian(x, y, radius, endAngle);
+    const end = this.polarToCartesian(x, y, radius, startAngle);
+    const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
+    return ['M', start.x, start.y, 'A', radius, radius, 0, largeArcFlag, 0, end.x, end.y].join(' ');
+  }
 
-    if (v >= 0.1 && v <= 50) return '#38d3fa';
-    if (v >= 51 && v <= 150) return '#0663f9';
-    if (v >= 151 && v <= 300) return '#045ff1';
-    if (v >= 301 && v <= 486) return '#010355';
-
-    return '#DDDDDD';
+  getTickMarks() {
+    const ticks = [];
+    for (let i = 0; i <= 10; i++) {
+      const angle = -120 + i * 24;
+      const inner = this.polarToCartesian(80, 80, 52, angle);
+      const outer = this.polarToCartesian(80, 80, 60, angle);
+      ticks.push({ x1: inner.x, y1: inner.y, x2: outer.x, y2: outer.y });
+    }
+    return ticks;
   }
   ngOnChanges(changes: SimpleChanges) {
     if (changes['station']) {
