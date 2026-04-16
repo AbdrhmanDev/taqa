@@ -1,7 +1,7 @@
 import { dashboardService } from './../../../dashboard/service/dashboard';
 import { Component, OnDestroy } from '@angular/core';
 import { RealtimeAlarmsDashboard } from '../../../dashboard/service/realtime-alarms-dashboard';
-import { ChangeDetectorRef, OnInit } from '@angular/core';
+import { ChangeDetectorRef, OnInit, Input } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 
@@ -27,7 +27,7 @@ export class StationAlarm implements OnInit {
   alarmsRealTime: any[] = [];
   stationDetailsDataAlarm: any[] = [];
   private subscription!: Subscription;
-  stationId!: number;
+  @Input() stationId!: number;
 
   // Final list shown in the UI (after tab filter + sort)
   displayedAlarms: any[] = [];
@@ -62,14 +62,11 @@ export class StationAlarm implements OnInit {
     private activateRoute: ActivatedRoute,
   ) {}
   ngOnInit(): void {
-    this.activateRoute.paramMap.subscribe((params) => {
-      this.stationId = Number(params.get('id'));
+    if (this.stationId) {
       this.getAlarmsHistory();
       this.onStartConnectionAlarms();
-      this.onGetAllStation();
-    });
-
-    // this.onGetAllSeverity();
+      // this.onGetAllStation(); // Removed redundant call
+    }
   }
 
   setTab(tab: 'all' | 'system' | 'user') {

@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
+import { Component, ViewChild, OnDestroy, OnInit, Input } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -59,7 +59,8 @@ export class OverView implements OnInit, OnDestroy {
   isLoading: boolean = false;
   noGasData: boolean = false;
   selectedTime: number = 0;
-  stationId!: number;
+  @Input() stationId!: number;
+  @Input() stationDetails: any;
   duration!: number;
   moveDialogVisible = false;
   unlinkDialogVisible = false;
@@ -117,23 +118,21 @@ export class OverView implements OnInit, OnDestroy {
   };
 
   constructor(
-    private stationDetails: StationDetails,
+    private _stationDetails: StationDetails,
     private activateRoute: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private realTime: RealtimeStationDetails,
     private Station: AllStation,
     private changeDetectorRef: ChangeDetectorRef,
-    private realtimeAlarmDetails: AlarmsStationDetails,
+    private realtimeAlarmDetails: AlarmsStationDetails
   ) {}
 
   ngOnInit(): void {
-    this.activateRoute.paramMap.subscribe((params) => {
-      this.stationId = Number(params.get('id'));
-      this.onGetStationDetails();
-      this.onGetComproser();
-      this.onGetAllGasConsumption();
-    });
-    this.onGetAllStation();
+    if (this.stationDetails) {
+      this.assetId = this.stationDetails.assetId;
+    }
+    this.onGetComproser();
+    this.onGetAllGasConsumption();
     this.onStartConnection();
     this.onStartConnectionAlarms();
   }
@@ -142,23 +141,14 @@ export class OverView implements OnInit, OnDestroy {
     return this.loadingItems.has(key);
   }
 
-  onGetStationDetails() {
-    this.stationDetails.getStationById(this.stationId).subscribe({
-      next: (res) => {
-        this.assetId = res.assetId;
-      },
-      error: (err) => console.log('Error getting station details:', err),
-    });
-  }
-
   openMoveDialog(compressor: any) {
     this.selectedCompressorToMove = compressor;
-    this.stationDetails.getAvailableAssetsComproser().subscribe({
-      next: (assets) => {
+    this._stationDetails.getAvailableAssetsComproser().subscribe({
+      next: (assets: any) => {
         this.availableAssets = assets;
         this.moveDialogVisible = true;
       },
-      error: (err) => console.log('Error getting available assets:', err),
+      error: (err: any) => console.log('Error getting available assets:', err),
     });
   }
 
@@ -174,11 +164,11 @@ export class OverView implements OnInit, OnDestroy {
   handleUnlink(compressor: any) {
     const compId = compressor.id || compressor.compressorId;
     this.loadingItems.add('table');
-    this.stationDetails.unlinkCompressor(compId).subscribe({
+    this._stationDetails.unlinkCompressor(compId).subscribe({
       next: () => {
         this.onGetComproser();
       },
-      error: (err) => {
+      error: (err: any) => {
         console.log('Error unlinking compressor:', err);
         this.loadingItems.delete('table');
       },
@@ -197,33 +187,21 @@ export class OverView implements OnInit, OnDestroy {
 
     this.loadingItems.add('table');
 
-    this.stationDetails.unlinkCompressor(compId).subscribe({
+    this._stationDetails.unlinkCompressor(compId).subscribe({
       next: () => {
-        this.stationDetails.linkCompressor(compId, targetAsset.id).subscribe({
+        this._stationDetails.linkCompressor(compId, targetAsset.id).subscribe({
           next: () => {
             this.onGetComproser();
           },
-          error: (err) => {
+          error: (err: any) => {
             console.log('Link error:', err);
             this.loadingItems.delete('table');
           },
         });
       },
-      error: (err) => {
+      error: (err: any) => {
         console.log('Unlink error:', err);
         this.loadingItems.delete('table');
-      },
-    });
-  }
-
-  onGetAllStation() {
-    this.Station.getAllStations(this.page, this.pageSize).subscribe({
-      next: (res) => {
-        this.allSation = res.items;
-        this.changeDetectorRef.detectChanges();
-      },
-      error: (err) => {
-        console.log('Error getting stations:', err);
       },
     });
   }
@@ -242,13 +220,13 @@ export class OverView implements OnInit, OnDestroy {
       }
 
       this.subscription = this.realTime.getStationDetails().subscribe({
-        next: (data) => {
+        next: (data: any) => {
           console.log('Received station data:', data);
           this.stationDetailsData = data;
           this.loadingItems.delete('summary');
           this.cdr.detectChanges();
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Error receiving station data:', err);
           this.loadingItems.delete('summary');
         },
@@ -266,14 +244,14 @@ export class OverView implements OnInit, OnDestroy {
 
     // Fetch historical alarms first
     this.realtimeAlarmDetails.getAlarmsHistory(this.stationId).subscribe({
-      next: (history) => {
+      next: (history: any) => {
         if (history && Array.isArray(history)) {
           this.stationDetailsDataAlarm = history;
         }
         this.loadingItems.delete('alarms');
         this.cdr.detectChanges();
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error fetching alarm history:', err);
         this.loadingItems.delete('alarms');
       },
@@ -287,7 +265,7 @@ export class OverView implements OnInit, OnDestroy {
       }
 
       this.alarmSubscription = this.realtimeAlarmDetails.getStationDetails().subscribe({
-        next: (data) => {
+        next: (data: any) => {
           console.log('Received station Alarm data:', data);
           if (data.className) {
             data.className = data.className.trim();
@@ -295,7 +273,7 @@ export class OverView implements OnInit, OnDestroy {
           this.stationDetailsDataAlarm.unshift(data);
           this.cdr.detectChanges();
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Error receiving alarm data:', err);
         },
       });
@@ -308,13 +286,13 @@ export class OverView implements OnInit, OnDestroy {
 
   onGetComproser() {
     this.loadingItems.add('table');
-    this.stationDetails.getComproserById(this.stationId).subscribe({
-      next: (res) => {
+    this._stationDetails.getComproserById(this.stationId).subscribe({
+      next: (res: any) => {
         this.comproserTableData = res;
         this.loadingItems.delete('table');
         this.cdr.detectChanges();
       },
-      error: (err) => {
+      error: (err: any) => {
         console.log('Error getting compressors:', err);
         this.loadingItems.delete('table');
       },
@@ -346,8 +324,8 @@ export class OverView implements OnInit, OnDestroy {
         .padStart(2, '0')}-${endDate.getDate().toString().padStart(2, '0')}`;
     }
 
-    this.stationDetails.getGasById(this.stationId, this.selectedTime, fromDate, toDate).subscribe({
-      next: (res) => {
+    this._stationDetails.getGasById(this.stationId, this.selectedTime, fromDate, toDate).subscribe({
+      next: (res: any) => {
         this.loadingItems.delete('chart');
         if (!res || res.length === 0) {
           this.allGasData = [];
@@ -388,7 +366,7 @@ export class OverView implements OnInit, OnDestroy {
         };
         this.cdr.detectChanges();
       },
-      error: (err) => {
+      error: (err: any) => {
         console.log('Error getting gas consumption:', err);
         this.loadingItems.delete('chart');
         this.noGasData = true;

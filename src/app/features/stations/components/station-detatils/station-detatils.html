@@ -22,16 +22,16 @@
     </p-tablist>
     <p-tabpanels>
       <p-tabpanel value="0">
-        <app-over-view *ngIf="activeTab === '0'"></app-over-view>
+        <app-over-view *ngIf="activeTab === '0'" [stationId]="stationId" [stationDetails]="allStationDetails"></app-over-view>
       </p-tabpanel>
       <p-tabpanel value="1">
-        <app-comproser-details *ngIf="activeTab === '1'"></app-comproser-details>
+        <app-comproser-details *ngIf="activeTab === '1'" [stationId]="stationId"></app-comproser-details>
       </p-tabpanel>
       <p-tabpanel value="2">
-        <app-dispensers *ngIf="activeTab === '2'"></app-dispensers>
+        <app-dispensers *ngIf="activeTab === '2'" [stationId]="stationId"></app-dispensers>
       </p-tabpanel>
       <p-tabpanel value="3">
-        <app-station-alarm *ngIf="activeTab === '3'"></app-station-alarm>
+        <app-station-alarm *ngIf="activeTab === '3'" [stationId]="stationId"></app-station-alarm>
       </p-tabpanel>
       <p-tabpanel value="4">
         <app-station-tickets *ngIf="activeTab === '4'"></app-station-tickets>

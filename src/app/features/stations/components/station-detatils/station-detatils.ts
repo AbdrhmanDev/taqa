@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { TabsModule } from 'primeng/tabs';
 import { OverView } from '../over-view/over-view';
 import { Comprossers } from '../comprossers/comprossers';
@@ -9,7 +9,6 @@ import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { StationDetails } from '../../service/station-details';
 import { IStationDetails } from '../../model/station-details';
-import { ChangeDetectorRef } from '@angular/core';
 import { ComproserDetails } from '../comprossers/comproser-details/comproser-details';
 import { CommonModule, Location } from '@angular/common';
 
@@ -47,8 +46,8 @@ export class StationDetatils implements OnInit {
     this.activateRoute.paramMap.subscribe((params) => {
       // show anything in url
       this.stationId = Number(params.get('id'));
+      this.onGetStationDetails();
     });
-    this.onGetStationDetails();
   }
   onGetStationDetails() {
     this.stationDetails.getStationById(this.stationId).subscribe({

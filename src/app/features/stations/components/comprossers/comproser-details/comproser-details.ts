@@ -7,6 +7,7 @@ import {
   ViewChild,
   AfterViewInit,
   SimpleChanges,
+  Input,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
@@ -80,7 +81,7 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
   selectedTime: any;
   station: any;
   private subscription!: Subscription;
-  stationId!: number;
+  @Input() stationId!: number;
   compressorDetailsData!: any;
   ComproserDataCard!: any;
   isLoadingCompressor: boolean = false;
@@ -133,16 +134,13 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
 
   ngOnInit(): void {
     this.initCharts();
-    this.activateRoute.paramMap.subscribe((params) => {
-      this.stationId = Number(params.get('id'));
-      if (this.stationId) {
-        this.onStartConnection();
-        this.onGetTimeLineChart();
-        this.onGetCompressorData();
-        this.onGetMachines();
-        this.onGetAvailableAssets();
-      }
-    });
+    if (this.stationId) {
+      this.onStartConnection();
+      this.onGetTimeLineChart();
+      this.onGetCompressorData();
+      this.onGetMachines();
+      this.onGetAvailableAssets();
+    }
   }
 
   ngAfterViewInit(): void {

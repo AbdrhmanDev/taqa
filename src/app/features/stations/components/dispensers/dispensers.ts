@@ -28,7 +28,7 @@ import { DispenserHistory } from './dispenser-history/dispenser-history';
   styleUrl: './dispensers.scss',
 })
 export class Dispensers implements OnInit {
-  stationId!: number;
+  @Input() stationId!: number;
   @Input() stations: any;
   allDispensers: any[] = [];
   status: string = '';
@@ -57,10 +57,6 @@ export class Dispensers implements OnInit {
     private cdr: ChangeDetectorRef,
   ) {}
   ngOnInit(): void {
-    this.activateRoute.paramMap.subscribe((params) => {
-      // show anything in url
-      this.stationId = Number(params.get('id'));
-    });
     this.onStartConnection();
   }
   allStatus: any[] = [

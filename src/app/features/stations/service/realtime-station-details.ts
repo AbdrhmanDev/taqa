@@ -15,13 +15,27 @@ export class RealtimeStationDetails {
     this.stationKpisConnection = new signalR.HubConnectionBuilder()
       .withUrl('http://10.11.140.37/Taqa_Back_2026/hubs/station-kpis')
       .withAutomaticReconnect()
-      .configureLogging(signalR.LogLevel.Information)
       .build();
+
+    this.stationKpisConnection.onclose(() => {
+      console.log('❌ Connection Closed');
+    });
+
+    this.stationKpisConnection.onreconnecting(() => {
+      console.log('⏳ Reconnecting...');
+    });
+
+    this.stationKpisConnection.onreconnected(() => {
+      console.log('✅ Reconnected');
+    });
 
     return this.stationKpisConnection
       .start()
-      .then(() => console.log('Station KPIs Connected'))
-      .catch((err) => console.log('Error: ' + err));
+      .then(() => {
+        console.log('✅ Station KPIs Connected');
+        console.log('State:', this.stationKpisConnection.state);
+      })
+      .catch((err) => console.log('❌ Error: ' + err));
   }
 
   joinStation(stationId: number): Promise<void> {
@@ -33,9 +47,23 @@ export class RealtimeStationDetails {
 
   getStationDetails(): Observable<any> {
     return new Observable((subscriber) => {
+      console.log('👂 Listening to ReceiveStationKpis...');
+
+      let received = false;
+
       this.stationKpisConnection.on('ReceiveStationKpis', (data) => {
+        received = true;
+        console.log('🔥 Data Received:', data);
         subscriber.next(data);
       });
+
+      // check لو مفيش داتا
+      setTimeout(() => {
+        if (!received) {
+          console.warn('⚠️ Connected but no data received from server');
+        }
+      }, 5000);
+
       return () => this.stationKpisConnection.off('ReceiveStationKpis');
     });
   }
