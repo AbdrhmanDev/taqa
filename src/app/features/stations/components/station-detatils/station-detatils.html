@@ -22,7 +22,7 @@
     </p-tablist>
     <p-tabpanels>
       <p-tabpanel value="0">
-        <app-over-view [hidden]="activeTab !== '0'" [stationId]="stationId"></app-over-view>
+        <app-over-view [hidden]="activeTab !== '0'" [stationId]="stationId" [activeTab]="activeTab"></app-over-view>
       </p-tabpanel>
       <p-tabpanel value="1">
         <app-comproser-details [hidden]="activeTab !== '1'" [stationId]="stationId" [activeTab]="activeTab"></app-comproser-details>

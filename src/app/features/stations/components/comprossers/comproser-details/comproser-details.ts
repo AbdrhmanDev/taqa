@@ -678,7 +678,12 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
 
   getColorS(value: number | null): string {
     if (this.isInvalidValue(value)) return '#DDDDDD';
-    return '#B42318';
+    const v = value as number;
+    if (v < 20) return '#3B82F6'; // Blue
+    if (v < 51) return '#22C55E'; // Green
+    if (v <= 150) return '#EAB308'; // Yellow
+    if (v <= 250) return '#F97316'; // Orange
+    return '#EF4444'; // Red
   }
 
   readonly minPressure = 0.1;
@@ -733,10 +738,11 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
   getColor(value: number | null): string {
     if (this.isInvalidValue(value)) return '#DDDDDD';
     const v = value as number;
-    if (v >= 0 && v <= 300) return '#16A34A'; // Vibrant Green
-    if (v > 300 && v <= 400) return '#EAB308'; // Vibrant Yellow/Orange
-    if (v > 400) return '#DC2626'; // Vibrant Red
-    return '#DDDDDD';
+    if (v < 20) return '#3B82F6'; // Blue
+    if (v < 51) return '#22C55E'; // Green
+    if (v <= 150) return '#EAB308'; // Yellow
+    if (v <= 250) return '#F97316'; // Orange
+    return '#EF4444'; // Red
   }
 
   getTicks() {

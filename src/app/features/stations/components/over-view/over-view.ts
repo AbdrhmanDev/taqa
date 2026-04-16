@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, OnDestroy, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -61,6 +61,7 @@ export class OverView implements OnInit, OnDestroy {
   selectedTime: number = 0;
   @Input() stationId!: number;
   @Input() stationDetails: any;
+  @Input() activeTab: string = '0';
   duration!: number;
   moveDialogVisible = false;
   unlinkDialogVisible = false;
@@ -136,6 +137,28 @@ export class OverView implements OnInit, OnDestroy {
     this.onGetAllGasConsumption();
     this.subscribeToRealtimeData();
     this.subscribeToAlarms();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['activeTab']?.currentValue === '0') {
+      console.log('Tab 0 (Overview) is now active - forcing chart render');
+      setTimeout(() => this.forceChartRender(), 300);
+    }
+  }
+
+  forceChartRender() {
+    if (this.chart && this.chartOptions) {
+      try {
+        console.log('Forcing Overview chart render...');
+        this.chart.updateOptions(this.chartOptions, true, true);
+        window.dispatchEvent(new Event('resize'));
+      } catch (e) {
+        console.warn('Overview chart render error:', e);
+      }
+    } else {
+      // Fallback if chart not fully ready
+      window.dispatchEvent(new Event('resize'));
+    }
   }
 
   public isPartLoading(key: string): boolean {
