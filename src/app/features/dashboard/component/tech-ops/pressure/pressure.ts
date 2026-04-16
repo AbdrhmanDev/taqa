@@ -117,11 +117,10 @@ export class Pressure {
 
     const v = value as number;
 
-    if (v >= 51 && v <= 150) return '#09ae30';
-    if (v >= 151 && v <= 250) return '#F97316';
-    if (v >= 251 && v <= 350) return '#EF4444';
-    if (v >= 351 && v <= 392) return '#EF4444';
-
-    return '#DDDDDD';
+    if (v < 20) return '#3B82F6'; // Blue
+    if (v < 51) return '#22C55E'; // Green
+    if (v <= 150) return '#EAB308'; // Yellow
+    if (v <= 250) return '#F97316'; // Orange
+    return '#EF4444'; // Red
   }
 }

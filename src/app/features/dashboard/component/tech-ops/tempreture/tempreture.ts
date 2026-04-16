@@ -62,8 +62,9 @@ export class Tempreture {
     if (!active) return 'bg-gray-200 opacity-20';
 
     const level = 9 - index; // 0 is bottom, 9 is top
-    if (level < 5) return 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.4)]';
-    if (level < 8) return 'bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.4)]';
-    return 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.4)]';
+    if (level < 2) return 'bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.4)]'; // 0-20% Blue
+    if (level < 5) return 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.4)]'; // 20-50% Green
+    if (level < 8) return 'bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.4)]'; // 50-80% Yellow
+    return 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.4)]'; // 80-100% Red
   }
 }
