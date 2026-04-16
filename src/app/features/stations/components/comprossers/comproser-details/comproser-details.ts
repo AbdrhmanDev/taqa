@@ -84,8 +84,8 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
   station: any;
   private subscription!: Subscription;
   @Input() stationId!: number;
-  @Input() startSignalR: boolean = false;
-  @Output() connectionReady = new EventEmitter<void>();
+  @Input() activeTab: string = '0';
+  @Output() connectionReady = new EventEmitter<void>(); // Keep for compatibility if still used in parent
   compressorDetailsData!: any;
   ComproserDataCard!: any;
   isLoadingCompressor: boolean = false;
@@ -143,11 +143,13 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
     this.onGetCompressorData();
     this.onGetMachines();
     this.onGetAvailableAssets();
+    this.subscribeToRealtimeData();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['startSignalR']?.currentValue === true && !this.subscription) {
-      this.onStartConnection();
+    if (changes['activeTab']?.currentValue === '1') {
+      console.log('Tab 1 (Compressors) is now active - forcing chart render');
+      setTimeout(() => this.forceChartRender(), 300);
     }
     if (changes['station']) {
       this.cdr.detectChanges();
@@ -750,33 +752,29 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
   }
 
 
-  async onStartConnection() {
-    try {
-      await this.realTime.startConnectionCompressor();
-      this.subscription = this.realTime.getCompressorDetails().subscribe({
-        next: (data) => {
+  subscribeToRealtimeData() {
+    this.isLoadingRealtime = true;
+    this.subscription = this.realTime.getCompressorDetails().subscribe({
+      next: (data) => {
+        if (data && data.length > 0) {
           this.compressorDetailsData = data[0];
           this.isLoadingRealtime = false;
           this.allComproser = data;
-          console.log('Received compressor data:', data);
-          this.connectionReady.emit();
+          console.log('Received compressor data from persistence:', data);
           this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error(err);
-          this.isLoadingRealtime = false;
-          this.cdr.detectChanges();
-        },
-      });
-      await this.realTime.joinCompressor(this.stationId);
-    } catch (error) {
-      console.error('Error starting connection:', error);
-    }
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        this.isLoadingRealtime = false;
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   ngOnDestroy(): void {
     if (this.subscription) this.subscription.unsubscribe();
-    this.realTime.stopConnectionCompressor();
+    // Connection managed by parent or service globally
   }
 
   // Pressure history methods

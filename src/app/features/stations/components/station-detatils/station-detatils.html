@@ -22,40 +22,16 @@
     </p-tablist>
     <p-tabpanels>
       <p-tabpanel value="0">
-        <div [hidden]="activeTab !== '0'">
-          <app-over-view 
-            [stationId]="stationId" 
-            [stationDetails]="allStationDetails"
-            (connectionReady)="onOverViewReady()">
-          </app-over-view>
-        </div>
+        <app-over-view [hidden]="activeTab !== '0'" [stationId]="stationId"></app-over-view>
       </p-tabpanel>
       <p-tabpanel value="1">
-        <div [hidden]="activeTab !== '1'">
-          <app-comproser-details 
-            [stationId]="stationId"
-            [startSignalR]="isOverViewReady"
-            (connectionReady)="onCompressorsReady()">
-          </app-comproser-details>
-        </div>
+        <app-comproser-details [hidden]="activeTab !== '1'" [stationId]="stationId" [activeTab]="activeTab"></app-comproser-details>
       </p-tabpanel>
       <p-tabpanel value="2">
-        <div [hidden]="activeTab !== '2'">
-          <app-dispensers 
-            [stationId]="stationId"
-            [startSignalR]="isCompressorsReady"
-            (connectionReady)="onDispensersReady()">
-          </app-dispensers>
-        </div>
+        <app-dispensers [hidden]="activeTab !== '2'" [stationId]="stationId"></app-dispensers>
       </p-tabpanel>
       <p-tabpanel value="3">
-        <div [hidden]="activeTab !== '3'">
-          <app-station-alarm 
-            [stationId]="stationId"
-            [startSignalR]="isDispensersReady"
-            (connectionReady)="onAlarmsReady()">
-          </app-station-alarm>
-        </div>
+        <app-station-alarm [hidden]="activeTab !== '3'" [stationId]="stationId"></app-station-alarm>
       </p-tabpanel>
       <p-tabpanel value="4">
         <app-station-tickets *ngIf="activeTab === '4'"></app-station-tickets>

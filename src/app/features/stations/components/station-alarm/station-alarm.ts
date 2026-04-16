@@ -28,8 +28,7 @@ export class StationAlarm implements OnInit {
   stationDetailsDataAlarm: any[] = [];
   private subscription!: Subscription;
   @Input() stationId!: number;
-  @Input() startSignalR: boolean = false;
-  @Output() connectionReady = new EventEmitter<void>();
+  @Output() connectionReady = new EventEmitter<void>(); // Keep for compatibility
 
   // Final list shown in the UI (after tab filter + sort)
   displayedAlarms: any[] = [];
@@ -63,16 +62,14 @@ export class StationAlarm implements OnInit {
     private realtimeAlarmDetails: AlarmsStationDetails,
     private activateRoute: ActivatedRoute,
   ) {}
-  ngOnInit(): void {}
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['startSignalR']?.currentValue === true && !this.subscription) {
-      if (this.stationId) {
-        this.getAlarmsHistory();
-        this.onStartConnectionAlarms();
-      }
+  ngOnInit(): void {
+    if (this.stationId) {
+      this.getAlarmsHistory();
+      this.subscribeToAlarms();
     }
   }
+
+  ngOnChanges(changes: SimpleChanges): void {}
 
   setTab(tab: 'all' | 'system' | 'user') {
     this.activeTab = tab;
@@ -94,27 +91,22 @@ export class StationAlarm implements OnInit {
     this.displayedAlarms = [...this.stationDetailsDataAlarm, ...this.alarmsHistory];
   }
 
-  async onStartConnectionAlarms() {
-    try {
-      await this.realtimeAlarmDetails.startConnection();
-
-      this.subscription = this.realtimeAlarmDetails.getStationDetails().subscribe({
-        next: (data) => {
+  subscribeToAlarms() {
+    this.isLoading = true;
+    this.subscription = this.realtimeAlarmDetails.getStationDetails().subscribe({
+      next: (data) => {
+        if (data) {
           console.log('Received station Alarm data byStation:', data);
           data.className = data.className?.trim(); //remove r/n/
 
           this.stationDetailsDataAlarm.unshift(data);
           this.mergeAlarms();
-          this.connectionReady.emit();
+          this.isLoading = false;
           this.cdr.detectChanges();
-        },
-        error: (err) => console.error(err),
-      });
-
-      await this.realtimeAlarmDetails.joinStation(this.stationId);
-    } catch (error) {
-      console.error('Error starting connection:', error);
-    }
+        }
+      },
+      error: (err) => console.error(err),
+    });
   }
 
   onGetAllStation() {

@@ -29,8 +29,7 @@ import { DispenserHistory } from './dispenser-history/dispenser-history';
 })
 export class Dispensers implements OnInit {
   @Input() stationId!: number;
-  @Input() startSignalR: boolean = false;
-  @Output() connectionReady = new EventEmitter<void>();
+  @Output() connectionReady = new EventEmitter<void>(); // Keep for compatibility
   @Input() stations: any;
   allDispensers: any[] = [];
   status: string = '';
@@ -58,13 +57,11 @@ export class Dispensers implements OnInit {
 
     private cdr: ChangeDetectorRef,
   ) {}
-  ngOnInit(): void {}
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['startSignalR']?.currentValue === true && !this.subscription) {
-      this.onStartConnection();
-    }
+  ngOnInit(): void {
+    this.subscribeToRealtimeData();
   }
+
+  ngOnChanges(changes: SimpleChanges): void {}
   allStatus: any[] = [
     { label: 'Online', value: 'Online' },
     { label: 'Offline', value: 'Offline' },
@@ -82,12 +79,11 @@ export class Dispensers implements OnInit {
     });
   }
 
-  async onStartConnection() {
-    try {
-      await this.realTime.startConnectionDispenser();
-
-      this.subscription = this.realTime.getDispenserDetails().subscribe({
-        next: (data) => {
+  subscribeToRealtimeData() {
+    this.isLoading = true;
+    this.subscription = this.realTime.getDispenserDetails().subscribe({
+      next: (data) => {
+        if (data) {
           if (this.allDispensers && this.allDispensers.length > 0) {
             this.detectDataChanges(data);
           }
@@ -99,16 +95,11 @@ export class Dispensers implements OnInit {
             this.filteredDispensers = data;
           }
           this.isLoading = false;
-          this.connectionReady.emit();
           this.cdr.detectChanges();
-        },
-        error: (err) => console.error(err),
-      });
-
-      await this.realTime.joinDispenser(this.stationId);
-    } catch (error) {
-      console.error('Error starting connection:', error);
-    }
+        }
+      },
+      error: (err) => console.error(err),
+    });
   }
   getComputedStatus(dispenser: any): string {
     if (!dispenser.lastTimeStamp) return 'Offline';
@@ -222,7 +213,7 @@ export class Dispensers implements OnInit {
       });
   }
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-    this.realTime.stopConnectionDispenser();
+    if (this.subscription) this.subscription.unsubscribe();
+    // Connections managed globally now
   }
 }

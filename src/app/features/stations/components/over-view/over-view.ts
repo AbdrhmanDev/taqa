@@ -83,7 +83,7 @@ export class OverView implements OnInit, OnDestroy {
   toDate!: string;
   dateRange: Date[] = [];
   private loadingItems = new Set<string>();
-  @Output() connectionReady = new EventEmitter<void>();
+  @Output() connectionReady = new EventEmitter<void>(); // Keep for compatibility if still used in parent, but we won't emit manually
 
   timeOptions = [
     { label: 'Current', value: 0 },
@@ -134,8 +134,8 @@ export class OverView implements OnInit, OnDestroy {
     }
     this.onGetComproser();
     this.onGetAllGasConsumption();
-    this.onStartConnection();
-    this.onStartConnectionAlarms();
+    this.subscribeToRealtimeData();
+    this.subscribeToAlarms();
   }
 
   public isPartLoading(key: string): boolean {
@@ -211,37 +211,25 @@ export class OverView implements OnInit, OnDestroy {
     return this.allSation.find((s) => s.id === this.stationId);
   }
 
-  async onStartConnection() {
+  subscribeToRealtimeData() {
     this.loadingItems.add('summary');
-    try {
-      await this.realTime.startConnection();
-
-      if (this.subscription) {
-        this.subscription.unsubscribe();
-      }
-
-      this.subscription = this.realTime.getStationDetails().subscribe({
-        next: (data: any) => {
+    this.subscription = this.realTime.getStationDetails().subscribe({
+      next: (data: any) => {
+        if (data) {
           console.log('Received station data:', data);
           this.stationDetailsData = data;
           this.loadingItems.delete('summary');
-          this.connectionReady.emit();
           this.cdr.detectChanges();
-        },
-        error: (err: any) => {
-          console.error('Error receiving station data:', err);
-          this.loadingItems.delete('summary');
-        },
-      });
-
-      await this.realTime.joinStation(this.stationId);
-    } catch (error) {
-      console.error('Error starting connection:', error);
-      this.loadingItems.delete('summary');
-    }
+        }
+      },
+      error: (err: any) => {
+        console.error('Error receiving station data:', err);
+        this.loadingItems.delete('summary');
+      },
+    });
   }
 
-  async onStartConnectionAlarms() {
+  subscribeToAlarms() {
     this.loadingItems.add('alarms');
 
     // Fetch historical alarms first
@@ -259,31 +247,22 @@ export class OverView implements OnInit, OnDestroy {
       },
     });
 
-    try {
-      await this.realtimeAlarmDetails.startConnection();
-
-      if (this.alarmSubscription) {
-        this.alarmSubscription.unsubscribe();
-      }
-
-      this.alarmSubscription = this.realtimeAlarmDetails.getStationDetails().subscribe({
-        next: (data: any) => {
+    // Subscribe to realtime alarms
+    this.alarmSubscription = this.realtimeAlarmDetails.getStationDetails().subscribe({
+      next: (data: any) => {
+        if (data) {
           console.log('Received station Alarm data:', data);
           if (data.className) {
             data.className = data.className.trim();
           }
           this.stationDetailsDataAlarm.unshift(data);
           this.cdr.detectChanges();
-        },
-        error: (err: any) => {
-          console.error('Error receiving alarm data:', err);
-        },
-      });
-
-      await this.realtimeAlarmDetails.joinStation(this.stationId);
-    } catch (error) {
-      console.error('Error starting alarms connection:', error);
-    }
+        }
+      },
+      error: (err: any) => {
+        console.error('Error receiving alarm data:', err);
+      },
+    });
   }
 
   onGetComproser() {
@@ -389,7 +368,6 @@ export class OverView implements OnInit, OnDestroy {
     if (this.alarmSubscription) {
       this.alarmSubscription.unsubscribe();
     }
-    this.realTime.stopConnection();
-    this.realtimeAlarmDetails.stopConnection();
+    // Connections are managed by the parent or global service now
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import * as signalR from '@microsoft/signalr';
 import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
@@ -10,17 +10,31 @@ import { environment } from '../../../../env/environment';
 export class AlarmsStationDetails {
   private http = inject(HttpClient);
   private hubConnection!: signalR.HubConnection;
-  startConnection(): Promise<void> {
+  private alarmsSubject = new BehaviorSubject<any>(null);
+  public alarms$ = this.alarmsSubject.asObservable();
+  private connectionStarted = false;
+
+  async startConnection(): Promise<void> {
+    if (this.connectionStarted) return;
+    this.connectionStarted = true;
+
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl('http://10.11.140.37/Taqa_2026_RealTime/hubs/stationAlarms')
       .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
-    return this.hubConnection
-      .start()
-      .then(() => console.log('SignalR Connected'))
-      .catch((err) => console.log('Error while starting connection: ' + err));
+    this.hubConnection.on('ReceiveAlarm', (data) => {
+      this.alarmsSubject.next(data);
+    });
+
+    try {
+      await this.hubConnection.start();
+      console.log('SignalR Alarms Connected');
+    } catch (err) {
+      console.log('Error while starting Alarms connection: ' + err);
+      this.connectionStarted = false;
+    }
   }
 
   joinStation(stationId: number): Promise<void> {
@@ -35,20 +49,7 @@ export class AlarmsStationDetails {
   }
 
   getStationDetails(): Observable<any> {
-    return new Observable((subscriber) => {
-      if (!this.hubConnection) {
-        subscriber.error('No active connection');
-        return;
-      }
-
-      this.hubConnection.on('ReceiveAlarm', (data) => {
-        subscriber.next(data);
-      });
-
-      return () => {
-        this.hubConnection.off('ReceiveAlarm');
-      };
-    });
+    return this.alarms$;
   }
 
   stopConnection() {
