@@ -29,7 +29,12 @@ import { CommonModule, Location } from '@angular/common';
 })
 export class StationDetatils implements OnInit {
   stationId!: number;
-  allStationDetails!: IStationDetails;
+  allStationDetails: any;
+  // Sequential warming states
+  isOverViewReady = false;
+  isCompressorsReady = false;
+  isDispensersReady = false;
+  isAlarmsReady = false;
   activeTab: string = '0';
 
   constructor(
@@ -62,8 +67,28 @@ export class StationDetatils implements OnInit {
       },
     });
   }
-  onTabChange(event: any) {
-    this.activeTab = event;
-    this.cdr.detectChanges();
+  setTab(tab: string) {
+    this.activeTab = tab;
+  }
+
+  // Sequential Initialization Handlers
+  onOverViewReady() {
+    this.isOverViewReady = true;
+    console.log('--- Sequential Warming: OverView Ready -> Starting Compressors ---');
+  }
+
+  onCompressorsReady() {
+    this.isCompressorsReady = true;
+    console.log('--- Sequential Warming: Compressors Ready -> Starting Dispensers ---');
+  }
+
+  onDispensersReady() {
+    this.isDispensersReady = true;
+    console.log('--- Sequential Warming: Dispensers Ready -> Starting Alarms ---');
+  }
+
+  onAlarmsReady() {
+    this.isAlarmsReady = true;
+    console.log('--- Sequential Warming: All Signals Ready ---');
   }
 }

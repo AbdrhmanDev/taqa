@@ -1,7 +1,7 @@
 import { dashboardService } from './../../../dashboard/service/dashboard';
 import { Component, OnDestroy } from '@angular/core';
 import { RealtimeAlarmsDashboard } from '../../../dashboard/service/realtime-alarms-dashboard';
-import { ChangeDetectorRef, OnInit, Input } from '@angular/core';
+import { ChangeDetectorRef, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 
@@ -28,6 +28,8 @@ export class StationAlarm implements OnInit {
   stationDetailsDataAlarm: any[] = [];
   private subscription!: Subscription;
   @Input() stationId!: number;
+  @Input() startSignalR: boolean = false;
+  @Output() connectionReady = new EventEmitter<void>();
 
   // Final list shown in the UI (after tab filter + sort)
   displayedAlarms: any[] = [];
@@ -61,11 +63,14 @@ export class StationAlarm implements OnInit {
     private realtimeAlarmDetails: AlarmsStationDetails,
     private activateRoute: ActivatedRoute,
   ) {}
-  ngOnInit(): void {
-    if (this.stationId) {
-      this.getAlarmsHistory();
-      this.onStartConnectionAlarms();
-      // this.onGetAllStation(); // Removed redundant call
+  ngOnInit(): void {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['startSignalR']?.currentValue === true && !this.subscription) {
+      if (this.stationId) {
+        this.getAlarmsHistory();
+        this.onStartConnectionAlarms();
+      }
     }
   }
 
@@ -100,6 +105,7 @@ export class StationAlarm implements OnInit {
 
           this.stationDetailsDataAlarm.unshift(data);
           this.mergeAlarms();
+          this.connectionReady.emit();
           this.cdr.detectChanges();
         },
         error: (err) => console.error(err),

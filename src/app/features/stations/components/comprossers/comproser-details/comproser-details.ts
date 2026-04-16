@@ -7,6 +7,8 @@ import {
   ViewChild,
   AfterViewInit,
   SimpleChanges,
+  EventEmitter,
+  Output,
   Input,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -82,6 +84,8 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
   station: any;
   private subscription!: Subscription;
   @Input() stationId!: number;
+  @Input() startSignalR: boolean = false;
+  @Output() connectionReady = new EventEmitter<void>();
   compressorDetailsData!: any;
   ComproserDataCard!: any;
   isLoadingCompressor: boolean = false;
@@ -90,6 +94,7 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
   isLoadingPressureHistory: boolean = false;
   isLoadingTemperatureHistory: boolean = false;
   isLoadingMachines: boolean = false;
+  allComproser: any[] = [];
 
   machines: any[] = [];
   availableAssets: any[] = [];
@@ -134,12 +139,18 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
 
   ngOnInit(): void {
     this.initCharts();
-    if (this.stationId) {
+    this.onGetTimeLineChart();
+    this.onGetCompressorData();
+    this.onGetMachines();
+    this.onGetAvailableAssets();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['startSignalR']?.currentValue === true && !this.subscription) {
       this.onStartConnection();
-      this.onGetTimeLineChart();
-      this.onGetCompressorData();
-      this.onGetMachines();
-      this.onGetAvailableAssets();
+    }
+    if (changes['station']) {
+      this.cdr.detectChanges();
     }
   }
 
@@ -738,11 +749,6 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
     return -120 + index * 30; // 240 degrees / 8 segments = 30 degrees per tick
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['station']) {
-      this.cdr.detectChanges();
-    }
-  }
 
   async onStartConnection() {
     try {
@@ -751,8 +757,10 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
         next: (data) => {
           this.compressorDetailsData = data[0];
           this.isLoadingRealtime = false;
+          this.allComproser = data;
+          console.log('Received compressor data:', data);
+          this.connectionReady.emit();
           this.cdr.detectChanges();
-          console.log('Received compressor data:', this.compressorDetailsData);
         },
         error: (err) => {
           console.error(err);

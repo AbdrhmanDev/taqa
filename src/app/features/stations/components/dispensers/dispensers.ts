@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { TabsModule } from 'primeng/tabs';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -29,6 +29,8 @@ import { DispenserHistory } from './dispenser-history/dispenser-history';
 })
 export class Dispensers implements OnInit {
   @Input() stationId!: number;
+  @Input() startSignalR: boolean = false;
+  @Output() connectionReady = new EventEmitter<void>();
   @Input() stations: any;
   allDispensers: any[] = [];
   status: string = '';
@@ -56,8 +58,12 @@ export class Dispensers implements OnInit {
 
     private cdr: ChangeDetectorRef,
   ) {}
-  ngOnInit(): void {
-    this.onStartConnection();
+  ngOnInit(): void {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['startSignalR']?.currentValue === true && !this.subscription) {
+      this.onStartConnection();
+    }
   }
   allStatus: any[] = [
     { label: 'Online', value: 'Online' },
@@ -93,6 +99,7 @@ export class Dispensers implements OnInit {
             this.filteredDispensers = data;
           }
           this.isLoading = false;
+          this.connectionReady.emit();
           this.cdr.detectChanges();
         },
         error: (err) => console.error(err),

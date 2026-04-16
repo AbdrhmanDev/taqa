@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnDestroy, OnInit, Input } from '@angular/core';
+import { Component, ViewChild, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -83,6 +83,7 @@ export class OverView implements OnInit, OnDestroy {
   toDate!: string;
   dateRange: Date[] = [];
   private loadingItems = new Set<string>();
+  @Output() connectionReady = new EventEmitter<void>();
 
   timeOptions = [
     { label: 'Current', value: 0 },
@@ -224,6 +225,7 @@ export class OverView implements OnInit, OnDestroy {
           console.log('Received station data:', data);
           this.stationDetailsData = data;
           this.loadingItems.delete('summary');
+          this.connectionReady.emit();
           this.cdr.detectChanges();
         },
         error: (err: any) => {
