@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 @Injectable({
@@ -6,28 +6,34 @@ import * as signalR from '@microsoft/signalr';
 })
 export class TechOpsRealtime {
   private hubConnection!: signalR.HubConnection;
+  private techOpsDataSubject = new BehaviorSubject<any[]>([]);
+  public techOpsData$ = this.techOpsDataSubject.asObservable();
+  private connectionStarted = false;
 
-  startConnection(): Promise<void> {
+  async startConnection(): Promise<void> {
+    if (this.connectionStarted) return;
+    this.connectionStarted = true;
+
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl('http://10.11.140.37/Taqa_2026_RealTime/hubs/station')
       .withAutomaticReconnect()
       .build();
 
-    return this.hubConnection
-      .start()
-      .then(() => console.log('SignalR Connected'))
-      .catch((err) => console.log('Error while starting connection: ' + err));
+    try {
+      await this.hubConnection.start();
+      console.log('SignalR TechOps Connected');
+      
+      this.hubConnection.on('ReceiveStation', (data) => {
+        this.techOpsDataSubject.next(data);
+      });
+    } catch (err) {
+      console.log('Error while starting connection: ' + err);
+      this.connectionStarted = false;
+    }
   }
 
   getTechOps(): Observable<any[]> {
-    return new Observable((subscriber) => {
-      this.hubConnection.on('ReceiveStation', (data) => {
-        subscriber.next(data);
-      });
-      return () => {
-        this.hubConnection.off('ReceiveStation');
-      };
-    });
+    return this.techOpsData$;
   }
 
   stopConnection() {

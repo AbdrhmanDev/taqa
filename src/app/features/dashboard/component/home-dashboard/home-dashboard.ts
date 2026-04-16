@@ -101,9 +101,17 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
     this.setLoading('highest');
     this.setLoading('alarms');
     this.setLoading('map');
+
+    // Subscribe to shared data
     this.getSummaryData();
     this.getGasData();
     this.getRevenueData();
+
+    // Trigger API calls
+    this.fetchSummary();
+    this.fetchGasTrend();
+    this.fetchRevenueTrend();
+
     this.onStartConnection();
     this.hourlyRevenufChart();
     this.getVehiclesChart();
@@ -139,7 +147,7 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
 
   getHourlyGasChart() {
     this.dashboardService.hourlyGasSold().subscribe({
-      next: (res) => {
+      next: (res: any) => {
         this.gasSoldCahrt = res;
         const gasValues = res.map((item: any) => item.totalGasSold);
         const timeLabels = res.map((item: any) => {
@@ -163,7 +171,7 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
         this.clearLoading('hourlyGas');
         this.cdr.detectChanges();
       },
-      error: (err) => {
+      error: (err: any) => {
         console.log('Error fetching hourly gas sold:', err);
         this.clearLoading('hourlyGas');
       },
@@ -172,7 +180,7 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
 
   hourlyRevenufChart() {
     this.dashboardService.hourlyRevenue().subscribe({
-      next: (res) => {
+      next: (res: any) => {
         this.revenueChart = res;
         const revenue = res.map((item: any) => item.totalRevenue);
         const timeLabels = res.map((item: any) => {
@@ -196,7 +204,7 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
         this.clearLoading('hourlyRevenue');
         this.cdr.detectChanges();
       },
-      error: (err) => {
+      error: (err: any) => {
         console.log(err);
         this.clearLoading('hourlyRevenue');
       },
@@ -205,7 +213,7 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
 
   getVehiclesChart() {
     this.dashboardService.hourlyVehicles().subscribe({
-      next: (res) => {
+      next: (res: any) => {
         this.gasVehiclesChart = res;
         const gasVehicles = res.map((item: any) => item.totalVehiclesCharged);
         const timeLabels = res.map((item: any) => {
@@ -229,7 +237,7 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
         this.clearLoading('vehicles');
         this.cdr.detectChanges();
       },
-      error: (err) => {
+      error: (err: any) => {
         console.log(err);
         this.clearLoading('vehicles');
       },
@@ -276,6 +284,42 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
       },
       error: (error) => {
         console.log(error);
+        this.clearLoading('revenue');
+      },
+    });
+  }
+
+  fetchSummary() {
+    this.dashboardService.dashboardSummary(0).subscribe({
+      next: (data) => {
+        this.sharedData.setDashboardSummary(data);
+      },
+      error: (err) => {
+        console.error('Error fetching dashboard summary:', err);
+        this.clearLoading('summary');
+      },
+    });
+  }
+
+  fetchGasTrend() {
+    this.dashboardService.dashboardGas(0).subscribe({
+      next: (data) => {
+        this.sharedData.setDashboardGas(data);
+      },
+      error: (err) => {
+        console.error('Error fetching gas volume trend:', err);
+        this.clearLoading('gas');
+      },
+    });
+  }
+
+  fetchRevenueTrend() {
+    this.dashboardService.dashboardRevenue(0).subscribe({
+      next: (data) => {
+        this.sharedData.setDashboardRevenue(data);
+      },
+      error: (err) => {
+        console.error('Error fetching revenue trend:', err);
         this.clearLoading('revenue');
       },
     });

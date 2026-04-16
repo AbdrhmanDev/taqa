@@ -18,6 +18,8 @@ import {
 } from 'ng-apexcharts';
 
 import * as Highcharts from 'highcharts';
+import Drilldown from 'highcharts/modules/drilldown';
+Drilldown(Highcharts);
 
 @Component({
   selector: 'app-chart-dashboard',
@@ -57,21 +59,21 @@ export class ChartDashboard implements OnInit {
 
   getGasData() {
     this.sharedData.dashboardGas$.subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.dashboardGasData = data;
         this.updateGasChart();
       },
-      error: (error) => console.log(error),
+      error: (error: any) => console.log(error),
     });
   }
 
   getRevenueData() {
     this.sharedData.dashboardRevenue$.subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.dashboardRevenueData = data;
         this.updateRevenueChart();
       },
-      error: (error) => console.log(error),
+      error: (error: any) => console.log(error),
     });
   }
 

@@ -79,21 +79,26 @@ export class TechOps implements OnInit {
     this.selectedStationId = station.stationId;
     this.isPressureDialogOpen = true;
   }
-  async onStartConection() {
-    await this._TechOpsRealtime.startConnection();
+  onStartConection() {
+    // We no longer await as the connection is managed by the service globally
+    this._TechOpsRealtime.startConnection();
 
     this.subscription = this._TechOpsRealtime.getTechOps().subscribe({
       next: (data) => {
-        this.techOpsData = data;
-        console.log('Received TechOps data:', data);
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        if (data && data.length > 0) {
+          this.techOpsData = data;
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        }
       },
       error: (err) => console.error(err),
     });
   }
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-    this._TechOpsRealtime.stopConnection();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+    // We DO NOT stop the connection here anymore because other dashboards might need it 
+    // and we want it to persist for the next time we visit this page.
   }
 }
