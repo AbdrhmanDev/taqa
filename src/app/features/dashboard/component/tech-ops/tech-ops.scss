@@ -1,0 +1,63 @@
+:host {
+  display: block;
+}
+
+/* Intelligence Bar Styles */
+.intel-bar {
+  background: white;
+  margin: 1.5rem 1rem 0.5rem 1rem;
+  padding: 1.25rem 2rem;
+  border-radius: 1.5rem;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+
+  .intel-grid {
+    display: flex;
+    gap: 3rem;
+  }
+
+  .intel-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .icon-box {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f1f5f9;
+      color: #64748b;
+      
+      &.accent-blue { background: #eff6ff; color: #3b82f6; }
+      &.accent-green { background: #f0fdf4; color: #22c55e; }
+      &.accent-red { background: #fef2f2; color: #ef4444; }
+      &.accent-amber { background: #fffbeb; color: #f59e0b; }
+    }
+
+    .meta {
+      display: flex;
+      flex-direction: column;
+      .val { font-size: 1.125rem; font-weight: 800; color: #1e293b; line-height: 1; }
+      .lbl { font-size: 0.65rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .intel-bar {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+    .intel-grid {
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+  }
+}
