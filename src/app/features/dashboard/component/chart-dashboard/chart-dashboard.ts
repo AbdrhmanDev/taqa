@@ -92,13 +92,13 @@ export class ChartDashboard implements OnInit {
     };
     this.yaxis = {
       labels: {
-        formatter: (val: number) => val?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+        formatter: (val: number) => val?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
       },
       title: { text: 'Revenue' }
     };
     this.dataLabels = {
       enabled: true,
-      formatter: (val: number) => val?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      formatter: (val: number) => val?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     };
     this.colors = ['#085D3A'];
     this.fill = {

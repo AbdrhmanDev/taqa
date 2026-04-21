@@ -42,8 +42,8 @@ export type chartGas = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   xaxis: ApexXAxis;
-  yaxis?: ApexYAxis;
-  tooltip?: ApexTooltip;
+  yaxis: ApexYAxis;
+  tooltip: ApexTooltip;
   dataLabels: ApexDataLabels;
   grid: ApexGrid;
   stroke: ApexStroke;
@@ -172,12 +172,12 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
           xaxis: { categories: timeLabels },
           yaxis: {
             labels: {
-              formatter: (val: number) => val?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+              formatter: (val: number) => val?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
             }
           },
           tooltip: {
             y: {
-              formatter: (val: number) => val?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+              formatter: (val: number) => val?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
             }
           },
           colors: ['#B42318'],
@@ -215,12 +215,12 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
           xaxis: { categories: timeLabels },
           yaxis: {
             labels: {
-              formatter: (val: number) => val?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+              formatter: (val: number) => val?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
             }
           },
           tooltip: {
             y: {
-              formatter: (val: number) => val?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+              formatter: (val: number) => val?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
             }
           },
           colors: ['#29B705'],

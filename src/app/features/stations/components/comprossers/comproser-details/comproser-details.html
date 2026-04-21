@@ -168,23 +168,13 @@
                 <stop offset="100%" style="stop-color:#DC2626;stop-opacity:1" />
               </linearGradient>
             </defs>
-            <!-- Background arc -->
-            <path
-              d="M 28 110 A 60 60 0 1 1 132 110"
-              fill="none"
-              stroke="#EEEEEE"
-              stroke-width="14"
-              stroke-linecap="round"
-            />
-
-            <!-- Gradient background arc (faded) -->
+            <!-- Gradient background arc -->
             <path
               d="M 28 110 A 60 60 0 1 1 132 110"
               fill="none"
               [attr.stroke]="'url(#gaugeGradient' + i + ')'"
               stroke-width="14"
               stroke-linecap="round"
-              stroke-opacity="0.25"
             />
 
             <!-- Graduation Ticks -->
@@ -193,14 +183,7 @@
               stroke="#9CA3AF" stroke-width="2"
               [attr.transform]="'rotate(' + getTickRotation(tick) + ', 80, 80)'" />
 
-            <!-- Value arc -->
-            <path
-              [attr.d]="getArcPath(stage.value)"
-              fill="none"
-              [attr.stroke]="getColor(stage.value)"
-              stroke-width="14"
-              stroke-linecap="round"
-            />
+
 
             <!-- Needle -->
             <line
@@ -208,7 +191,7 @@
               y1="80"
               x2="80"
               y2="28"
-              [attr.stroke]="getColor(stage.value)"
+              stroke="#1e293b"
               stroke-width="3"
               stroke-linecap="round"
               [attr.transform]="'rotate(' + getNeedleRotation(stage.value) + ', 80, 80)'"

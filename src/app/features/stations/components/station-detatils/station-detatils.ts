@@ -55,25 +55,29 @@ export class StationDetatils implements OnInit {
   }
 
   async startAllConnections() {
-    console.log(`🚀 Starting parallel connections for station ${this.stationId}`);
-    
-    // Start all connections in parallel
-    await Promise.all([
-      this.realtimeService.startConnection(),
-      this.realtimeService.startConnectionDispenser(),
-      this.realtimeService.startConnectionCompressor(),
-      this.alarmsService.startConnection()
-    ]);
+    console.log(`🚀 Starting sequential connections for station ${this.stationId}`);
 
-    // Join all groups in parallel
-    await Promise.all([
-      this.realtimeService.joinStation(this.stationId),
-      this.realtimeService.joinDispenser(this.stationId),
-      this.realtimeService.joinCompressor(this.stationId),
-      this.alarmsService.joinStation(this.stationId)
-    ]);
-    
-    console.log('✅ All background connections established and groups joined');
+    try {
+      // 1. Station KPIs
+      await this.realtimeService.startConnection();
+      await this.realtimeService.joinStation(this.stationId);
+
+      // 2. Dispenser
+      await this.realtimeService.startConnectionDispenser();
+      await this.realtimeService.joinDispenser(this.stationId);
+
+      // 3. Compressor
+      await this.realtimeService.startConnectionCompressor();
+      await this.realtimeService.joinCompressor(this.stationId);
+
+      // 4. Alarms
+      await this.alarmsService.startConnection();
+      await this.alarmsService.joinStation(this.stationId);
+
+      console.log('✅ All connections established successfully');
+    } catch (error) {
+      console.error('❌ SignalR initialization failed:', error);
+    }
   }
   onGetStationDetails() {
     this.stationDetails.getStationById(this.stationId).subscribe({
@@ -90,7 +94,7 @@ export class StationDetatils implements OnInit {
   }
   setTab(tab: string) {
     this.activeTab = tab;
-    
+
     // Trigger window resize after a short delay to force charts inside hidden tabs to re-render
     setTimeout(() => {
       window.dispatchEvent(new Event('resize'));
