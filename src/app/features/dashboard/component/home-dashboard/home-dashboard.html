@@ -13,7 +13,7 @@
       <h5 class="text-sm font-medium text-gray-500">Total Revenue</h5>
     </div>
     <div class="flex items-baseline gap-2">
-      <p class="text-2xl font-bold" *ngIf="!isPartLoading('summary')">{{dashboardData?.totalRevenue?.value | number:'1.0-0'}}</p>
+      <p class="text-2xl font-bold" *ngIf="!isPartLoading('summary')">{{dashboardData?.totalRevenue?.value | number:'1.2-2'}}</p>
       <p class="text-sm text-gray-400" *ngIf="!isPartLoading('summary')">EGP</p>
       <p-skeleton width="60%" height="2rem" *ngIf="isPartLoading('summary')"></p-skeleton>
     </div>
@@ -48,7 +48,7 @@
       <h5 class="text-sm font-medium text-gray-500">Gas Volume Sold</h5>
     </div>
     <div class="flex items-baseline gap-2">
-      <p class="text-2xl font-bold" *ngIf="!isPartLoading('gas')">{{dashboardData?.gasVolumeSold?.value | number:'1.0-0'}}</p>
+      <p class="text-2xl font-bold" *ngIf="!isPartLoading('gas')">{{dashboardData?.gasVolumeSold?.value | number:'1.2-2'}}</p>
       <p class="text-sm text-gray-400" *ngIf="!isPartLoading('gas')">L</p>
       <p-skeleton width="60%" height="2rem" *ngIf="isPartLoading('gas')"></p-skeleton>
     </div>
@@ -80,7 +80,7 @@
       <h5 class="text-sm font-medium text-gray-500">Vehicles Charged</h5>
     </div>
     <div class="flex items-baseline gap-2">
-      <p class="text-2xl font-bold">{{dashboardData?.vehiclesCharged?.value | number:'1.0-0'}}</p>
+      <p class="text-2xl font-bold">{{dashboardData?.vehiclesCharged?.value | number:'1.2-2'}}</p>
       <span class="text-sm text-gray-400">Cars</span>
     </div>
   </div>
@@ -99,7 +99,7 @@
       <h5 class="text-sm font-medium text-gray-500">Active Compressors</h5>
     </div>
     <div class="flex items-baseline gap-2">
-      <p class="text-2xl font-bold" *ngIf="!isPartLoading('summary')">{{dashboardData?.activeCompressors?.value | number:'1.0-0'}}</p>
+      <p class="text-2xl font-bold" *ngIf="!isPartLoading('summary')">{{dashboardData?.activeCompressors?.value | number:'1.2-2'}}</p>
       <p class="text-sm text-gray-400" *ngIf="!isPartLoading('summary')">Compressors</p>
       <p-skeleton width="60%" height="2rem" *ngIf="isPartLoading('summary')"></p-skeleton>
     </div>
@@ -126,7 +126,7 @@
       <h5 class="text-sm font-medium text-gray-500">Active Stations</h5>
     </div>
     <div class="flex items-baseline gap-2">
-      <p class="text-2xl font-bold" *ngIf="!isPartLoading('summary')">{{dashboardData?.activeStations?.value | number:'1.0-0'}}</p>
+      <p class="text-2xl font-bold" *ngIf="!isPartLoading('summary')">{{dashboardData?.activeStations?.value | number:'1.2-2'}}</p>
       <p class="text-sm text-gray-400" *ngIf="!isPartLoading('summary')">Stations</p>
       <p-skeleton width="60%" height="2rem" *ngIf="isPartLoading('summary')"></p-skeleton>
     </div>
@@ -248,7 +248,7 @@
           </div>
         </div>
         <span class="text-sm text-gray-500 w-24 text-right ml-3">
-          {{ station.averageDailyGasVolume }} L/day
+          {{ station.averageDailyGasVolume | number:'1.2-2' }} L/day
         </span>
       </div>
     </div>
@@ -313,11 +313,11 @@
         <td class="px-4 py-4">
           <div class="font-medium text-gray-800">{{ stationUptime.stationName }}</div>
         </td>
-        <td class="text-gray-600">{{ stationUptime.hoursRunning }}</td>
-        <td>{{ stationUptime.hoursDown }}</td>
+        <td class="text-gray-600">{{ stationUptime.hoursRunning | number:'1.2-2' }}</td>
+        <td>{{ stationUptime.hoursDown | number:'1.2-2' }}</td>
 
-        <td class="text-gray-500 text-sm">{{ stationUptime.uptimePercentage }}</td>
-        <td class="text-gray-500 text-sm">{{ stationUptime.totalRevenue }}</td>
+        <td class="text-gray-500 text-sm">{{ stationUptime.uptimePercentage | number:'1.2-2' }}</td>
+        <td class="text-gray-500 text-sm">{{ stationUptime.totalRevenue | number:'1.2-2' }}</td>
         <!-- <td>
         <button
           class="cursor-pointer w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-500 transition">

@@ -28,6 +28,8 @@ import {
   ApexAxisChartSeries,
   ApexChart,
   ApexXAxis,
+  ApexYAxis,
+  ApexTooltip,
   ApexDataLabels,
   ApexTitleSubtitle,
   ApexStroke,
@@ -40,6 +42,8 @@ export type chartGas = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   xaxis: ApexXAxis;
+  yaxis?: ApexYAxis;
+  tooltip?: ApexTooltip;
   dataLabels: ApexDataLabels;
   grid: ApexGrid;
   stroke: ApexStroke;
@@ -166,6 +170,16 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
           },
           grid: { row: { colors: ['#ffffff', 'transparent'], opacity: 0.5 } },
           xaxis: { categories: timeLabels },
+          yaxis: {
+            labels: {
+              formatter: (val: number) => val?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            }
+          },
+          tooltip: {
+            y: {
+              formatter: (val: number) => val?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            }
+          },
           colors: ['#B42318'],
         };
         this.clearLoading('hourlyGas');
@@ -199,6 +213,16 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
           },
           grid: { row: { colors: ['#ffffff', 'transparent'], opacity: 0.5 } },
           xaxis: { categories: timeLabels },
+          yaxis: {
+            labels: {
+              formatter: (val: number) => val?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            }
+          },
+          tooltip: {
+            y: {
+              formatter: (val: number) => val?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            }
+          },
           colors: ['#29B705'],
         };
         this.clearLoading('hourlyRevenue');
@@ -232,6 +256,16 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
           },
           grid: { row: { colors: ['#ffffff', 'transparent'], opacity: 0.5 } },
           xaxis: { categories: timeLabels },
+          yaxis: {
+            labels: {
+              formatter: (val: number) => val?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            }
+          },
+          tooltip: {
+            y: {
+              formatter: (val: number) => val?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            }
+          },
           colors: ['#3673E8'],
         };
         this.clearLoading('vehicles');

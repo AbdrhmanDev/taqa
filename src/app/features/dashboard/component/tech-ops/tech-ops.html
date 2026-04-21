@@ -45,7 +45,7 @@
           [style.width.%]="station.availability">
         </div>
       </div>
-      <span class="text-xs text-gray-700 font-semibold whitespace-nowrap">{{ station.availability }}%</span>
+      <span class="text-xs text-gray-700 font-semibold whitespace-nowrap">{{ station.availability | number:'1.2-2' }}%</span>
     </div>
 
     <!-- Icon Buttons -->
@@ -104,7 +104,7 @@
         {{ station.dispenserActivity != null ? 'No of active dispensers' : 'No Active Dispenser' }}
       </span>
       <span *ngIf="station.dispenserActivity != null" class="font-bold text-gray-800">
-        {{ station.dispenserActivity }}
+        {{ station.dispenserActivity | number:'1.2-2' }}
       </span>
     </div>
 

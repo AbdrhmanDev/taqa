@@ -90,14 +90,22 @@ export class ChartDashboard implements OnInit {
       type: 'category',
       categories: this.dashboardRevenueData.revenueByZone.map((i: any) => i.zoneName),
     };
-    this.yaxis = { title: { text: 'Revenue' } };
-    this.dataLabels = { enabled: true };
+    this.yaxis = {
+      labels: {
+        formatter: (val: number) => val?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      },
+      title: { text: 'Revenue' }
+    };
+    this.dataLabels = {
+      enabled: true,
+      formatter: (val: number) => val?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    };
     this.colors = ['#085D3A'];
     this.fill = {
       type: 'gradient',
       gradient: { shadeIntensity: 1, opacityFrom: 0.6, opacityTo: 0.1, stops: [0, 90, 100] },
     };
-    this.tooltip = { y: { formatter: (val: number) => val.toString() } };
+    this.tooltip = { y: { formatter: (val: number) => val?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) } };
     this.markers = { size: 4 };
     setTimeout(() => this.cd.detectChanges(), 0);
   }
@@ -172,12 +180,27 @@ export class ChartDashboard implements OnInit {
       colors: ['#3538CD'],
       subtitle: { text: 'Zone → Compressor → Dispenser' },
       xAxis: { type: 'category' },
+      yAxis: {
+        labels: {
+          formatter: function (this: any) {
+            return Highcharts.numberFormat(this.value, 2, '.', ',');
+          },
+        },
+      },
+      tooltip: {
+        pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:,.2f}</b><br/>',
+      },
       series: [{ type: 'column', name: 'Zones', data: zoneSeries }],
       drilldown: {
         series: [...compressorDrilldown, ...dispenserDrilldown],
       },
       plotOptions: {
-        column: { dataLabels: { enabled: true } },
+        column: {
+          dataLabels: {
+            enabled: true,
+            format: '{point.y:,.2f}',
+          },
+        },
       },
       credits: { enabled: false },
     };

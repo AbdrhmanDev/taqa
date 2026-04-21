@@ -42,17 +42,17 @@
         <!-- Labels -->
         <text [attr.x]="polarToCartesian(80, 80, 75, -120).x" [attr.y]="polarToCartesian(80, 80, 75, -120).y"
           font-size="8" fill="#94a3b8" text-anchor="middle" font-weight="bold">
-          {{ minPressure }}
+          {{ minPressure | number:'1.2-2' }}
         </text>
         <text [attr.x]="polarToCartesian(80, 80, 75, 120).x" [attr.y]="polarToCartesian(80, 80, 75, 120).y" font-size="8"
           fill="#94a3b8" text-anchor="middle" font-weight="bold">
-          {{ maxPressure }}
+          {{ maxPressure | number:'1.2-2' }}
         </text>
       </svg>
 
 
       <p class="text-2xl font-bold -mt-2" [style.color]="getColor(sensor.value)">
-        {{ isInvalidValue(sensor.value) ? 'N/A' : sensor.value }}
+        {{ isInvalidValue(sensor.value) ? 'N/A' : (sensor.value | number:'1.2-2') }}
       </p>
       <p class="text-xs text-gray-400 mt-1">bar</p>
     </div>
@@ -89,7 +89,7 @@
 
 
       <p class="text-2xl font-bold" [style.color]="isInvalidValues(sensor.value) ? '#94a3b8' : getColors(sensor.value)">
-        {{ isInvalidValues(sensor.value) ? 'N/A' : sensor.value }}
+        {{ isInvalidValues(sensor.value) ? 'N/A' : (sensor.value | number:'1.2-2') }}
       </p>
       <p class="text-xs text-gray-400">°C</p>
     </div>
