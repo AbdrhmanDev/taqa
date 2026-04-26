@@ -1,6 +1,6 @@
 <div class="dispenser-dashboard">
   <!-- Metallic Header -->
-  <div class="dashboard-header-metallic">
+  <!-- <div class="dashboard-header-metallic">
     <div>
       <h1>STATION ARCHITECTURE</h1>
       <p>Terminal Telemetry & Structural Dynamics</p>
@@ -8,7 +8,7 @@
     <p-select [options]="allStatus" [(ngModel)]="selectedStatus" (change)="filterDispensers()" optionLabel="label"
       optionValue="value" placeholder="Network Channels" class="w-60 border-none bg-slate-50 text-xs">
     </p-select>
-  </div>
+  </div> -->
 
   <!-- Terminal Grid -->
   <div class="control-grid" *ngIf="!isLoading">
@@ -27,7 +27,7 @@
         <!-- CHANNEL A (Left) -->
         <div class="nozzle-panel side-a" [class.is-offline]="dispenser.left?.connectionStatus !== 'Online'">
           <div class="panel-title-bar">
-            <span class="side-tag">CHANNEL A</span>
+            <span class="side-tag">Left Nozzle</span>
             <div class="status-light" [ngClass]="{ 'online': dispenser.left?.connectionStatus === 'Online' }"></div>
           </div>
 
@@ -92,7 +92,7 @@
         <!-- CHANNEL B (Right) -->
         <div class="nozzle-panel side-b" [class.is-offline]="dispenser.right?.connectionStatus !== 'Online'">
           <div class="panel-title-bar">
-            <span class="side-tag">CHANNEL B</span>
+            <span class="side-tag">Right Nozzle</span>
             <div class="status-light" [ngClass]="{ 'online': dispenser.right?.connectionStatus === 'Online' }"></div>
           </div>
 

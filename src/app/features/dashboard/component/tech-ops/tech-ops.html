@@ -1,7 +1,9 @@
 <!-- Loading Spinner -->
 <div *ngIf="isLoading" class="m-3 flex justify-center items-center min-h-40">
   <div class="flex flex-col items-center gap-3">
-    <div class="w-10 h-10 border-4 border-gray-200 border-t-blue-900 rounded-full animate-spin"></div>
+    <div
+      class="w-10 h-10 border-4 border-gray-200 border-t-blue-900 rounded-full animate-spin"
+    ></div>
     <p class="text-gray-400 text-sm">Loading alarms...</p>
   </div>
 </div>
@@ -23,7 +25,21 @@
     <!-- Active Compressors -->
     <div class="intel-item">
       <div class="icon-box accent-green">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-4.97 0-9-4.03-9-9s4.03-9 9-9 9 4.03 9 9-4.03 9-9 9z"/><path d="M12 12V7"/><path d="m15 15-3-3"/></svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 21c-4.97 0-9-4.03-9-9s4.03-9 9-9 9 4.03 9 9-4.03 9-9 9z" />
+          <path d="M12 12V7" />
+          <path d="m15 15-3-3" />
+        </svg>
       </div>
       <div class="meta">
         <span class="val">{{ totalStationsCount }}</span>
@@ -34,7 +50,22 @@
     <!-- Active Dispensers -->
     <div class="intel-item">
       <div class="icon-box accent-amber">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18h8"/><path d="M3 22h18"/><path d="M9 12h3"/><path d="M17 22V8a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14"/></svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M6 18h8" />
+          <path d="M3 22h18" />
+          <path d="M9 12h3" />
+          <path d="M17 22V8a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14" />
+        </svg>
       </div>
       <div class="meta">
         <span class="val">{{ totalActiveDispensers }}</span>
@@ -45,7 +76,23 @@
     <!-- Alarms -->
     <div class="intel-item">
       <div class="icon-box accent-red">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+          />
+          <line x1="12" y1="9" x2="12" y2="13" />
+          <line x1="12" y1="17" x2="12.01" y2="17" />
+        </svg>
       </div>
       <div class="meta">
         <span class="val">{{ alarmStationsCount }}</span>
@@ -54,18 +101,22 @@
     </div>
   </div>
 
-  <div class="hidden lg:flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-xl border border-slate-100">
+  <div
+    class="hidden lg:flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-xl border border-slate-100"
+  >
     <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Global Telemetry Active</span>
+    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest"
+      >Global Telemetry Active</span
+    >
   </div>
 </div>
 
 <!-- TechOps Cards Grid -->
 <div *ngIf="!isLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 m-3 mt-4">
-
-  <div class="bg-[#F8F9F9] rounded-2xl border border-teal-400 p-4 shadow-sm space-y-4"
-    *ngFor="let station of techOpsData">
-
+  <div
+    class="bg-[#F8F9F9] rounded-2xl border border-teal-400 p-4 shadow-sm space-y-4"
+    *ngFor="let station of techOpsData"
+  >
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-2">
@@ -80,11 +131,15 @@
 
     <!-- Tags -->
     <div class="grid grid-cols-2 gap-2 text-[10px]">
-      <div class="bg-gray-100/80 rounded-lg px-2 py-1.5 text-gray-500 font-medium text-center border border-gray-100 truncate shadow-sm">
+      <div
+        class="bg-gray-100/80 rounded-lg px-2 py-1.5 text-gray-500 font-medium text-center border border-gray-100 truncate shadow-sm"
+      >
         {{ station.compManufacturer }}
       </div>
-      <div class="rounded-lg px-2 py-1.5 font-bold text-center border shadow-sm transition-all duration-300 flex items-center justify-center gap-1.5"
-        [ngClass]="getStatusInfo(station.state).color">
+      <div
+        class="rounded-lg px-2 py-1.5 font-bold text-center border shadow-sm transition-all duration-300 flex items-center justify-center gap-1.5"
+        [ngClass]="getStatusInfo(station.state).color"
+      >
         <span class="w-1.5 h-1.5 rounded-full" [ngClass]="getStatusInfo(station.state).dot"></span>
         # {{ station.state }}
       </div>
@@ -94,48 +149,75 @@
     <div class="flex items-center gap-3">
       <span class="text-sm text-gray-500 whitespace-nowrap">Beacon Availability</span>
       <div class="flex-1 bg-gray-200 rounded-full h-2">
-        <div class="h-2 rounded-full bg-gradient-to-r from-blue-500 to-green-500"
-          [style.width.%]="station.availabilityClean">
-        </div>
+        <div
+          class="h-2 rounded-full bg-gradient-to-r from-blue-500 to-green-500"
+          [style.width.%]="station.availabilityClean"
+        ></div>
       </div>
-      <span class="text-xs text-gray-700 font-semibold whitespace-nowrap">{{ station.availabilityClean | number:'1.2-2' }}%</span>
+      <span class="text-xs text-gray-700 font-semibold whitespace-nowrap"
+        >{{ station.availabilityClean | number : '1.2-2' }}%</span
+      >
     </div>
+    سفش
 
     <!-- Icon Buttons -->
     <div class="grid grid-cols-2 gap-2">
-
       <!-- Compressor -->
-      <div class="border border-gray-200 rounded-xl p-3 flex flex-col items-center gap-2 cursor-pointer bg-white"
-        (click)="openCompressorDialog(station)">
+      <div
+        class="border border-gray-200 rounded-xl p-3 flex flex-col items-center gap-2 cursor-pointer bg-white"
+        (click)="openCompressorDialog(station)"
+      >
         <div class="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center">
-          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
             <circle cx="12" cy="18" r="3" stroke="#2D31A6" stroke-width="1.5" />
             <path d="M12 15V10" stroke="#2D31A6" stroke-width="1.5" stroke-linecap="round" />
-            <path d="M22 13C22 7.47715 17.5228 3 12 3C6.47715 3 2 7.47715 2 13" stroke="#2D31A6" stroke-width="1.5"
-              stroke-linecap="round" />
+            <path
+              d="M22 13C22 7.47715 17.5228 3 12 3C6.47715 3 2 7.47715 2 13"
+              stroke="#2D31A6"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
           </svg>
         </div>
         <p class="text-xs text-gray-400">Compressor</p>
       </div>
 
       <!-- Dispenser -->
-      <div (click)="openDispenserDialog(station)"
-        class="border border-gray-200 rounded-xl p-3 flex flex-col items-center gap-2 cursor-pointer bg-white">
+      <div
+        (click)="openDispenserDialog(station)"
+        class="border border-gray-200 rounded-xl p-3 flex flex-col items-center gap-2 cursor-pointer bg-white"
+      >
         <div class="w-11 h-11 bg-red-100 rounded-xl flex items-center justify-center">
-          <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 23 23" fill="none">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="23"
+            height="23"
+            viewBox="0 0 23 23"
+            fill="none"
+          >
             <g clip-path="url(#clip0_14519_15807)">
               <path
                 d="M12.9769 19.3364C13.0153 19.593 13.1714 19.817 13.3989 19.9418C13.6263 20.0668 13.899 20.0784 14.1362 19.973L17.6463 18.4225C17.8202 18.3459 17.9067 18.1493 17.8459 17.9693L16.0845 12.7359C15.8026 11.9102 14.9623 11.4123 14.1027 11.5615L13.5522 11.6602C12.6095 11.8247 11.9725 12.7147 12.1211 13.6603L12.9769 19.3364ZM13.84 19.3014C13.8121 19.3145 13.7797 19.3132 13.753 19.2977C13.7253 19.2831 13.7063 19.2557 13.7024 19.2245L12.8443 13.5531C12.8267 13.431 12.8309 13.3067 12.8569 13.1861L13.4775 13.6764C13.7772 13.9101 14.0008 14.2276 14.1197 14.5888L15.4646 18.5858L13.84 19.3014ZM13.6801 12.3854L14.2304 12.2867C14.2895 12.2761 14.3495 12.2709 14.4097 12.2709C14.8516 12.2721 15.2444 12.5533 15.3879 12.9714L17.0434 17.889L16.1381 18.2886L14.815 14.3571C14.6511 13.8602 14.3433 13.4231 13.9307 13.1014L13.2579 12.5692C13.3829 12.4768 13.5272 12.414 13.6801 12.3854Z"
-                fill="#912018" />
+                fill="#912018"
+              />
               <path
                 d="M0.939991 3.48517L6.41998 5.09989C6.49407 5.12189 6.56294 5.15868 6.62224 5.20807L8.55513 6.81842L8.86675 7.07897L11.3921 20.2055C11.5198 20.8728 11.9448 21.4455 12.5467 21.7606C13.1486 22.0756 13.8614 22.0988 14.4825 21.8234L18.0037 20.2678C18.3467 20.6742 18.9127 20.813 19.4049 20.6114L21.2622 19.8496C21.8876 19.5932 22.1868 18.8786 21.9308 18.2531L18.5483 9.99645L18.7993 9.7065C19.2675 9.16423 19.2085 8.34545 18.6676 7.87575L14.7975 4.52267C14.5369 4.29706 14.1974 4.18434 13.8539 4.20921C13.5102 4.23407 13.1905 4.3945 12.965 4.65505L12.3391 5.37909L10.9324 4.20702H10.9302L8.32465 2.08766C8.1911 1.97881 8.03705 1.89784 7.87175 1.84945L1.9355 0.0998414C1.24808 -0.102082 0.526905 0.291014 0.324141 0.97826L0.0614052 1.87045C-0.0367008 2.20106 0.000928849 2.55703 0.165727 2.86008C0.330525 3.16297 0.609052 3.3879 0.939991 3.48517ZM12.6586 6.13319L13.5204 5.13651C13.6183 5.02328 13.7573 4.95357 13.9068 4.94265C14.0561 4.9319 14.2038 4.98095 14.317 5.07889L18.1872 8.43062C18.4223 8.63473 18.4479 8.99053 18.2444 9.22622L17.846 9.68701C17.7553 9.79167 17.7311 9.93849 17.7835 10.0665L21.2518 18.5295C21.3543 18.7796 21.2345 19.0655 20.9844 19.168L19.1264 19.9295C19.0061 19.9787 18.8712 19.9782 18.7513 19.928C18.6315 19.8778 18.5366 19.7819 18.4874 19.6616C18.4499 19.5698 18.377 19.4971 18.2849 19.46C18.193 19.4229 18.0901 19.4244 17.9993 19.4645L14.186 21.1493C13.7694 21.3334 13.2916 21.3174 12.8883 21.1061C12.4847 20.8948 12.1997 20.5111 12.1137 20.0637L9.56357 6.80885C9.54745 6.72569 9.5031 6.6506 9.43809 6.59634L9.32285 6.50025L10.7288 4.99271L12.1468 6.17368C12.3003 6.30135 12.5279 6.2827 12.6586 6.13185V6.13319ZM0.765282 2.07893L1.02735 1.18606C1.06951 1.04226 1.16728 0.921311 1.29882 0.849579C1.43035 0.778016 1.5849 0.761553 1.72854 0.804054L7.66109 2.55048C7.73299 2.57164 7.79985 2.60675 7.85781 2.65396L10.1609 4.52553L8.7584 6.03021L7.09194 4.64111C6.95587 4.52738 6.79796 4.44288 6.62779 4.39299L1.14695 2.77945C0.848101 2.69125 0.677423 2.37778 0.765282 2.07893Z"
-                fill="#912018" />
+                fill="#912018"
+              />
               <path
                 d="M10.5226 6.89022C10.4282 6.91441 10.3471 6.97505 10.2974 7.05888C10.2476 7.14287 10.2334 7.24316 10.2577 7.33757L10.4412 8.05623C10.4828 8.21851 10.629 8.33207 10.7965 8.33224C10.8272 8.33241 10.8578 8.32854 10.8875 8.32082C11.0839 8.27076 11.2025 8.07085 11.1524 7.87447L10.969 7.15564C10.945 7.06123 10.8845 6.98026 10.8008 6.93053C10.7172 6.88081 10.617 6.86619 10.5226 6.89022Z"
-                fill="#912018" />
+                fill="#912018"
+              />
               <path
                 d="M10.836 9.25924L11.3561 11.4611C11.3952 11.6265 11.543 11.7436 11.713 11.7436C11.7416 11.7438 11.7698 11.7404 11.7975 11.7337C11.9944 11.6874 12.1167 11.4903 12.0709 11.2933L11.5509 9.09141C11.5207 8.96374 11.4248 8.86177 11.2991 8.82414C11.1735 8.78635 11.0372 8.8186 10.9416 8.90847C10.8462 8.99852 10.8059 9.13257 10.836 9.26024V9.25924Z"
-                fill="#912018" />
+                fill="#912018"
+              />
             </g>
             <defs>
               <clipPath id="clip0_14519_15807">
@@ -146,13 +228,20 @@
         </div>
         <p class="text-xs text-gray-400">Dispenser</p>
       </div>
-
     </div>
     <!-- Active Dispensers -->
-    <div class="rounded-xl px-3 py-2 flex justify-between items-center" [ngClass]="station.dispenserActivityClean > 0
-        ? 'border border-yellow-400 bg-yellow-50'
-        : 'border border-gray-300 bg-gray-100'">
-      <span class="text-sm" [ngClass]="station.dispenserActivityClean > 0 ? 'text-gray-700' : 'text-gray-500'">
+    <div
+      class="rounded-xl px-3 py-2 flex justify-between items-center"
+      [ngClass]="
+        station.dispenserActivityClean > 0
+          ? 'border border-yellow-400 bg-yellow-50'
+          : 'border border-gray-300 bg-gray-100'
+      "
+    >
+      <span
+        class="text-sm"
+        [ngClass]="station.dispenserActivityClean > 0 ? 'text-gray-700' : 'text-gray-500'"
+      >
         Active Dispensers
       </span>
       <span class="font-bold text-gray-800">
@@ -161,19 +250,25 @@
     </div>
 
     <!-- Timestamp -->
-    <p class="text-[11px] text-gray-400 text-center">
-      Last update {{ station.lastUpdate }}
-    </p>
-
+    <p class="text-[11px] text-gray-400 text-center">Last update {{ station.lastUpdate }}</p>
   </div>
 
   <!-- Dialogs Moved outside the loop -->
-  <p-dialog header="Compressors" [(visible)]="isPressureDialogOpen" [modal]="true" [style]="{ width: '90vw' }">
+  <p-dialog
+    header="Compressors"
+    [(visible)]="isPressureDialogOpen"
+    [modal]="true"
+    [style]="{ width: '90vw' }"
+  >
     <app-pressure [station]="selectedStation"></app-pressure>
   </p-dialog>
 
-  <p-dialog header="Dispensers" [(visible)]="isTemperatureDialogOpen" [modal]="true" [style]="{ width: '90vw' }">
+  <p-dialog
+    header="Dispensers"
+    [(visible)]="isTemperatureDialogOpen"
+    [modal]="true"
+    [style]="{ width: '90vw' }"
+  >
     <app-tempreture [station]="selectedStation"></app-tempreture>
   </p-dialog>
-
 </div>
