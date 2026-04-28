@@ -40,6 +40,7 @@ export class Sidebar {
       items: [
         { name: 'Dashboard', icon: 'dashboard', route: '/dashboard/homeDashboard' },
         { name: 'Tech ops', icon: 'dashboard', route: '/dashboard/tech-ops' },
+        { name: 'Station Hierarchy', icon: 'layers-01', route: '/dashboard/station-hierarchy' },
       ],
     },
     {
@@ -88,7 +89,6 @@ export class Sidebar {
       items: [
         { name: 'Zone', icon: 'location', route: '/dashboard/zones' },
         { name: 'Area', icon: 'map', route: '/dashboard/areas' },
-        { name: 'Station Hierarchy', icon: 'layers-01', route: '/dashboard/station-hierarchy' },
       ],
     },
   ];

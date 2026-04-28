@@ -99,7 +99,9 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
   machines: any[] = [];
   availableAssets: any[] = [];
   showLinkModal: boolean = false;
+  showUnlinkModal: boolean = false;
   selectedMachine: any = null;
+  selectedMachineToUnlink: any = null;
   selectedAssetId: any = null;
 
   // Pressure history popup properties
@@ -522,30 +524,55 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
         this.timeLineChart = res.result;
         console.log('timeline', this.timeLineChart);
 
+        const allPossibleStatuses = [
+          'Off',
+          'Idle',
+          'Starting',
+          'Compression',
+          'Recirculating',
+          'Alarm',
+          'Start_delay',
+          'Force',
+          'Not_Linked',
+          'Unknown'
+        ];
+
         const statusColors: { [key: string]: string } = {
           Off: '#9CA3AF',
           Idle: '#3B82F6',
-          Statring: '#FBBF24',
           Starting: '#FBBF24',
           Compression: '#10B981',
           Recirculating: '#6366F1',
           Alarm: '#EF4444',
           Start_delay: '#8B5CF6',
           Force: '#EC4899',
-          Lockout: '#111827',
+          Not_Linked: '#6B7280',
+          Unknown: '#D1D5DB'
         };
 
-        const colors = this.timeLineChart.map((s: any) => statusColors[s.name] || '#3E4A60');
+        // Create a map of existing data from response
+        const dataMap = new Map();
+        this.timeLineChart.forEach((s: any) => {
+          dataMap.set(s.name, s.data);
+        });
 
-        this.timelineChartOptions = {
-          ...this.timelineChartOptions,
-          series: this.timeLineChart.map((s: any) => ({
-            name: s.name,
-            data: s.data.map((d: any) => ({
+        // Build series for ALL possible statuses
+        const finalSeries = allPossibleStatuses.map(statusName => {
+          const statusData = dataMap.get(statusName) || [];
+          return {
+            name: statusName,
+            data: statusData.map((d: any) => ({
               x: 'Status',
               y: [new Date(d[0]).getTime(), new Date(d[1]).getTime()],
             })),
-          })),
+          };
+        });
+
+        const colors = allPossibleStatuses.map(s => statusColors[s] || '#3E4A60');
+
+        this.timelineChartOptions = {
+          ...this.timelineChartOptions,
+          series: finalSeries,
           colors: colors,
         };
 
@@ -642,17 +669,28 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
     });
   }
 
-  onUnlinkMachine(machineId: number) {
-    if (confirm('Are you sure you want to unlink this machine?')) {
-      this.stationDetails.unlinkMachine(machineId).subscribe({
-        next: () => {
-          this.onGetMachines();
-        },
-        error: (err) => {
-          console.error('Error unlinking machine:', err);
-        },
-      });
-    }
+  onUnlinkMachine(machine: any) {
+    this.selectedMachineToUnlink = machine;
+    this.showUnlinkModal = true;
+  }
+
+  confirmUnlink() {
+    if (!this.selectedMachineToUnlink) return;
+
+    this.stationDetails.unlinkMachine(this.selectedMachineToUnlink.id).subscribe({
+      next: () => {
+        this.onGetMachines();
+        this.closeUnlinkModal();
+      },
+      error: (err) => {
+        console.error('Error unlinking machine:', err);
+      },
+    });
+  }
+
+  closeUnlinkModal() {
+    this.showUnlinkModal = false;
+    this.selectedMachineToUnlink = null;
   }
 
   get temperatureStages() {

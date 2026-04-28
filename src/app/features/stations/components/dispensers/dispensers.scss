@@ -1,239 +1,249 @@
-/* dispensers.scss - Professional Metallic Terminal UI (Refined) */
+/* dispensers.scss - ultra-compact Physical Pump Design */
 
 :host {
-  --metallic-base: #f1f5f9;
-  --metallic-card: #ffffff;
-  --metallic-border: #e2e8f0;
-  --side-a-accent: #3b82f6; // Electric Blue
-  --side-b-accent: #10b981; // Emerald Green
-  --status-offline: #ef4444; // Warning Red
-  --text-main: #1e293b;
+  --industrial-bg: #f1f5f9;
+  --pump-frame: #334155;
+  --lcd-bg: #0f172a;
+  --lcd-glow: #10b981;
   --text-dim: #64748b;
+  --danger: #ef4444;
 }
 
-.dispenser-dashboard {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem;
+.dispenser-container {
+  padding: 1rem;
+  max-width: 100%;
 }
 
-.dashboard-header-metallic {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 3rem;
-  padding: 1.25rem 2rem;
-  background: white;
-  border-radius: 1.5rem;
-  border: 1px solid var(--metallic-border);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-
-  h1 { font-size: 1.5rem; font-weight: 900; color: var(--text-main); letter-spacing: -0.02em; }
-  p { font-size: 0.75rem; color: var(--text-dim); font-weight: 700; margin-top: 0.125rem; }
-}
-
-/* Control Panel Grid */
-.control-grid {
+.pump-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  gap: 2.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 2rem;
+  justify-items: center;
 }
 
-/* The Dispenser Terminal - Metallic */
-.dispenser-terminal {
+.pump-station {
   position: relative;
-  background: var(--metallic-card);
-  border-radius: 2.5rem;
-  padding: 0.5rem;
-  border: 1px solid var(--metallic-border);
-  box-shadow: 
-    0 20px 25px -5px rgba(0, 0, 0, 0.05),
-    inset 0 0 15px rgba(255,255,255,0.8);
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+
+  &.pump-offline {
+    filter: grayscale(0.8);
+    opacity: 0.7;
+  }
+}
+
+/* Side Units (Hose + Box) */
+.side-unit {
+  flex: 0 0 100px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  align-items: center;
+  position: relative;
+  padding-top: 20px;
+  z-index: 5;
 
-  &:hover {
-    border-color: #cbd5e1;
-    transform: translateY(-8px);
-    box-shadow: 0 40px 60px -20px rgba(0, 0, 0, 0.1);
+  &.left-unit { margin-right: -5px; }
+  &.right-unit { margin-left: -5px; }
+}
+
+.hose {
+  width: 90px;
+  height: 160px;
+  z-index: 1;
+  
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/* Nozzle Box */
+.nozzle-box {
+  background: #ffffff;
+  border: 2px solid var(--pump-frame);
+  border-radius: 1rem;
+  padding: 0.6rem;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  margin-top: -10px;
+  z-index: 5;
+
+  .box-tag {
+    font-size: 0.45rem;
+    font-weight: 900;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 0.25rem;
+    margin-bottom: 0.4rem;
   }
 
-  &.is-offline {
-    filter: grayscale(0.8) contrast(0.9);
-    opacity: 0.8;
-    &::after {
-      content: 'OFFLINE / NO SIGNAL';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(-15deg);
-      background: rgba(239, 68, 68, 0.15);
-      color: var(--status-offline);
-      padding: 1rem 3rem;
-      font-size: 2rem;
-      font-weight: 900;
-      border: 4px solid var(--status-offline);
-      z-index: 100;
-      pointer-events: none;
-      border-radius: 1rem;
-      backdrop-filter: blur(4px);
+  .box-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      cursor: pointer;
+
+      label { font-size: 0.45rem; font-weight: 800; color: var(--text-dim); }
+      span { font-size: 0.7rem; font-weight: 900; color: #1e293b; }
     }
   }
 }
 
-.terminal-header {
-  padding: 1.25rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #f8fafc;
-  border-bottom: 1px solid var(--metallic-border);
-
-  .node-id { font-size: 1.125rem; font-weight: 900; color: var(--text-main); }
-  .comp-tag { font-size: 0.65rem; color: var(--text-dim); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-}
-
-/* The Pillar Spine - Refined Metallic */
-.terminal-body {
-  display: flex;
+/* Central Unit Body */
+.pump-main-unit {
   position: relative;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  background: linear-gradient(to bottom, #f8fafc, #ffffff);
-}
-
-.pillar-spine {
-  width: 16px;
-  background: linear-gradient(to right, #e2e8f0, #cbd5e1, #e2e8f0);
-  border-radius: 9999px;
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
-  position: relative;
+  width: 190px;
+  background: #ffffff;
+  border: 5px solid var(--pump-frame);
+  border-radius: 1.5rem;
+  padding: 1.25rem;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 
   &::before {
     content: '';
     position: absolute;
-    top: 50%;
+    top: -12px;
     left: 50%;
-    transform: translate(-50%, -50%);
-    width: 28px;
-    height: 28px;
-    background: white;
-    border: 4px solid var(--metallic-border);
-    border-radius: 50%;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transform: translateX(-50%);
+    width: 80px;
+    height: 12px;
+    background: var(--pump-frame);
+    border-radius: 6px 6px 0 0;
   }
 }
 
-/* Nozzle panels - Metallic */
-.nozzle-panel {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  padding: 1.5rem;
-  border-radius: 2rem;
-  background: white;
-  border: 1px solid var(--metallic-border);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-
-  &.side-a { border-top: 6px solid var(--side-a-accent); }
-  &.side-b { border-top: 6px solid var(--side-b-accent); }
-
-  &.is-offline {
-    background: #f1f5f9;
-    border-top-color: var(--text-dim);
-    .v { color: var(--text-dim) !important; }
-    .status-light { background: var(--status-offline) !important; box-shadow: 0 0 12px var(--status-offline) !important; animation: red-flash 1s infinite alternate; }
-  }
-}
-
-@keyframes red-flash {
-  from { opacity: 0.3; }
-  to { opacity: 1; }
-}
-
-.panel-title-bar {
+.unit-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
-  .side-tag { font-size: 0.8rem; font-weight: 800; color: var(--text-main); letter-spacing: 0.5px; }
-  .status-light { width: 10px; height: 10px; border-radius: 50%; &.online { background: var(--side-b-accent); box-shadow: 0 0 10px var(--side-b-accent); } }
-}
 
-/* Digital Data Cells - Clean Metallic */
-.data-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.control-cell {
-  background: #f8fafc;
-  padding: 1rem;
-  border-radius: 1.25rem;
-  border: 1px solid var(--metallic-border);
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    border-color: #94a3b8;
-    background: white;
-    transform: translateY(-4px);
+  .id-badge {
+    background: var(--pump-frame);
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.5rem;
+    font-weight: 900;
+    font-size: 0.75rem;
   }
 
-  .label {
+  .status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--lcd-glow);
+  }
+}
+
+/* LCD Display */
+.main-lcd {
+  background: var(--lcd-bg);
+  border-radius: 0.6rem;
+  padding: 1rem;
+  border: 2px solid #1e293b;
+
+  .lcd-label {
+    font-size: 0.5rem;
+    font-weight: 900;
+    color: #475569;
+    margin-bottom: 0.25rem;
+  }
+
+  .lcd-numbers {
+    position: relative;
+    height: 1.8rem;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.65rem;
-    font-weight: 800;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
+    justify-content: flex-end;
+    
+    span {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1.5rem;
+      font-weight: 900;
+    }
+
+    .ghost { color: #1e293b; position: absolute; right: 0; }
+    .actual { color: var(--lcd-glow); position: relative; }
   }
 
-  .value-box {
+  .lcd-unit {
     text-align: right;
-    .val { font-size: 1.25rem; font-weight: 900; color: var(--text-main); font-family: 'DM Mono', monospace; letter-spacing: -1px; }
-    .unt { font-size: 0.6rem; color: var(--text-dim); margin-left: 2px; font-weight: 700; }
-  }
-
-  &.featured {
-    grid-column: span 2;
-    background: linear-gradient(135deg, white, #f8fafc);
-    border-width: 2px;
-    .val { font-size: 1.75rem; color: var(--side-a-accent); }
+    font-size: 0.5rem;
+    font-weight: 900;
+    color: #475569;
   }
 }
 
-.panel-footer {
-  padding: 1rem 2rem;
-  background: #f8fafc;
-  border-top: 1px solid var(--metallic-border);
+.unit-footer {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed #e2e8f0;
+  
+  span {
+    font-size: 0.45rem;
+    font-weight: 700;
+    color: var(--text-dim);
+  }
+}
+
+/* Loader */
+.loader-container {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  font-size: 0.7rem;
-  font-weight: 700;
+  padding: 5rem 0;
   color: var(--text-dim);
+
+  .custom-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #e2e8f0;
+    border-top-color: var(--pump-frame);
+    border-radius: 50%;
+    animation: spin 1s infinite linear;
+  }
 }
 
-@media (max-width: 1024px) {
-  .control-grid { grid-template-columns: 1fr; }
-  .terminal-body { flex-direction: column; }
-  .pillar-spine { display: none; }
+/* Live Update Animations */
+.data-flash {
+  &.metric {
+    animation: data-glow-cyan 2.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  &.actual {
+    animation: data-glow-green 2.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
 }
 
-/* Data Live Updates */
-.feed-update {
-  animation: metallic-pulse 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+@keyframes data-glow-cyan {
+  0% { background: transparent; transform: scale(1); }
+  20% { background: rgba(56, 189, 248, 0.15); transform: scale(1.05); border-color: #38bdf8; }
+  100% { background: transparent; transform: scale(1); }
 }
 
-@keyframes metallic-pulse {
-  0% { transform: scale(1); border-color: var(--side-a-accent); }
-  50% { transform: scale(1.02); }
-  100% { transform: scale(1); border-color: var(--metallic-border); }
+@keyframes data-glow-green {
+  0% { color: var(--lcd-glow); text-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+  20% { color: #fff; text-shadow: 0 0 25px #fff, 0 0 10px var(--lcd-glow); }
+  100% { color: var(--lcd-glow); text-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+}
+
+@media (max-width: 480px) {
+  .pump-grid { grid-template-columns: 1fr; }
+  .pump-station { flex-direction: column; align-items: center; }
+  .side-unit { width: 100%; max-width: 190px; padding-top: 0.5rem; margin: 0 !important; }
+  .hose { display: none; }
 }

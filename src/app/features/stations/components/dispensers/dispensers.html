@@ -1,174 +1,106 @@
-<div class="dispenser-dashboard">
-  <!-- Metallic Header -->
-  <!-- <div class="dashboard-header-metallic">
-    <div>
-      <h1>STATION ARCHITECTURE</h1>
-      <p>Terminal Telemetry & Structural Dynamics</p>
-    </div>
-    <p-select [options]="allStatus" [(ngModel)]="selectedStatus" (change)="filterDispensers()" optionLabel="label"
-      optionValue="value" placeholder="Network Channels" class="w-60 border-none bg-slate-50 text-xs">
-    </p-select>
-  </div> -->
-
+<div class="dispenser-container">
   <!-- Terminal Grid -->
-  <div class="control-grid" *ngIf="!isLoading">
-    <div *ngFor="let dispenser of filteredDispensers" class="dispenser-terminal"
-      [class.is-offline]="dispenser.left?.connectionStatus !== 'Online' && dispenser.right?.connectionStatus !== 'Online'">
+  <div class="pump-grid" *ngIf="!isLoading">
+    <div *ngFor="let dispenser of filteredDispensers" class="pump-station"
+      [class.pump-offline]="dispenser.left?.connectionStatus !== 'Online' && dispenser.right?.connectionStatus !== 'Online'">
       
-      <!-- Top Section -->
-      <div class="terminal-header">
-        <span class="node-id">{{ dispenser.dispenserName }}</span>
-        <span class="comp-tag">{{ dispenser.compressorName }}</span>
-      </div>
-
-      <!-- Main Unit Body -->
-      <div class="terminal-body">
+      <!-- LEFT SIDE: Hose + Nozzle Box -->
+      <div class="side-unit left-unit">
+        <div class="hose hose-left">
+          <svg viewBox="0 0 100 300" preserveAspectRatio="none">
+            <path d="M100,0 C100,100 20,150 20,300" fill="none" stroke="#334155" stroke-width="12" stroke-linecap="round"/>
+          </svg>
+        </div>
         
-        <!-- CHANNEL A (Left) -->
-        <div class="nozzle-panel side-a" [class.is-offline]="dispenser.left?.connectionStatus !== 'Online'">
-          <div class="panel-title-bar">
-            <span class="side-tag">Left Nozzle</span>
-            <div class="status-light" [ngClass]="{ 'online': dispenser.left?.connectionStatus === 'Online' }"></div>
-          </div>
-
-          <div class="data-grid">
-            <!-- VOLUME -->
-            <div class="control-cell featured" [class.feed-update]="dispenser.left?.chargeVolumeChanged"
-              (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'chargeVolume')">
-              <div class="label">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                Charge (Volum)
-              </div>
-              <div class="value-box">
-                <span class="val">{{ dispenser.left?.chargeVolume | number : '1.2-2' }}</span>
-                <span class="unt">m³</span>
-              </div>
+        <!-- LEFT NOZZLE BOX at the end of the hose -->
+        <div class="nozzle-box side-left" [class.offline]="dispenser.left?.connectionStatus !== 'Online'">
+          <div class="box-tag">LEFT NOZZLE</div>
+          <div class="box-metrics">
+            <div class="metric" (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'chargeVolume')"
+              [class.data-flash]="dispenser.left?.chargeVolumeChanged">
+              <label>Vol</label>
+              <span class="val">{{ dispenser.left?.chargeVolume | number:'1.2-2' }}</span>
             </div>
-
-            <!-- TIME -->
-            <div class="control-cell" [class.feed-update]="dispenser.left?.chargingTimeChanged"
-              (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'chargingTime')">
-              <div class="label">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                Time
-              </div>
-              <div class="value-box">
-                <span class="val">{{ dispenser.left?.chargingTime | number : '1.2-2' }}</span>
-                <span class="unt">min</span>
-              </div>
+            <div class="metric" (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'chargingTime')"
+              [class.data-flash]="dispenser.left?.chargingTimeChanged">
+              <label>Time</label>
+              <span class="val">{{ dispenser.left?.chargingTime | number:'1.2-2' }}</span>
             </div>
-
-            <!-- THROUGHPUT -->
-            <div class="control-cell" [class.feed-update]="dispenser.left?.throughputChanged"
-              (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'throughput')">
-              <div class="label">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m2 12 5 2 5-7 5 7 5-2"/></svg>
-                Rate
-              </div>
-              <div class="value-box">
-                <span class="val">{{ dispenser.left?.throughput | number : '1.2-2' }}</span>
-                <span class="unt">m³/m</span>
-              </div>
-            </div>
-
-            <!-- IDLE -->
-            <div class="control-cell" [class.feed-update]="dispenser.left?.waitingTimeChanged"
-              (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'waitingTime')">
-              <div class="label">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                Idle
-              </div>
-              <div class="value-box">
-                <span class="val">{{ dispenser.left?.waitingTime | number : '1.2-2' }}</span>
-                <span class="unt">min</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Pillar Divider -->
-        <div class="pillar-spine"></div>
-
-        <!-- CHANNEL B (Right) -->
-        <div class="nozzle-panel side-b" [class.is-offline]="dispenser.right?.connectionStatus !== 'Online'">
-          <div class="panel-title-bar">
-            <span class="side-tag">Right Nozzle</span>
-            <div class="status-light" [ngClass]="{ 'online': dispenser.right?.connectionStatus === 'Online' }"></div>
-          </div>
-
-          <div class="data-grid">
-            <!-- VOLUME -->
-            <div class="control-cell featured" [class.feed-update]="dispenser.right?.chargeVolumeChanged"
-              (click)="openDialog(dispenser.dispenserName, dispenser.right?.dispenserNo, 'chargeVolume')">
-              <div class="label">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                Charge (Volum)
-              </div>
-              <div class="value-box">
-                <span class="val">{{ dispenser.right?.chargeVolume | number : '1.2-2' }}</span>
-                <span class="unt">m³</span>
-              </div>
-            </div>
-
-            <!-- TIME -->
-            <div class="control-cell" [class.feed-update]="dispenser.right?.chargingTimeChanged"
-              (click)="openDialog(dispenser.dispenserName, dispenser.right?.dispenserNo, 'chargingTime')">
-              <div class="label">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                Time
-              </div>
-              <div class="value-box">
-                <span class="val">{{ dispenser.right?.chargingTime | number : '1.2-2' }}</span>
-                <span class="unt">min</span>
-              </div>
-            </div>
-
-            <!-- THROUGHPUT -->
-            <div class="control-cell" [class.feed-update]="dispenser.right?.throughputChanged"
-              (click)="openDialog(dispenser.dispenserName, dispenser.right?.dispenserNo, 'throughput')">
-              <div class="label">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m2 12 5 2 5-7 5 7 5-2"/></svg>
-                Rate
-              </div>
-              <div class="value-box">
-                <span class="val">{{ dispenser.right?.throughput | number : '1.2-2' }}</span>
-                <span class="unt">m³/m</span>
-              </div>
-            </div>
-
-            <!-- IDLE -->
-            <div class="control-cell" [class.feed-update]="dispenser.right?.waitingTimeChanged"
-              (click)="openDialog(dispenser.dispenserName, dispenser.right?.dispenserNo, 'waitingTime')">
-              <div class="label">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                Idle
-              </div>
-              <div class="value-box">
-                <span class="val">{{ dispenser.right?.waitingTime | number : '1.2-2' }}</span>
-                <span class="unt">min</span>
-              </div>
+            <div class="metric" (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'throughput')"
+              [class.data-flash]="dispenser.left?.throughputChanged">
+              <label>Rate</label>
+              <span class="val">{{ dispenser.left?.throughput | number:'1.2-2' }}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Dock -->
-      <div class="panel-footer">
-        <span class="flex items-center gap-2">
-           <span class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></span>
-           ENCRYPTED NODE FEED ACTIVE
-        </span>
-        <span class="font-mono">{{ formatTimestamp(dispenser.lastTimeStamp) }}</span>
+      <!-- CENTER: Pump Central Unit -->
+      <div class="pump-main-unit">
+        <div class="unit-head">
+          <div class="id-badge">{{ dispenser.dispenserName }}</div>
+          <div class="status-indicator" [class.active]="dispenser.left?.connectionStatus === 'Online' || dispenser.right?.connectionStatus === 'Online'"></div>
+        </div>
+
+        <div class="main-lcd">
+          <div class="lcd-label">TOTAL VOLUME</div>
+          <div class="lcd-numbers">
+            <span class="ghost">88888.88</span>
+            <span class="actual" [class.data-flash]="dispenser.left?.chargeVolumeChanged || dispenser.right?.chargeVolumeChanged">
+              {{ (dispenser.left?.chargeVolume || 0) + (dispenser.right?.chargeVolume || 0) | number:'1.2-2' }}
+            </span>
+          </div>
+          <div class="lcd-unit">m³</div>
+        </div>
+
+        <div class="unit-footer">
+          <span class="comp-name">{{ dispenser.compressorName }}</span>
+          <span class="timestamp">{{ formatTimestamp(dispenser.lastTimeStamp) }}</span>
+        </div>
       </div>
+
+      <!-- RIGHT SIDE: Hose + Nozzle Box -->
+      <div class="side-unit right-unit">
+        <div class="hose hose-right">
+          <svg viewBox="0 0 100 300" preserveAspectRatio="none">
+            <path d="M0,0 C0,100 80,150 80,300" fill="none" stroke="#334155" stroke-width="12" stroke-linecap="round"/>
+          </svg>
+        </div>
+
+        <!-- RIGHT NOZZLE BOX at the end of the hose -->
+        <div class="nozzle-box side-right" [class.offline]="dispenser.right?.connectionStatus !== 'Online'">
+          <div class="box-tag">RIGHT NOZZLE</div>
+          <div class="box-metrics">
+            <div class="metric" (click)="openDialog(dispenser.dispenserName, dispenser.right?.dispenserNo, 'chargeVolume')"
+              [class.data-flash]="dispenser.right?.chargeVolumeChanged">
+              <label>Vol</label>
+              <span class="val">{{ dispenser.right?.chargeVolume | number:'1.2-2' }}</span>
+            </div>
+            <div class="metric" (click)="openDialog(dispenser.dispenserName, dispenser.right?.dispenserNo, 'chargingTime')"
+              [class.data-flash]="dispenser.right?.chargingTimeChanged">
+              <label>Time</label>
+              <span class="val">{{ dispenser.right?.chargingTime | number:'1.2-2' }}</span>
+            </div>
+            <div class="metric" (click)="openDialog(dispenser.dispenserName, dispenser.right?.dispenserNo, 'throughput')"
+              [class.data-flash]="dispenser.right?.throughputChanged">
+              <label>Rate</label>
+              <span class="val">{{ dispenser.right?.throughput | number:'1.2-2' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <div *ngIf="isLoading" class="flex justify-center items-center py-40">
-    <div class="w-12 h-12 border-4 border-slate-200 border-t-blue-500 rounded-full animate-spin"></div>
+  <!-- Loading & Empty States -->
+  <div *ngIf="isLoading" class="loader-container">
+    <div class="custom-spinner"></div>
+    <p>Calibrating Terminals...</p>
   </div>
 
   <div *ngIf="!isLoading && filteredDispensers.length === 0" class="flex flex-col items-center py-40 text-slate-300 border-2 border-dashed border-slate-100 rounded-3xl">
-    <p class="font-black text-xl tracking-tighter opacity-50 uppercase">No Operational Terminals Resolved</p>
+    <p class="font-black text-xl tracking-tighter opacity-50 uppercase">No Terminals Found</p>
   </div>
 </div>
 

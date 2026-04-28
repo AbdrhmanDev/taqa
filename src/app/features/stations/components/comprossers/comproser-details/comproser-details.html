@@ -516,7 +516,7 @@
 
                 <svg
                   *ngIf="machine.dispId1 || machine.dispId2"
-                  (click)="onUnlinkMachine(machine.id)"
+                  (click)="onUnlinkMachine(machine)"
                   class="cursor-pointer hover:opacity-70"
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -779,6 +779,45 @@
         class="flex-1 px-4 py-2 bg-indigo-700 text-white rounded-lg hover:bg-indigo-800 disabled:bg-indigo-300 transition-colors"
       >
         Confirm Link
+      </button>
+    </div>
+  </div>
+</div>
+<!-- Unlink Machine Modal -->
+<div *ngIf="showUnlinkModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" (click)="closeUnlinkModal()">
+  <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md" (click)="$event.stopPropagation()">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-xl font-bold text-gray-800">Confirm Unlink</h2>
+      <button (click)="closeUnlinkModal()" class="text-gray-400 hover:text-gray-600">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="mb-8">
+      <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
+          <path d="M12 9V14M12 17.01L12.01 16.998M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#D92D20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <p class="text-center text-gray-600">Are you sure you want to unlink <span class="font-bold text-gray-800">{{ selectedMachineToUnlink?.name }}</span>?</p>
+      <p class="text-center text-xs text-gray-400 mt-2">This action will stop real-time data tracking for this machine.</p>
+    </div>
+
+    <div class="flex gap-4">
+      <button 
+        (click)="closeUnlinkModal()" 
+        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+      >
+        Cancel
+      </button>
+      <button 
+        (click)="confirmUnlink()" 
+        class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+      >
+        Confirm Unlink
       </button>
     </div>
   </div>

@@ -8,6 +8,7 @@ import {
   ChangeDetectorRef,
   AfterViewInit,
   OnDestroy,
+  NgZone,
 } from '@angular/core';
 import { dashboardService } from './../../service/dashboard';
 
@@ -93,6 +94,7 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private dashboardService: dashboardService,
     private router: Router,
+    private ngZone: NgZone,
   ) {}
 
   ngOnInit(): void {
@@ -516,19 +518,30 @@ export class HomeDashboard implements OnInit, AfterViewInit, OnDestroy {
       const lat = parseFloat(station.latitude);
       const lng = parseFloat(station.longitude);
       const color = this.getStatusColor(station.status);
+      const isActive = station.status?.toLowerCase() === 'active' || station.status?.toLowerCase() === 'online';
+      const markerClass = isActive ? 'marker-active' : 'marker-inactive';
+      
       bounds.extend([lat, lng]);
 
       const icon = L.divIcon({
         className: 'custom-marker',
-        html: `<div style="width: 12px; height: 12px; background: ${color}; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.3); cursor: pointer;"></div>`,
-        iconSize: [12, 12],
-        iconAnchor: [6, 6],
+        html: `<div class="marker-inner ${markerClass}"></div>`,
+        iconSize: [18, 18],
+        iconAnchor: [9, 9],
       });
 
       const marker = L.marker([lat, lng], { icon }).addTo(this.map);
       marker.bindPopup(
-        `<strong>${station.stationName}</strong><br><span style="color: ${color};">● ${station.status}</span>`,
+        `<strong>${station.stationName}</strong><br><span style="color: ${isActive ? '#16a34a' : '#dc2626'};">● ${station.status}</span><br><small>Click to view details</small>`,
       );
+
+      marker.on('click', () => {
+        if (station.stationId) {
+          this.ngZone.run(() => {
+            this.router.navigate(['/dashboard/station-details', station.stationId]);
+          });
+        }
+      });
     });
 
     if (bounds.isValid()) {
