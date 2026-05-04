@@ -55,28 +55,30 @@ export class StationDetatils implements OnInit {
   }
 
   async startAllConnections() {
-    console.log(`🚀 Starting sequential connections for station ${this.stationId}`);
+    console.log(`🚀 Starting parallel connections for station ${this.stationId}`);
 
     try {
-      // 1. Station KPIs
-      await this.realtimeService.startConnection();
-      await this.realtimeService.joinStation(this.stationId);
+      await Promise.all([
+        // 1. Station KPIs
+        this.realtimeService.startConnection().then(() => this.realtimeService.joinStation(this.stationId)),
 
-      // 2. Dispenser
-      await this.realtimeService.startConnectionDispenser();
-      await this.realtimeService.joinDispenser(this.stationId);
+        // 2. Dispenser
+        this.realtimeService
+          .startConnectionDispenser()
+          .then(() => this.realtimeService.joinDispenser(this.stationId)),
 
-      // 3. Compressor
-      await this.realtimeService.startConnectionCompressor();
-      await this.realtimeService.joinCompressor(this.stationId);
+        // 3. Compressor
+        this.realtimeService
+          .startConnectionCompressor()
+          .then(() => this.realtimeService.joinCompressor(this.stationId)),
 
-      // 4. Alarms
-      await this.alarmsService.startConnection();
-      await this.alarmsService.joinStation(this.stationId);
+        // 4. Alarms
+        this.alarmsService.startConnection().then(() => this.alarmsService.joinStation(this.stationId)),
+      ]);
 
-      console.log('✅ All connections established successfully');
+      console.log('✅ All connections established successfully in parallel');
     } catch (error) {
-      console.error('❌ SignalR initialization failed:', error);
+      console.error('❌ SignalR parallel initialization failed:', error);
     }
   }
   onGetStationDetails() {

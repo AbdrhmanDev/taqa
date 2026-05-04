@@ -127,17 +127,23 @@
       <div *ngIf="!isLoadingRealtime" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div class="bg-indigo-200 rounded-lg shadow p-4">
           <p class="text-xs text-gray-500 uppercase tracking-wide">Average Pressure</p>
-          <p class="text-3xl font-bold text-black mt-1">{{ compressorDetailsData?.avg | number : '1.0-2' }}</p>
+          <p class="text-3xl font-bold text-black mt-1">
+            {{ compressorDetailsData?.avg | number : '1.0-2' }}
+          </p>
         </div>
 
         <div class="bg-[#F0FDF4] rounded-lg shadow p-4">
           <p class="text-xs text-gray-500 uppercase tracking-wide">Max Pressure</p>
-          <p class="text-3xl font-bold text-black mt-1">{{ compressorDetailsData?.max | number : '1.0-2' }}</p>
+          <p class="text-3xl font-bold text-black mt-1">
+            {{ compressorDetailsData?.max | number : '1.0-2' }}
+          </p>
         </div>
 
         <div class="bg-yellow-100 rounded-lg shadow p-4">
           <p class="text-xs text-gray-500 uppercase tracking-wide">Min Pressure</p>
-          <p class="text-3xl font-bold text-black mt-1">{{ compressorDetailsData?.min | number : '1.0-2' }}</p>
+          <p class="text-3xl font-bold text-black mt-1">
+            {{ compressorDetailsData?.min | number : '1.0-2' }}
+          </p>
         </div>
 
         <div class="bg-purple-200 rounded-lg shadow p-4">
@@ -157,15 +163,19 @@
       </div>
 
       <div *ngIf="!isLoadingRealtime" class="grid grid-cols-3 gap-4">
-        <div *ngFor="let stage of stages; let i = index" class="card flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity" (click)="openPressureHistory(i + 1)">
+        <div
+          *ngFor="let stage of stages; let i = index"
+          class="card flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity"
+          (click)="openPressureHistory(i + 1)"
+        >
           <!-- Gauge SVG -->
           <svg width="160" height="130" viewBox="0 0 160 130">
             <defs>
               <linearGradient [id]="'gaugeGradient' + i" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" style="stop-color:#16A34A;stop-opacity:1" />
-                <stop offset="60%" style="stop-color:#16A34A;stop-opacity:1" />
-                <stop offset="80%" style="stop-color:#EAB308;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#DC2626;stop-opacity:1" />
+                <stop offset="0%" style="stop-color: #16a34a; stop-opacity: 1" />
+                <stop offset="60%" style="stop-color: #16a34a; stop-opacity: 1" />
+                <stop offset="80%" style="stop-color: #eab308; stop-opacity: 1" />
+                <stop offset="100%" style="stop-color: #dc2626; stop-opacity: 1" />
               </linearGradient>
             </defs>
             <!-- Gradient background arc -->
@@ -178,12 +188,16 @@
             />
 
             <!-- Graduation Ticks -->
-            <line *ngFor="let tick of getTicks()"
-              x1="80" y1="10" x2="80" y2="18"
-              stroke="#9CA3AF" stroke-width="2"
-              [attr.transform]="'rotate(' + getTickRotation(tick) + ', 80, 80)'" />
-
-
+            <line
+              *ngFor="let tick of getTicks()"
+              x1="80"
+              y1="10"
+              x2="80"
+              y2="18"
+              stroke="#9CA3AF"
+              stroke-width="2"
+              [attr.transform]="'rotate(' + getTickRotation(tick) + ', 80, 80)'"
+            />
 
             <!-- Needle -->
             <line
@@ -248,17 +262,23 @@
     <div *ngIf="!isLoadingRealtime" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
       <div class="bg-indigo-200 rounded-lg shadow p-4">
         <p class="text-xs text-gray-500 uppercase tracking-wide">Average Temperature</p>
-        <p class="text-3xl font-bold text-black mt-1">{{ compressorDetailsData?.avg_T | number : '1.0-2' }}</p>
+        <p class="text-3xl font-bold text-black mt-1">
+          {{ compressorDetailsData?.avg_T | number : '1.0-2' }}
+        </p>
       </div>
 
       <div class="bg-[#F0FDF4] rounded-lg shadow p-4">
         <p class="text-xs text-gray-500 uppercase tracking-wide">Max Temperature</p>
-        <p class="text-3xl font-bold text-black mt-1">{{ compressorDetailsData?.max_T | number : '1.0-2' }}</p>
+        <p class="text-3xl font-bold text-black mt-1">
+          {{ compressorDetailsData?.max_T | number : '1.0-2' }}
+        </p>
       </div>
 
       <div class="bg-yellow-100 rounded-lg shadow p-4">
         <p class="text-xs text-gray-500 uppercase tracking-wide">Min Temperature</p>
-        <p class="text-3xl font-bold text-black mt-1">{{ compressorDetailsData?.min_T | number : '1.0-2' }}</p>
+        <p class="text-3xl font-bold text-black mt-1">
+          {{ compressorDetailsData?.min_T | number : '1.0-2' }}
+        </p>
       </div>
 
       <div class="bg-purple-200 rounded-lg shadow p-4">
@@ -374,7 +394,9 @@
       <!-- Title -->
       <div>
         <h3 class="text-lg font-semibold text-gray-800">Dispensers</h3>
-        <p class="text-xs text-gray-400">total {{ machines.length | number : '1.0-0' }} Dispensers</p>
+        <p class="text-xs text-gray-400">
+          total {{ machines.length | number : '1.0-0' }} Dispensers
+        </p>
       </div>
 
       <!-- Button -->
@@ -428,7 +450,7 @@
               <p class="text-gray-400 mt-2 text-xs">Loading dispensers...</p>
             </td>
           </tr>
-          
+
           <tr *ngIf="!isLoadingMachines && machines.length === 0">
             <td colspan="5" class="py-8 text-center text-gray-400">
               No dispensers found for this station.
@@ -447,11 +469,15 @@
             <td>{{ machine.dispenserNum1 || 1 }}</td>
 
             <td>
-              <span 
-                [ngClass]="(machine.dispId1 || machine.dispId2) ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600'"
+              <span
+                [ngClass]="
+                  machine.dispId1 || machine.dispId2
+                    ? 'bg-green-100 text-green-600'
+                    : 'bg-gray-100 text-gray-600'
+                "
                 class="text-xs px-3 py-1 rounded-full"
               >
-                {{ (machine.dispId1 || machine.dispId2) ? 'Linked' : 'Unlinked' }}
+                {{ machine.dispId1 || machine.dispId2 ? 'Linked' : 'Unlinked' }}
               </span>
             </td>
 
@@ -554,15 +580,28 @@
 </div>
 
 <!-- Pressure History Popup Modal -->
-<div *ngIf="showPressureHistoryPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" (click)="closePressureHistory()">
-  <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+<div
+  *ngIf="showPressureHistoryPopup"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="closePressureHistory()"
+>
+  <div
+    class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+    (click)="$event.stopPropagation()"
+  >
     <!-- Header -->
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-2xl font-bold text-gray-800">Pressure History - Stage {{ selectedStage }}</h2>
       <button (click)="closePressureHistory()" class="text-gray-400 hover:text-gray-600">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
         </svg>
       </button>
     </div>
@@ -571,43 +610,43 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
-        <input 
-          type="date" 
-          [(ngModel)]="pressureHistoryParams.date" 
+        <input
+          type="date"
+          [(ngModel)]="pressureHistoryParams.date"
           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-        >
+        />
       </div>
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">Time From</label>
-        <input 
-          type="time" 
-          [(ngModel)]="pressureHistoryParams.timeFrom" 
+        <input
+          type="time"
+          [(ngModel)]="pressureHistoryParams.timeFrom"
           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-        >
+        />
       </div>
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">Time To</label>
-        <input 
-          type="time" 
-          [(ngModel)]="pressureHistoryParams.timeTo" 
+        <input
+          type="time"
+          [(ngModel)]="pressureHistoryParams.timeTo"
           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-        >
+        />
       </div>
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">Interval (minutes)</label>
-        <input 
-          type="number" 
-          [(ngModel)]="pressureHistoryParams.intervalMinutes" 
+        <input
+          type="number"
+          [(ngModel)]="pressureHistoryParams.intervalMinutes"
           min="1"
           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-        >
+        />
       </div>
     </div>
 
     <!-- Update Button -->
     <div class="mb-6">
-      <button 
-        (click)="updatePressureHistory()" 
+      <button
+        (click)="updatePressureHistory()"
         [disabled]="isLoadingPressureHistory"
         class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:bg-blue-300 transition-colors"
       >
@@ -617,15 +656,15 @@
     </div>
 
     <!-- Chart -->
-    <div class="bg-gray-50 rounded-lg p-4" style="min-height: 400px;">
+    <div class="bg-gray-50 rounded-lg p-4" style="min-height: 400px">
       <div *ngIf="isLoadingPressureHistory" class="flex items-center justify-center h-96">
         <div class="text-center">
           <p-progressSpinner styleClass="w-10 h-10"></p-progressSpinner>
           <p class="text-gray-500 mt-3">Loading pressure history data...</p>
         </div>
       </div>
-      
-      <div *ngIf="!isLoadingPressureHistory" style="height: 400px;">
+
+      <div *ngIf="!isLoadingPressureHistory" style="height: 400px">
         <apx-chart
           #pressureHistoryChart
           [series]="pressureHistoryChartOptions.series"
@@ -647,15 +686,30 @@
 </div>
 
 <!-- Temperature History Popup Modal -->
-<div *ngIf="showTemperatureHistoryPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" (click)="closeTemperatureHistory()">
-  <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+<div
+  *ngIf="showTemperatureHistoryPopup"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="closeTemperatureHistory()"
+>
+  <div
+    class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+    (click)="$event.stopPropagation()"
+  >
     <!-- Header -->
     <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-bold text-gray-800">Temperature History - Stage {{ selectedTemperatureStage }}</h2>
+      <h2 class="text-2xl font-bold text-gray-800">
+        Temperature History - Stage {{ selectedTemperatureStage }}
+      </h2>
       <button (click)="closeTemperatureHistory()" class="text-gray-400 hover:text-gray-600">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
         </svg>
       </button>
     </div>
@@ -664,43 +718,43 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
-        <input 
-          type="date" 
-          [(ngModel)]="temperatureHistoryParams.date" 
+        <input
+          type="date"
+          [(ngModel)]="temperatureHistoryParams.date"
           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-        >
+        />
       </div>
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">Time From</label>
-        <input 
-          type="time" 
-          [(ngModel)]="temperatureHistoryParams.timeFrom" 
+        <input
+          type="time"
+          [(ngModel)]="temperatureHistoryParams.timeFrom"
           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-        >
+        />
       </div>
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">Time To</label>
-        <input 
-          type="time" 
-          [(ngModel)]="temperatureHistoryParams.timeTo" 
+        <input
+          type="time"
+          [(ngModel)]="temperatureHistoryParams.timeTo"
           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-        >
+        />
       </div>
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">Interval (minutes)</label>
-        <input 
-          type="number" 
-          [(ngModel)]="temperatureHistoryParams.intervalMinutes" 
+        <input
+          type="number"
+          [(ngModel)]="temperatureHistoryParams.intervalMinutes"
           min="1"
           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-        >
+        />
       </div>
     </div>
 
     <!-- Update Button -->
     <div class="mb-6">
-      <button 
-        (click)="updateTemperatureHistory()" 
+      <button
+        (click)="updateTemperatureHistory()"
         [disabled]="isLoadingTemperatureHistory"
         class="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 disabled:bg-orange-300 transition-colors"
       >
@@ -710,15 +764,15 @@
     </div>
 
     <!-- Chart -->
-    <div class="bg-gray-50 rounded-lg p-4" style="min-height: 400px;">
+    <div class="bg-gray-50 rounded-lg p-4" style="min-height: 400px">
       <div *ngIf="isLoadingTemperatureHistory" class="flex items-center justify-center h-96">
         <div class="text-center">
           <p-progressSpinner styleClass="w-10 h-10"></p-progressSpinner>
           <p class="text-gray-500 mt-3">Loading temperature history data...</p>
         </div>
       </div>
-      
-      <div *ngIf="!isLoadingTemperatureHistory" style="height: 400px;">
+
+      <div *ngIf="!isLoadingTemperatureHistory" style="height: 400px">
         <apx-chart
           #temperatureHistoryChart
           [series]="temperatureHistoryChartOptions.series"
@@ -740,25 +794,40 @@
 </div>
 
 <!-- Link Machine Modal -->
-<div *ngIf="showLinkModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" (click)="closeLinkModal()">
-  <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md" (click)="$event.stopPropagation()">
+<div
+  *ngIf="showLinkModal"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="closeLinkModal()"
+>
+  <div
+    class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md"
+    (click)="$event.stopPropagation()"
+  >
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-xl font-bold text-gray-800">Link Dispenser</h2>
       <button (click)="closeLinkModal()" class="text-gray-400 hover:text-gray-600">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
         </svg>
       </button>
     </div>
 
     <div class="mb-6">
-      <p class="text-gray-600 mb-2">Linking dispenser: <span class="font-bold text-gray-800">{{ selectedMachine?.name }}</span></p>
+      <p class="text-gray-600 mb-2">
+        Linking dispenser: <span class="font-bold text-gray-800">{{ selectedMachine?.name }}</span>
+      </p>
       <label class="block text-sm font-medium text-gray-700 mb-2">Select Asset</label>
-      <p-select 
-        [options]="availableAssets" 
-        [(ngModel)]="selectedAssetId" 
-        optionLabel="label" 
+      <p-select
+        [options]="availableAssets"
+        [(ngModel)]="selectedAssetId"
+        optionLabel="label"
         optionValue="value"
         placeholder="Select an asset"
         appendTo="body"
@@ -767,14 +836,14 @@
     </div>
 
     <div class="flex gap-4">
-      <button 
-        (click)="closeLinkModal()" 
+      <button
+        (click)="closeLinkModal()"
         class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
       >
         Cancel
       </button>
-      <button 
-        (click)="confirmLink()" 
+      <button
+        (click)="confirmLink()"
         [disabled]="!selectedAssetId"
         class="flex-1 px-4 py-2 bg-indigo-700 text-white rounded-lg hover:bg-indigo-800 disabled:bg-indigo-300 transition-colors"
       >
@@ -784,37 +853,68 @@
   </div>
 </div>
 <!-- Unlink Machine Modal -->
-<div *ngIf="showUnlinkModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" (click)="closeUnlinkModal()">
-  <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md" (click)="$event.stopPropagation()">
+<div
+  *ngIf="showUnlinkModal"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="closeUnlinkModal()"
+>
+  <div
+    class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md"
+    (click)="$event.stopPropagation()"
+  >
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-xl font-bold text-gray-800">Confirm Unlink</h2>
       <button (click)="closeUnlinkModal()" class="text-gray-400 hover:text-gray-600">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
         </svg>
       </button>
     </div>
 
     <div class="mb-8">
       <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
-          <path d="M12 9V14M12 17.01L12.01 16.998M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#D92D20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M12 9V14M12 17.01L12.01 16.998M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+            stroke="#D92D20"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
       </div>
-      <p class="text-center text-gray-600">Are you sure you want to unlink <span class="font-bold text-gray-800">{{ selectedMachineToUnlink?.name }}</span>?</p>
-      <p class="text-center text-xs text-gray-400 mt-2">This action will stop real-time data tracking for this machine.</p>
+      <p class="text-center text-gray-600">
+        Are you sure you want to unlink
+        <span class="font-bold text-gray-800">{{ selectedMachineToUnlink?.name }}</span
+        >?
+      </p>
+      <p class="text-center text-xs text-gray-400 mt-2">
+        This action will stop real-time data tracking for this machine.
+      </p>
     </div>
 
     <div class="flex gap-4">
-      <button 
-        (click)="closeUnlinkModal()" 
+      <button
+        (click)="closeUnlinkModal()"
         class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
       >
         Cancel
       </button>
-      <button 
-        (click)="confirmUnlink()" 
+      <button
+        (click)="confirmUnlink()"
         class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
       >
         Confirm Unlink

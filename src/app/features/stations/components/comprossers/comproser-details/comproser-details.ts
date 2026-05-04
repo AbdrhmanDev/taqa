@@ -800,11 +800,18 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
     this.isLoadingRealtime = true;
     this.subscription = this.realTime.getCompressorDetails().subscribe({
       next: (data) => {
-        if (data && data.length > 0) {
-          this.compressorDetailsData = data[0];
+        console.log('--- Realtime Compressor Signal Received ---');
+        console.log('Data:', data);
+        
+        if (data !== null) {
           this.isLoadingRealtime = false;
-          this.allComproser = data;
-          console.log('Received compressor data from persistence:', data);
+          if (data.length > 0) {
+            this.compressorDetailsData = data[0];
+            this.allComproser = data;
+          } else {
+            this.compressorDetailsData = null;
+            this.allComproser = [];
+          }
           this.cdr.detectChanges();
         }
       },
