@@ -44,6 +44,14 @@ export const routes: Routes = [
         pathMatch: 'full',
       },
       {
+        path: 'scada-monitor',
+        loadComponent: () =>
+          import('./features/scada-monitor/scada-dashboard.component').then(
+            (m) => m.ScadaDashboardComponent,
+          ),
+        title: 'SCADA Monitor',
+      },
+      {
         path: 'homeDashboard',
         loadComponent: () =>
           import('./features/dashboard/component/home-dashboard/home-dashboard').then(

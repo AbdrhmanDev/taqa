@@ -1,0 +1,95 @@
+.scada-container {
+  background-color: #0f172a;
+  color: #f8fafc;
+  min-height: 100vh;
+  padding: 1.5rem;
+  font-family: sans-serif;
+  
+  --scada-bg: #0f172a;
+  --scada-card-bg: #1e293b;
+  --scada-border: #334155;
+  --scada-accent: #38bdf8;
+  --neon-green: #22c55e;
+  --neon-red: #ef4444;
+  --neon-blue: #0ea5e9;
+}
+
+.scada-card {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    border-color: #38bdf8;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+  }
+}
+
+.neon-text-blue {
+  text-shadow: 0 0 5px rgba(14, 165, 233, 0.5);
+}
+
+.diagram-area {
+  background-color: #0f172a;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  border: 1px solid #334155;
+  position: relative;
+  overflow: hidden;
+  background-image: radial-gradient(#1e293b 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.pipeline {
+  position: absolute;
+  height: 0.25rem;
+  background-color: #334155;
+
+  &.active {
+    background-color: #38bdf8;
+    box-shadow: 0 0 8px #38bdf8;
+    background-image: linear-gradient(90deg, transparent 0%, #38bdf8 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: flow 2s linear infinite;
+  }
+}
+
+@keyframes flow {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+.metric-value {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #38bdf8;
+}
+
+.metric-label {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  text-transform: uppercase;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+/* PrimeNG Overrides for Dark Mode */
+::ng-deep {
+  .p-card {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    color: #f1f5f9 !important;
+  }
+  .p-drawer {
+    background-color: #0f172a !important;
+    border-left: 1px solid #334155 !important;
+    color: #f1f5f9 !important;
+  }
+}
