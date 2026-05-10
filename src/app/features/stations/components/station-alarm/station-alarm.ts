@@ -78,13 +78,20 @@ export class StationAlarm implements OnInit {
   }
 
   getAlarmsHistory() {
+    this.isLoading = true;
     this.dashboardService.StationAlarmById(this.stationId).subscribe({
       next: (res: any[]) => {
         this.alarmsHistory = res;
         console.log('Alarms history:', this.alarmsHistory);
         this.mergeAlarms();
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err);
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
     });
   }
   mergeAlarms() {
@@ -92,11 +99,23 @@ export class StationAlarm implements OnInit {
   }
 
   subscribeToAlarms() {
-    this.isLoading = true;
     this.subscription = this.realtimeAlarmDetails.getStationDetails().subscribe({
       next: (data) => {
         if (data) {
-          console.log('Received station Alarm data byStation:', data);
+          const sid = data.stationId || data.stationID || data.id;
+          console.log(`🔍 [Alarm Filter] Incoming StationId: ${sid}, Expected: ${this.stationId}`);
+
+          if (sid && Number(sid) !== Number(this.stationId)) {
+            console.warn(`⏭️ [Alarm Filter] Data skipped for station ${sid}`);
+            return;
+          }
+
+          console.log('✅ [Alarm Filter] Match found! Updating UI...');
+          console.log('⚠️ [Alarm Data Details]:', {
+            Message: data.className,
+            Severity: data.severity,
+            Time: data.time
+          });
           data.className = data.className?.trim(); //remove r/n/
 
           this.stationDetailsDataAlarm.unshift(data);

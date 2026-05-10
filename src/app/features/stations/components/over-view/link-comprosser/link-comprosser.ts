@@ -59,8 +59,12 @@ export class LinkComprosser {
     this.stationDetails.getComroserById(this.comproserId).subscribe({
       next: (res) => {
         this.allComprosers = [res];
+        this.cdr.detectChanges();
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err);
+        this.cdr.detectChanges();
+      },
     });
   }
 
@@ -68,8 +72,12 @@ export class LinkComprosser {
     this.stationDetails.getAvaliavleAssets().subscribe({
       next: (res) => {
         this.availableAssets = res;
+        this.cdr.detectChanges();
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err);
+        this.cdr.detectChanges();
+      },
     });
   }
 
@@ -77,8 +85,12 @@ export class LinkComprosser {
     this.stationDetails.getAvailableStations().subscribe({
       next: (res) => {
         this.availableStations = res.items;
+        this.cdr.detectChanges();
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err);
+        this.cdr.detectChanges();
+      },
     });
   }
 

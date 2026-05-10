@@ -132,6 +132,8 @@ export class OverView implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.stationDetails) {
       this.assetId = this.stationDetails.assetId;
+      this.stationDetailsData = this.stationDetails;
+      this.loadingItems.delete('summary');
     }
     this.onGetComproser();
     this.onGetAllGasConsumption();
@@ -239,7 +241,22 @@ export class OverView implements OnInit, OnDestroy {
     this.subscription = this.realTime.getStationDetails().subscribe({
       next: (data: any) => {
         if (data) {
-          console.log('Received station data:', data);
+          const sid = data.stationId || data.stationID || data.id;
+          console.log(`🔍 [KPI Filter] Incoming StationId: ${sid}, Expected: ${this.stationId}`);
+
+          if (Number(sid) !== Number(this.stationId)) {
+            console.warn(`⏭️ [KPI Filter] Data skipped for station ${sid}`);
+            return;
+          }
+
+          console.log('✅ [KPI Filter] Match found! Updating UI...');
+          console.log('📊 [KPI Data Details]:', {
+            stationId: sid,
+            Revenue: data.totalRevenue,
+            GasVolume: data.gasVolumeSold,
+            Vehicles: data.vehiclesCharged,
+            Timestamp: new Date().toLocaleTimeString()
+          });
           this.stationDetailsData = data;
           this.loadingItems.delete('summary');
           this.cdr.detectChanges();
@@ -274,6 +291,9 @@ export class OverView implements OnInit, OnDestroy {
     this.alarmSubscription = this.realtimeAlarmDetails.getStationDetails().subscribe({
       next: (data: any) => {
         if (data) {
+          const sid = data.stationId || data.stationID || data.id;
+          if (sid && sid !== this.stationId) return;
+
           console.log('Received station Alarm data:', data);
           if (data.className) {
             data.className = data.className.trim();

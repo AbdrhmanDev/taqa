@@ -58,6 +58,7 @@ export class Dispensers implements OnInit {
     private cdr: ChangeDetectorRef,
   ) {}
   ngOnInit(): void {
+    this.getAllDispensers();
     this.subscribeToRealtimeData();
   }
 
@@ -67,14 +68,23 @@ export class Dispensers implements OnInit {
     { label: 'Offline', value: 'Offline' },
   ];
   getAllDispensers() {
+    this.isLoading = true;
     this._stationDetails.getDispenserById(this.stationId).subscribe({
       next: (res) => {
-        console.log(res);
+        console.log('Initial Dispensers:', res);
+        this.DispenserDetails = res;
         this.allDispensers = res;
+        this.filteredDispensers = this.selectedStatus 
+          ? res.filter((d: any) => d.status === this.selectedStatus)
+          : res;
+        
+        this.isLoading = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.log(err);
+        console.error('Error fetching initial dispensers:', err);
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
     });
   }
@@ -82,8 +92,30 @@ export class Dispensers implements OnInit {
   subscribeToRealtimeData() {
     this.isLoading = true;
     this.subscription = this.realTime.getDispenserDetails().subscribe({
-      next: (data) => {
-        if (data) {
+      next: (data: any[]) => {
+        if (data && data.length > 0) {
+          const firstItem = data[0];
+          const sid = firstItem.stationId || firstItem.stationID || firstItem.station_id || firstItem.id;
+          console.log(`🔍 [Dispenser Filter] Incoming StationId: ${sid}, Expected: ${this.stationId}`);
+          
+          if (!sid) {
+            console.warn('⚠️ [Dispenser Filter] No StationId found in data! Available keys:', Object.keys(firstItem));
+          }
+
+          if (sid && Number(sid) !== Number(this.stationId)) {
+            console.warn(`⏭️ [Dispenser Filter] Data skipped for station ${sid}`);
+            return;
+          }
+
+          console.log('✅ [Dispenser Filter] Match found! Updating UI...');
+          console.table(data.map(d => ({
+            Name: d.dispenserName,
+            Left_Status: d.left?.connectionStatus,
+            Left_Vol: d.left?.chargeVolume,
+            Right_Status: d.right?.connectionStatus,
+            Right_Vol: d.right?.chargeVolume
+          })));
+
           if (this.allDispensers && this.allDispensers.length > 0) {
             this.detectDataChanges(data);
           }

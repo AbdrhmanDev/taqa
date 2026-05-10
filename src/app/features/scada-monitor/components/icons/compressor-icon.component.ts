@@ -6,102 +6,107 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div
-      [class.shake-animation]="vibration > 70"
-      class="w-full h-full flex items-center justify-center p-2"
-    >
-      <svg
-        viewBox="0 0 200 120"
-        xmlns="http://www.w3.org/2000/svg"
-        class="w-full h-auto drop-shadow-xl"
-      >
-        <!-- Main Body -->
-        <rect x="20" y="40" width="140" height="60" rx="4" fill="#334155" />
-        <rect x="25" y="45" width="130" height="50" rx="2" fill="#475569" />
+    <div class="comp-data-card">
+      <div class="card-title">COMPRESSOR STATUS</div>
+      
+      <div class="stages-grid">
+        <div class="stage-item" *ngFor="let stage of (stages || []); let i = index">
+          <div class="stage-header">STAGE {{ i + 1 }}</div>
+          <div class="stage-values">
+            <div class="v-group">
+              <span class="label">PRESS</span>
+              <span class="val blue">{{ stage.pressure | number:'1.1-1' }}</span>
+              <span class="unit">BAR</span>
+            </div>
+            <div class="v-group">
+              <span class="label">TEMP</span>
+              <span class="val orange">{{ stage.temperature | number:'1.0-0' }}</span>
+              <span class="unit">°C</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        <!-- Cooling Fins -->
-        <g stroke="#1e293b" stroke-width="2">
-          <line x1="40" y1="40" x2="40" y2="100" />
-          <line x1="55" y1="40" x2="55" y2="100" />
-          <line x1="70" y1="40" x2="70" y2="100" />
-          <line x1="85" y1="40" x2="85" y2="100" />
-          <line x1="100" y1="40" x2="100" y2="100" />
-          <line x1="115" y1="40" x2="115" y2="100" />
-          <line x1="130" y1="40" x2="130" y2="100" />
-        </g>
-
-        <!-- Cylinder Head -->
-        <rect x="40" y="25" width="40" height="15" rx="2" fill="#64748b" />
-        <rect x="100" y="25" width="40" height="15" rx="2" fill="#64748b" />
-
-        <!-- Pressure Gauges -->
-        <circle cx="175" cy="55" r="12" fill="#cbd5e1" stroke="#334155" stroke-width="2" />
-        <line x1="175" y1="55" x2="182" y2="48" stroke="#ef4444" stroke-width="2" />
-        <!-- Needle 1 -->
-
-        <circle cx="175" cy="85" r="12" fill="#cbd5e1" stroke="#334155" stroke-width="2" />
-        <line x1="175" y1="85" x2="168" y2="78" stroke="#ef4444" stroke-width="2" />
-        <!-- Needle 2 -->
-
-        <!-- Motor Section -->
-        <rect x="140" y="55" width="40" height="35" rx="8" fill="#1e293b" />
-        <path d="M140 65 Q 150 55, 160 65" fill="none" stroke="#94a3b8" stroke-width="1" />
-
-        <!-- Status Indicator -->
-        <circle
-          cx="30"
-          cy="50"
-          r="3"
-          [attr.fill]="status === 'Running' ? '#22c55e' : '#ef4444'"
-          class="animate-pulse"
-        />
-      </svg>
+      <div class="comp-footer-data">
+        <div class="f-item">
+          <span class="fl">OIL PRESSURE</span>
+          <span class="fv">{{ oilPressure | number:'1.1-1' }} PSI</span>
+        </div>
+        <div class="f-item">
+          <span class="fl">VIBRATION</span>
+          <span class="fv" [class.danger]="vibration > 70">{{ vibration }} MM/S</span>
+        </div>
+      </div>
     </div>
   `,
-  styles: [
-    `
-      @keyframes shake {
-        0% {
-          transform: translate(1px, 1px) rotate(0deg);
-        }
-        10% {
-          transform: translate(-1px, -2px) rotate(-1deg);
-        }
-        20% {
-          transform: translate(-3px, 0px) rotate(1deg);
-        }
-        30% {
-          transform: translate(3px, 2px) rotate(0deg);
-        }
-        40% {
-          transform: translate(1px, -1px) rotate(1deg);
-        }
-        50% {
-          transform: translate(-1px, 2px) rotate(-1deg);
-        }
-        60% {
-          transform: translate(-3px, 1px) rotate(0deg);
-        }
-        70% {
-          transform: translate(3px, 1px) rotate(-1deg);
-        }
-        80% {
-          transform: translate(-1px, -1px) rotate(1deg);
-        }
-        90% {
-          transform: translate(1px, 2px) rotate(0deg);
-        }
-        100% {
-          transform: translate(1px, -2px) rotate(-1deg);
-        }
+  styles: [`
+    .comp-data-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1rem;
+      color: #1e293b;
+    }
+    .card-title {
+      font-size: 0.75rem;
+      font-weight: 900;
+      color: #64748b;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 0.5rem;
+    }
+    .stages-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+    .stage-item {
+      background: white;
+      border: 1px solid #f1f5f9;
+      border-radius: 8px;
+      padding: 0.6rem;
+    }
+    .stage-header {
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: #94a3b8;
+      margin-bottom: 0.4rem;
+    }
+    .stage-values {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .v-group {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      .label { font-size: 0.5rem; font-weight: 700; color: #94a3b8; width: 30px; }
+      .val { font-size: 0.875rem; font-weight: 900; }
+      .val.blue { color: #3b82f6; }
+      .val.orange { color: #f59e0b; }
+      .unit { font-size: 0.55rem; color: #94a3b8; }
+    }
+    .comp-footer-data {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+      padding-top: 0.75rem;
+      border-top: 1px dashed #e2e8f0;
+      .f-item {
+        display: flex;
+        flex-direction: column;
+        .fl { font-size: 0.55rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; }
+        .fv { font-size: 0.8rem; font-weight: 900; color: #475569; }
+        .fv.danger { color: #ef4444; }
       }
-      .shake-animation {
-        animation: shake 0.5s infinite;
-      }
-    `,
-  ],
+    }
+  `]
 })
 export class CompressorIconComponent {
   @Input() vibration: number = 0;
+  @Input() oilPressure: number = 0;
   @Input() status: string = 'Idle';
+  @Input() stages: any[] = [];
 }

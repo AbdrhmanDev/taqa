@@ -103,7 +103,7 @@ export class ScadaDataBridgeService implements OnDestroy {
       }
 
       const station = { ...stations[index] }; // Shallow copy
-      station.status = 'Online';
+      station.status = 'Running';
       station.lastSignal = new Date().toISOString();
       
       // Map fields based on actual backend structure observed in logs
@@ -134,6 +134,7 @@ export class ScadaDataBridgeService implements OnDestroy {
 
       const station = { ...stations[index] };
       station.lastSignal = new Date().toISOString();
+      station.status = 'Running';
       station.compressor = {
         id: data.compressorId || data.id || data.brokerId,
         model: data.model || 'Standard',
@@ -169,7 +170,9 @@ export class ScadaDataBridgeService implements OnDestroy {
         id: d.dispenserId || d.id,
         name: d.dispenserName || d.name || `Dispenser ${d.id}`,
         status: (d.status === 'Active' || d.status === 'Filling' || d.isFilling) ? 'Filling' : 'Idle',
-        currentReading: d.currentReading || 0
+        currentReading: d.currentReading || 0,
+        left: { volume: d.leftVolume || d.currentReading || 0, throughput: d.leftFlow || 0 },
+        right: { volume: d.rightVolume || 0, throughput: d.rightFlow || 0 }
       }));
 
       stations[index] = station;

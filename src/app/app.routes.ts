@@ -23,14 +23,14 @@ export const routes: Routes = [
     path: 'change-password-success',
     loadComponent: () =>
       import('./features/auth/component/change-pass-success/change-pass-success').then(
-        (m) => m.ChangePassSuccess,
+        (m) => m.ChangePassSuccess
       ),
   },
   {
     path: 'reset-password',
     loadComponent: () =>
       import('./features/auth/component/reset-password/reset-password').then(
-        (m) => m.ResetPassword,
+        (m) => m.ResetPassword
       ),
   },
   {
@@ -47,7 +47,7 @@ export const routes: Routes = [
         path: 'scada-monitor',
         loadComponent: () =>
           import('./features/scada-monitor/scada-dashboard.component').then(
-            (m) => m.ScadaDashboardComponent,
+            (m) => m.ScadaDashboardComponent
           ),
         title: 'SCADA Monitor',
       },
@@ -55,7 +55,7 @@ export const routes: Routes = [
         path: 'homeDashboard',
         loadComponent: () =>
           import('./features/dashboard/component/home-dashboard/home-dashboard').then(
-            (m) => m.HomeDashboard,
+            (m) => m.HomeDashboard
           ),
         title: 'Dashboard',
       },
@@ -63,7 +63,7 @@ export const routes: Routes = [
         path: 'chartDashboard',
         loadComponent: () =>
           import('./features/dashboard/component/chart-dashboard/chart-dashboard').then(
-            (m) => m.ChartDashboard,
+            (m) => m.ChartDashboard
           ),
         title: 'Dashboard',
       },
@@ -83,14 +83,14 @@ export const routes: Routes = [
             path: 'tempreture',
             loadComponent: () =>
               import('./features/dashboard/component/tech-ops/tempreture/tempreture').then(
-                (m) => m.Tempreture,
+                (m) => m.Tempreture
               ),
           },
           {
             path: 'pressure',
             loadComponent: () =>
               import('./features/dashboard/component/tech-ops/pressure/pressure').then(
-                (m) => m.Pressure,
+                (m) => m.Pressure
               ),
           },
         ],
@@ -126,7 +126,7 @@ export const routes: Routes = [
         path: 'station-details/:id',
         loadComponent: () =>
           import('./features/stations/components/station-detatils/station-detatils').then(
-            (m) => m.StationDetatils,
+            (m) => m.StationDetatils
           ),
         title: 'Stations Details',
       },
@@ -140,7 +140,7 @@ export const routes: Routes = [
         path: 'compressors',
         loadComponent: () =>
           import('./features/stations/components/comprossers/comprossers').then(
-            (m) => m.Comprossers,
+            (m) => m.Comprossers
           ),
         title: 'Stations',
       },
@@ -148,7 +148,7 @@ export const routes: Routes = [
         path: 'compressors',
         loadComponent: () =>
           import('./features/stations/components/comprossers/comprossers').then(
-            (m) => m.Comprossers,
+            (m) => m.Comprossers
           ),
         title: 'Stations',
       },
@@ -161,15 +161,15 @@ export const routes: Routes = [
       {
         path: 'dispensers-history',
         loadComponent: () =>
-          import('./features/stations/components/dispensers/dispenser-history/dispenser-history').then(
-            (m) => m.DispenserHistory,
-          ),
+          import(
+            './features/stations/components/dispensers/dispenser-history/dispenser-history'
+          ).then((m) => m.DispenserHistory),
       },
       {
         path: 'station-alarm',
         loadComponent: () =>
           import('./features/stations/components/station-alarm/station-alarm').then(
-            (m) => m.StationAlarm,
+            (m) => m.StationAlarm
           ),
         title: 'Stations',
       },
@@ -177,7 +177,7 @@ export const routes: Routes = [
         path: 'station-tickets',
         loadComponent: () =>
           import('./features/stations/components/station-tickets/station-tickets').then(
-            (m) => m.StationTickets,
+            (m) => m.StationTickets
           ),
         title: 'Stations',
       },
@@ -185,7 +185,7 @@ export const routes: Routes = [
         path: 'requests',
         loadComponent: () =>
           import('./features/Maintenance Request/components/requests/requests').then(
-            (m) => m.Requests,
+            (m) => m.Requests
           ),
         title: 'Maintenance Request',
       },
@@ -193,7 +193,7 @@ export const routes: Routes = [
         path: 'create-ticket',
         loadComponent: () =>
           import('./features/Maintenance Request/components/create-ticket/create-ticket').then(
-            (m) => m.CreateTicket,
+            (m) => m.CreateTicket
           ),
         title: 'Create Ticket',
       },
@@ -213,16 +213,16 @@ export const routes: Routes = [
         path: 'profile-user',
         loadComponent: () =>
           import('./features/setting/components/profile-user/profile-user').then(
-            (m) => m.ProfileUser,
+            (m) => m.ProfileUser
           ),
         title: 'Profile',
       },
       {
         path: 'comproser-details',
         loadComponent: () =>
-          import('./features/stations/components/comprossers/comproser-details/comproser-details').then(
-            (m) => m.ComproserDetails,
-          ),
+          import(
+            './features/stations/components/comprossers/comproser-details/comproser-details'
+          ).then((m) => m.ComproserDetails),
         title: 'Comproser Details',
       },
       {
@@ -259,7 +259,7 @@ export const routes: Routes = [
         path: 'Revenue-chart',
         loadComponent: () =>
           import('./features/revenue/component/revenue-chart/revenue-chart').then(
-            (m) => m.RevenueChart,
+            (m) => m.RevenueChart
           ),
         title: 'Revenue',
       },
@@ -267,7 +267,7 @@ export const routes: Routes = [
         path: 'Revenue-table',
         loadComponent: () =>
           import('./features/revenue/component/revenue-table/revenue-table').then(
-            (m) => m.RevenueTable,
+            (m) => m.RevenueTable
           ),
         title: 'Revenue',
       },
@@ -275,7 +275,7 @@ export const routes: Routes = [
         path: 'alarm-alert',
         loadComponent: () =>
           import('./features/alarm-alerts/components/alarm-alerts-home/alarm-alerts-home').then(
-            (m) => m.AlarmAlertsHome,
+            (m) => m.AlarmAlertsHome
           ),
         title: 'Alarm & Alerts',
       },
@@ -283,7 +283,7 @@ export const routes: Routes = [
         path: 'alarm-view',
         loadComponent: () =>
           import('./features/alarm-alerts/components/alarm-view/alarm-view').then(
-            (m) => m.AlarmView,
+            (m) => m.AlarmView
           ),
         title: 'Alarm & Alerts',
       },
@@ -297,7 +297,7 @@ export const routes: Routes = [
         path: 'create-alarm',
         loadComponent: () =>
           import('./features/alarm-alerts/components/create-alarm/create-alarm').then(
-            (m) => m.CreateAlarm,
+            (m) => m.CreateAlarm
           ),
         title: 'Alarm & Alert Management',
       },
@@ -305,7 +305,7 @@ export const routes: Routes = [
         path: 'preview-alarm',
         loadComponent: () =>
           import('./features/alarm-alerts/components/preview-alarm/preview-alarm').then(
-            (m) => m.PreviewAlarm,
+            (m) => m.PreviewAlarm
           ),
         title: 'Alarm & Alert Management',
       },
@@ -331,7 +331,7 @@ export const routes: Routes = [
         path: 'station-hierarchy',
         loadComponent: () =>
           import('./features/station-hierarchy/station-hierarchy').then(
-            (m) => m.StationHierarchyComponent,
+            (m) => m.StationHierarchyComponent
           ),
         title: 'Station Hierarchy',
       },
@@ -339,7 +339,7 @@ export const routes: Routes = [
         path: '**',
         loadComponent: () =>
           import('./shared/components/coming-soon/coming-soon.component').then(
-            (m) => m.ComingSoonComponent,
+            (m) => m.ComingSoonComponent
           ),
       },
     ],
@@ -349,7 +349,7 @@ export const routes: Routes = [
     path: '**',
     loadComponent: () =>
       import('./shared/components/coming-soon/coming-soon.component').then(
-        (m) => m.ComingSoonComponent,
+        (m) => m.ComingSoonComponent
       ),
   },
 ];

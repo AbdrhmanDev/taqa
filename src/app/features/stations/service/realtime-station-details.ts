@@ -36,6 +36,7 @@ export class RealtimeStationDetails {
       .build();
 
     this.stationKpisConnection.on('ReceiveStationKpis', (data) => {
+      console.log('📡 [SignalR] Raw KPI Data Received:', data);
       this.stationKpisSubject.next(data);
     });
 
@@ -50,6 +51,8 @@ export class RealtimeStationDetails {
 
   joinStation(stationId: number): Promise<void> {
     if (!this.stationKpisConnection) return Promise.resolve();
+    // Clear previous data to prevent stale data flicker
+    this.stationKpisSubject.next(null);
     return this.stationKpisConnection
       .invoke('JoinStationGroup', stationId)
       .then(() => console.log(`Joined station group ${stationId}`))
@@ -58,6 +61,14 @@ export class RealtimeStationDetails {
 
   getStationDetails(): Observable<any> {
     return this.stationKpis$;
+  }
+
+  leaveStation(stationId: number): Promise<void> {
+    if (!this.stationKpisConnection) return Promise.resolve();
+    return this.stationKpisConnection
+      .invoke('LeaveStationGroup', stationId)
+      .then(() => console.log(`Left station group ${stationId}`))
+      .catch((err) => console.error(err));
   }
 
   stopConnection() {
@@ -77,6 +88,7 @@ export class RealtimeStationDetails {
       .build();
 
     this.dispenserConnection.on('ReceiveStationDispensers', (data) => {
+      console.log('📡 [SignalR] Raw Dispenser Data Received:', data);
       this.dispenserSubject.next(data);
     });
 
@@ -91,6 +103,8 @@ export class RealtimeStationDetails {
 
   joinDispenser(stationId: number): Promise<void> {
     if (!this.dispenserConnection) return Promise.resolve();
+    // Clear previous data
+    this.dispenserSubject.next(null);
     return this.dispenserConnection
       .invoke('JoinStationGroup', stationId)
       .then(() => console.log(`Joined dispenser group ${stationId}`))
@@ -99,6 +113,14 @@ export class RealtimeStationDetails {
 
   getDispenserDetails(): Observable<any> {
     return this.dispenser$;
+  }
+
+  leaveDispenser(stationId: number): Promise<void> {
+    if (!this.dispenserConnection) return Promise.resolve();
+    return this.dispenserConnection
+      .invoke('LeaveStationGroup', stationId)
+      .then(() => console.log(`Left dispenser group ${stationId}`))
+      .catch((err) => console.error(err));
   }
 
   stopConnectionDispenser(): Promise<void> {
@@ -118,6 +140,7 @@ export class RealtimeStationDetails {
       .build();
 
     this.compressorConnection.on('ReceiveDashboard', (data) => {
+      console.log('📡 [SignalR] Raw Compressor Data Received:', data);
       this.compressorSubject.next(data);
     });
 
@@ -132,6 +155,8 @@ export class RealtimeStationDetails {
 
   joinCompressor(stationId: number): Promise<void> {
     if (!this.compressorConnection) return Promise.resolve();
+    // Clear previous data
+    this.compressorSubject.next(null);
     return this.compressorConnection
       .invoke('JoinStation', stationId)
       .then(() => console.log(`Joined compressor station_${stationId} `))
@@ -140,6 +165,14 @@ export class RealtimeStationDetails {
 
   getCompressorDetails(): Observable<any> {
     return this.compressor$;
+  }
+
+  leaveCompressor(stationId: number): Promise<void> {
+    if (!this.compressorConnection) return Promise.resolve();
+    return this.compressorConnection
+      .invoke('LeaveStation', stationId)
+      .then(() => console.log(`Left compressor station_${stationId}`))
+      .catch((err) => console.error(err));
   }
 
   stopConnectionCompressor(): Promise<void> {

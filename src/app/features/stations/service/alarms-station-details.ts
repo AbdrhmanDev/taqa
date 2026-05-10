@@ -42,6 +42,9 @@ export class AlarmsStationDetails {
       return Promise.reject('No active connection');
     }
 
+    // Clear previous data
+    this.alarmsSubject.next(null);
+
     return this.hubConnection
       .invoke('JoinStation', stationId)
       .then(() => console.log(`Joined station group Alarm ${stationId}`))
@@ -50,6 +53,14 @@ export class AlarmsStationDetails {
 
   getStationDetails(): Observable<any> {
     return this.alarms$;
+  }
+
+  leaveStation(stationId: number): Promise<void> {
+    if (!this.hubConnection) return Promise.resolve();
+    return this.hubConnection
+      .invoke('LeaveStation', stationId)
+      .then(() => console.log(`Left station group Alarm ${stationId}`))
+      .catch((err) => console.error(err));
   }
 
   stopConnection() {

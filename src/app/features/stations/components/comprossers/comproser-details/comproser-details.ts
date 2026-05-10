@@ -600,14 +600,22 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
     this.isLoadingCompressor = true;
     this.stationDetails.getCompressorById(this.stationId).subscribe({
       next: (res) => {
-        this.ComproserDataCard = res[0];
-        console.log(this.ComproserDataCard);
+        if (res && res.length > 0) {
+          this.ComproserDataCard = res[0];
+          
+          // Use API data as initial state for real-time displays to avoid persistent skeletons
+          this.compressorDetailsData = res[0];
+          this.allComproser = res;
+          this.isLoadingRealtime = false;
+        }
+        console.log('Initial Compressor Data:', this.ComproserDataCard);
         this.isLoadingCompressor = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.log(err);
+        console.error('Error fetching compressor data:', err);
         this.isLoadingCompressor = false;
+        this.isLoadingRealtime = false; // Stop loading even on error
         this.cdr.detectChanges();
       },
     });
@@ -799,19 +807,28 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
   subscribeToRealtimeData() {
     this.isLoadingRealtime = true;
     this.subscription = this.realTime.getCompressorDetails().subscribe({
-      next: (data) => {
-        console.log('--- Realtime Compressor Signal Received ---');
-        console.log('Data:', data);
-        
-        if (data !== null) {
-          this.isLoadingRealtime = false;
-          if (data.length > 0) {
-            this.compressorDetailsData = data[0];
-            this.allComproser = data;
-          } else {
-            this.compressorDetailsData = null;
-            this.allComproser = [];
+      next: (data: any[]) => {
+        if (data && data.length > 0) {
+          const sid = data[0].stationId || data[0].stationID || data[0].id;
+          console.log(`🔍 [Compressor Filter] Incoming StationId: ${sid}, Expected: ${this.stationId}`);
+
+          if (Number(sid) !== Number(this.stationId)) {
+            console.warn(`⏭️ [Compressor Filter] Data skipped for station ${sid}`);
+            return;
           }
+
+          console.log('✅ [Compressor Filter] Match found! Updating UI...');
+          console.log('💨 [Compressor Data Details]:', {
+            Avg_Pressure: data[0].avg,
+            Avg_Temp: data[0].avg_T,
+            ActiveStages: data[0].activePressureStagesCount,
+            Pressures: data[0].pressureStages,
+            Temperatures: data[0].temperatureStages
+          });
+          
+          this.isLoadingRealtime = false;
+          this.compressorDetailsData = data[0];
+          this.allComproser = data;
           this.cdr.detectChanges();
         }
       },

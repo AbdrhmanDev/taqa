@@ -1,7 +1,7 @@
 export interface ScadaStation {
   stationId: number;
   name: string;
-  status: 'Online' | 'Offline' | 'Alarm';
+  status: 'Online' | 'Offline' | 'Alarm' | 'Running';
   zone?: string;
   lastSignal?: string;
   compressor?: ScadaCompressor;
@@ -33,4 +33,6 @@ export interface ScadaDispenser {
   name: string;
   status: 'Idle' | 'Filling' | 'Fault';
   currentReading: number;
+  left?: { volume: number; throughput: number };
+  right?: { volume: number; throughput: number };
 }
