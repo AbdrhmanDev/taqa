@@ -96,25 +96,12 @@ export class Dispensers implements OnInit {
         if (data && data.length > 0) {
           const firstItem = data[0];
           const sid = firstItem.stationId || firstItem.stationID || firstItem.station_id || firstItem.id;
-          console.log(`🔍 [Dispenser Filter] Incoming StationId: ${sid}, Expected: ${this.stationId}`);
           
-          if (!sid) {
-            console.warn('⚠️ [Dispenser Filter] No StationId found in data! Available keys:', Object.keys(firstItem));
-          }
-
           if (sid && Number(sid) !== Number(this.stationId)) {
-            console.warn(`⏭️ [Dispenser Filter] Data skipped for station ${sid}`);
             return;
           }
 
-          console.log('✅ [Dispenser Filter] Match found! Updating UI...');
-          console.table(data.map(d => ({
-            Name: d.dispenserName,
-            Left_Status: d.left?.connectionStatus,
-            Left_Vol: d.left?.chargeVolume,
-            Right_Status: d.right?.connectionStatus,
-            Right_Vol: d.right?.chargeVolume
-          })));
+          console.log(`📦 [Dispenser Signal] ${data.length} items received at ${new Date().toLocaleTimeString()}`);
 
           if (this.allDispensers && this.allDispensers.length > 0) {
             this.detectDataChanges(data);

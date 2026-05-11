@@ -31,8 +31,16 @@ export class RealtimeStationDetails {
     this.kpisStarted = true;
 
     this.stationKpisConnection = new signalR.HubConnectionBuilder()
-      .withUrl('http://10.11.140.37/Taqa_Back_2026/hubs/station-kpis')
-      .withAutomaticReconnect()
+      .withUrl('http://10.11.140.37/Taqa_Back_2026/hubs/station-kpis', {
+        transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.LongPolling,
+        skipNegotiation: false
+      })
+      .withAutomaticReconnect({
+        nextRetryDelayInMilliseconds: retryContext => {
+          if (retryContext.elapsedMilliseconds < 60000) return 2000;
+          return 10000;
+        }
+      })
       .build();
 
     this.stationKpisConnection.on('ReceiveStationKpis', (data) => {
@@ -71,9 +79,12 @@ export class RealtimeStationDetails {
       .catch((err) => console.error(err));
   }
 
-  stopConnection() {
-    this.stationKpisConnection?.stop();
+  async stopConnection(): Promise<void> {
     this.kpisStarted = false;
+    if (this.stationKpisConnection) {
+      await this.stationKpisConnection.stop();
+      console.log('🛑 Station KPIs Connection Stopped');
+    }
   }
 
   // ============ Dispenser ============
@@ -82,8 +93,16 @@ export class RealtimeStationDetails {
     this.dispenserStarted = true;
 
     this.dispenserConnection = new signalR.HubConnectionBuilder()
-      .withUrl('http://10.11.140.37/Taqa_Back_2026/hubs/dispensers')
-      .withAutomaticReconnect()
+      .withUrl('http://10.11.140.37/Taqa_Back_2026/hubs/dispensers', {
+        transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.LongPolling,
+        skipNegotiation: false
+      })
+      .withAutomaticReconnect({
+        nextRetryDelayInMilliseconds: retryContext => {
+          if (retryContext.elapsedMilliseconds < 60000) return 2000;
+          return 10000;
+        }
+      })
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
@@ -123,9 +142,12 @@ export class RealtimeStationDetails {
       .catch((err) => console.error(err));
   }
 
-  stopConnectionDispenser(): Promise<void> {
+  async stopConnectionDispenser(): Promise<void> {
     this.dispenserStarted = false;
-    return this.dispenserConnection?.stop();
+    if (this.dispenserConnection) {
+      await this.dispenserConnection.stop();
+      console.log('🛑 Dispenser Connection Stopped');
+    }
   }
 
   // ============ Compressor ============
@@ -134,8 +156,16 @@ export class RealtimeStationDetails {
     this.compressorStarted = true;
 
     this.compressorConnection = new signalR.HubConnectionBuilder()
-      .withUrl('http://10.11.140.37/Taqa_Back_2026/monitoringHub')
-      .withAutomaticReconnect()
+      .withUrl('http://10.11.140.37/Taqa_Back_2026/monitoringHub', {
+        transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.LongPolling,
+        skipNegotiation: false
+      })
+      .withAutomaticReconnect({
+        nextRetryDelayInMilliseconds: retryContext => {
+          if (retryContext.elapsedMilliseconds < 60000) return 2000;
+          return 10000;
+        }
+      })
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
@@ -175,8 +205,21 @@ export class RealtimeStationDetails {
       .catch((err) => console.error(err));
   }
 
-  stopConnectionCompressor(): Promise<void> {
+  async stopConnectionCompressor(): Promise<void> {
     this.compressorStarted = false;
-    return this.compressorConnection?.stop();
+    if (this.compressorConnection) {
+      await this.compressorConnection.stop();
+      console.log('🛑 Compressor Connection Stopped');
+    }
+  }
+
+  async stopAllConnections(): Promise<void> {
+    console.log('🧹 [Cleanup] Stopping all SignalR connections...');
+    await Promise.allSettled([
+      this.stopConnection(),
+      this.stopConnectionDispenser(),
+      this.stopConnectionCompressor()
+    ]);
+    console.log('✅ [Cleanup] All connections shut down.');
   }
 }

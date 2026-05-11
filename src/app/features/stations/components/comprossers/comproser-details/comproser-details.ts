@@ -810,21 +810,12 @@ export class ComproserDetails implements OnInit, OnDestroy, OnChanges, AfterView
       next: (data: any[]) => {
         if (data && data.length > 0) {
           const sid = data[0].stationId || data[0].stationID || data[0].id;
-          console.log(`🔍 [Compressor Filter] Incoming StationId: ${sid}, Expected: ${this.stationId}`);
-
+          
           if (Number(sid) !== Number(this.stationId)) {
-            console.warn(`⏭️ [Compressor Filter] Data skipped for station ${sid}`);
             return;
           }
 
-          console.log('✅ [Compressor Filter] Match found! Updating UI...');
-          console.log('💨 [Compressor Data Details]:', {
-            Avg_Pressure: data[0].avg,
-            Avg_Temp: data[0].avg_T,
-            ActiveStages: data[0].activePressureStagesCount,
-            Pressures: data[0].pressureStages,
-            Temperatures: data[0].temperatureStages
-          });
+          console.log(`📦 [Compressor Signal] Update received at ${new Date().toLocaleTimeString()} for Station ${sid}`);
           
           this.isLoadingRealtime = false;
           this.compressorDetailsData = data[0];

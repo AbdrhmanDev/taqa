@@ -182,6 +182,37 @@ export const routes: Routes = [
         title: 'Stations',
       },
       {
+        path: 'signalr-test',
+        loadComponent: () =>
+          import(
+            './features/stations/components/signalr-test-hub/signalr-test-hub.component'
+          ).then((m) => m.SignalrTestHubComponent),
+        title: 'SignalR Diagnostics',
+        children: [
+          {
+            path: 'dispenser',
+            loadComponent: () =>
+              import(
+                './features/stations/components/signalr-test-hub/components/dispenser-test.component'
+              ).then((m) => m.DispenserTestComponent),
+          },
+          {
+            path: 'compressor',
+            loadComponent: () =>
+              import(
+                './features/stations/components/signalr-test-hub/components/compressor-test.component'
+              ).then((m) => m.CompressorTestComponent),
+          },
+          {
+            path: 'kpi',
+            loadComponent: () =>
+              import(
+                './features/stations/components/signalr-test-hub/components/kpi-test.component'
+              ).then((m) => m.KpiTestComponent),
+          },
+        ],
+      },
+      {
         path: 'requests',
         loadComponent: () =>
           import('./features/Maintenance Request/components/requests/requests').then(

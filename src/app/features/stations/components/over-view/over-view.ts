@@ -242,21 +242,13 @@ export class OverView implements OnInit, OnDestroy {
       next: (data: any) => {
         if (data) {
           const sid = data.stationId || data.stationID || data.id;
-          console.log(`🔍 [KPI Filter] Incoming StationId: ${sid}, Expected: ${this.stationId}`);
-
+          
           if (Number(sid) !== Number(this.stationId)) {
-            console.warn(`⏭️ [KPI Filter] Data skipped for station ${sid}`);
             return;
           }
 
-          console.log('✅ [KPI Filter] Match found! Updating UI...');
-          console.log('📊 [KPI Data Details]:', {
-            stationId: sid,
-            Revenue: data.totalRevenue,
-            GasVolume: data.gasVolumeSold,
-            Vehicles: data.vehiclesCharged,
-            Timestamp: new Date().toLocaleTimeString()
-          });
+          console.log(`📦 [KPI Signal] Update received at ${new Date().toLocaleTimeString()} for Station ${sid}`);
+          
           this.stationDetailsData = data;
           this.loadingItems.delete('summary');
           this.cdr.detectChanges();

@@ -113,6 +113,9 @@ export class StationDetatils implements OnInit, OnDestroy {
     if (this.joinedStationId) {
       this.leaveAllGroups(this.joinedStationId);
     }
+    // Fully stop all WebSocket connections when leaving the station details context
+    this.realtimeService.stopAllConnections();
+    this.alarmsService.stopConnection();
   }
 
   onGetStationDetails() {

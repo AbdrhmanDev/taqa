@@ -69,6 +69,7 @@ export class Sidebar {
         { name: 'Tariff', icon: 'tariff', route: '/dashboard/tariff' },
         { name: 'Alarm & Alert', icon: 'alarm-alert', route: '/dashboard/alarm-alert' },
         { name: 'Maintenance Request', icon: 'maintenance', route: '/dashboard/requests' },
+        { name: 'SignalR Diagnostics', icon: 'signalr', route: '/dashboard/signalr-test' },
         {
           name: 'User Management',
           icon: 'users',

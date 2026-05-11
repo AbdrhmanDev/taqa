@@ -24,13 +24,12 @@
 
       <div class="mode-selector">
         <span class="mode-label">System Mode:</span>
-        <p-toggleButton
-          [ngModel]="isControlMode()"
-          (ngModelChange)="isControlMode.set($event)"
-          onLabel="COMMAND ON"
-          offLabel="MONITOR ONLY"
-          styleClass="mode-toggle"
-        >
+        <p-toggleButton 
+          [ngModel]="isControlMode()" 
+          (ngModelChange)="isControlMode.set($event)" 
+          [onLabel]="onLabel" 
+          [offLabel]="offLabel" 
+          styleClass="mode-toggle">
         </p-toggleButton>
       </div>
 

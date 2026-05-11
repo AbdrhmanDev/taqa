@@ -1,0 +1,33 @@
+<div class="test-hub-container">
+  <div class="header-section">
+    <h1 class="title">SignalR Diagnostics Center</h1>
+    <p class="subtitle">Select a module to perform real-time signal latency and stability tests.</p>
+  </div>
+
+  <div class="cards-grid">
+    <div *ngFor="let module of testModules" 
+         [routerLink]="module.route" 
+         class="test-card ripple"
+         routerLinkActive="active-card">
+      <div class="card-icon">
+        <i [class]="'bi ' + module.icon"></i>
+      </div>
+      <div class="card-content">
+        <h3>{{ module.title }}</h3>
+        <p>{{ module.description }}</p>
+      </div>
+      <div class="card-arrow">
+        <i class="bi bi-chevron-right"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="test-content-area">
+    <router-outlet></router-outlet>
+    
+    <div class="placeholder-msg" *ngIf="!childActive">
+       <i class="bi bi-broadcast"></i>
+       <p>Select a test module above to begin diagnostics</p>
+    </div>
+  </div>
+</div>

@@ -43,8 +43,11 @@ export class ScadaDashboardComponent implements OnInit {
   stations = this.bridge.activeStations;
   eventLog = this.bridge.eventLog;
   
-  isControlMode = signal(false);
-  showLog = signal(false);
+  isControlMode = signal<boolean>(false);
+  showLog = signal<boolean>(false);
+  
+  onLabel = 'COMMAND ON';
+  offLabel = 'MONITOR ONLY';
   gatewayIp = '10.11.140.37';
 
   searchQuery = signal('');

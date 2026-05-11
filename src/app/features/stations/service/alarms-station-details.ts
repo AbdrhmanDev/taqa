@@ -19,8 +19,16 @@ export class AlarmsStationDetails {
     this.connectionStarted = true;
 
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('http://10.11.140.37/Taqa_2026_RealTime/hubs/stationAlarms')
-      .withAutomaticReconnect()
+      .withUrl('http://10.11.140.37/Taqa_2026_RealTime/hubs/stationAlarms', {
+        transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.LongPolling,
+        skipNegotiation: false
+      })
+      .withAutomaticReconnect({
+        nextRetryDelayInMilliseconds: retryContext => {
+          if (retryContext.elapsedMilliseconds < 60000) return 2000;
+          return 10000;
+        }
+      })
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
