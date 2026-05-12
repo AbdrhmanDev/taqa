@@ -2,6 +2,7 @@ import { Injectable, inject, signal, WritableSignal, OnDestroy } from '@angular/
 import { RealtimeStationDetails } from '../../stations/service/realtime-station-details';
 import { AlarmsStationDetails } from '../../stations/service/alarms-station-details';
 import { StationConfigService } from '../../station-config/service/station-config.service';
+import { TechOpsRealtime } from '../../dashboard/service/tech-ops-realtime';
 import { Subscription, firstValueFrom } from 'rxjs';
 import { ScadaStation, ScadaCompressor, ScadaDispenser } from '../models/scada.model';
 
@@ -12,6 +13,7 @@ export class ScadaDataBridgeService implements OnDestroy {
   private realtime = inject(RealtimeStationDetails);
   private alarms = inject(AlarmsStationDetails);
   private config = inject(StationConfigService);
+  private techOps = inject(TechOpsRealtime);
 
   // Writable Signals for state
   public activeStations: WritableSignal<ScadaStation[]> = signal([]);
@@ -46,6 +48,7 @@ export class ScadaDataBridgeService implements OnDestroy {
       await this.realtime.startConnectionCompressor();
       await this.realtime.startConnectionDispenser();
       await this.alarms.startConnection();
+      await this.techOps.startConnection();
 
       // 3. Register Listeners FIRST before joining groups to not miss any messages
       this.subscriptions.push(
@@ -59,6 +62,9 @@ export class ScadaDataBridgeService implements OnDestroy {
       );
       this.subscriptions.push(
         this.alarms.getStationDetails().subscribe(alarm => this.handleAlarm(alarm))
+      );
+      this.subscriptions.push(
+        this.techOps.techOpsData$.subscribe(data => this.updateTechOpsData(data))
       );
 
       console.log('SCADA Bridge: Subscriptions active. Joining groups...');
@@ -176,6 +182,36 @@ export class ScadaDataBridgeService implements OnDestroy {
       }));
 
       stations[index] = station;
+      return [...stations];
+    });
+  }
+
+  private updateTechOpsData(data: any[]) {
+    if (!data || !Array.isArray(data)) return;
+    
+    console.log('SCADA Bridge [TECH-OPS]: Batch update received', data.length);
+
+    this.activeStations.update(stations => {
+      data.forEach(item => {
+        const sid = item.stationId || item.stationID || item.id;
+        const index = stations.findIndex(s => s.stationId === sid);
+        
+        if (index !== -1) {
+          const station = { ...stations[index] };
+          // Tech Ops provides high-level status
+          if (item.statusName) {
+            station.status = (item.statusName === 'Online' || item.statusName === 'Active') ? 'Online' : 'Offline';
+          }
+          
+          // Optionally map other basic fields if they aren't provided by detailed hubs
+          if (!station.kpis.revenue && item.totalRevenue) station.kpis.revenue = item.totalRevenue;
+          
+          station.beaconAvailability = item.beaconAvailability ?? 85; // Default to 85% for illustrative purposes
+          station.compressorType = item.compressorType || 'IMPA';
+          
+          stations[index] = station;
+        }
+      });
       return [...stations];
     });
   }

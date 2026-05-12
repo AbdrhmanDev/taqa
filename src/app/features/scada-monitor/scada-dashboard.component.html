@@ -1,151 +1,213 @@
-<div class="scada-monitor-hub">
-  <!-- Top Navigation / Header -->
-  <header class="hub-header">
-    <div class="brand-section">
-      <div class="logo-circle">
-        <i class="pi pi-shield text-blue-400"></i>
-      </div>
-      <div class="brand-text">
-        <h1>SCADA <span class="highlight">COMMAND</span></h1>
-        <p>Live Operations Center • v2.1</p>
+<div class="scada-map-container">
+  <!-- Loading State -->
+  <div class="map-loading" *ngIf="isMapLoading">
+    <div class="spinner"></div>
+    <p>Establishing Field Connectivity...</p>
+  </div>
+
+  <!-- HUD Top Bar -->
+  <div class="hud-bar">
+    <div class="hud-brand">
+      <div class="logo"><i class="pi pi-shield"></i></div>
+      <div>
+        <h1>SCADA <span>COMMAND</span></h1>
+        <p>Live Map Operations • v2.1</p>
       </div>
     </div>
 
-    <div class="controls-section">
-      <div class="search-bar">
-        <i class="pi pi-search"></i>
-        <input
-          type="text"
-          [ngModel]="searchQuery()"
-          (ngModelChange)="searchQuery.set($event)"
-          placeholder="Search stations..."
-        />
+    <div class="hud-stats">
+      <div class="stat online">
+        <div class="num">{{ onlineCount() }}</div>
+        <div class="lbl">Online</div>
       </div>
-
-      <div class="mode-selector">
-        <span class="mode-label">System Mode:</span>
-        <p-toggleButton 
-          [ngModel]="isControlMode()" 
-          (ngModelChange)="isControlMode.set($event)" 
-          [onLabel]="onLabel" 
-          [offLabel]="offLabel" 
-          styleClass="mode-toggle">
-        </p-toggleButton>
+      <div class="stat alarm">
+        <div class="num">{{ alarmCount() }}</div>
+        <div class="lbl">Alarms</div>
       </div>
+      <div class="stat">
+        <div class="num">{{ totalStations() }}</div>
+        <div class="lbl">Total</div>
+      </div>
+    </div>
 
-      <button
-        (click)="showLog.set(true)"
-        class="alert-btn"
-        [class.has-alerts]="newEventsCount() > 0"
-      >
+    <div class="hud-actions">
+      <button type="button" class="hud-btn" (click)="resetMapView()" title="Reset View">
+        <i class="pi pi-compass"></i>
+      </button>
+      <button type="button" class="hud-btn" (click)="toggleLog()" title="Event Log">
         <i class="pi pi-bell"></i>
         <span class="badge" *ngIf="newEventsCount() > 0">{{ newEventsCount() }}</span>
       </button>
     </div>
-  </header>
+  </div>
 
-  <!-- Stations Vertical Grid -->
-  <main class="stations-vertical-grid">
-    @for (station of filteredStations(); track station.stationId) {
-    <div class="station-box" [class.in-alarm]="station.status === 'Alarm'">
-      <!-- 1. Identity & Quick Stats -->
-      <div class="box-header">
-        <div class="station-info">
-          <h2 class="station-name">{{ station.name }}</h2>
-          <div class="status-indicator">
-            <span class="dot" [class]="station.status"></span>
-            <span class="text">{{ station.status }}</span>
+  <!-- Leaflet Map -->
+  <div id="scada-map"></div>
+
+  <!-- Station Detail Tree Modal -->
+  <div class="tree-modal-overlay" *ngIf="selectedStation" (click)="closeDetail()">
+    <div class="tree-modal-content" (click)="$event.stopPropagation()">
+      <button type="button" class="close-btn" (click)="closeDetail()">
+        <i class="pi pi-times"></i>
+      </button>
+      
+      <div class="tree-container">
+        
+        <!-- Level 1: Station Root -->
+        <div class="tree-node root-node">
+          <div class="node-card main-card">
+            <div class="node-header">
+              <i class="pi pi-building text-emerald-500" style="font-size: 1.5rem;"></i>
+              <div class="header-text">
+                <small>Source</small>
+                <h3>{{ selectedStation.name }}</h3>
+              </div>
+            </div>
+            
+            <div class="info-row">
+              <span class="lbl bg-emerald-100 text-emerald-700">Compressor type</span>
+              <span class="val bg-blue-50 text-blue-600 font-bold">{{ selectedStation.compressorType || 'IMPA' }}</span>
+            </div>
+
+            <div class="progress-row">
+              <span class="lbl">Beacon Availability</span>
+              <div class="progress-bar-container">
+                <div class="progress-fill bg-teal-500" [style.width.%]="selectedStation.beaconAvailability || 85"></div>
+                <span class="progress-text">{{ selectedStation.beaconAvailability || 85 }}%</span>
+              </div>
+            </div>
+
+            <div class="stats-row">
+              <div class="stat">
+                <i class="pi pi-car text-gray-500"></i>
+                <strong>{{ selectedStation.kpis.vehicles || 0 }}</strong>
+              </div>
+              <div class="stat">
+                <i class="pi pi-wallet text-gray-500"></i>
+                <strong>{{ (selectedStation.kpis.revenue || 0) | number:'1.2-2' }} <small>EGP</small></strong>
+              </div>
+              <div class="stat">
+                <i class="pi pi-bolt text-gray-500"></i>
+                <strong>{{ (selectedStation.kpis.totalFlow || 0) | number:'1.0-0' }} <small>L</small></strong>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="quick-kpis">
-          <div class="kpi-pill">
-            <span class="l">INLET</span>
-            <span class="v"
-              >{{ station.kpis.inletPressure | number : '1.1-1' }} <small>BAR</small></span
-            >
-          </div>
-          <div class="kpi-pill">
-            <span class="l">TOTAL FLOW</span>
-            <span class="v">{{ station.kpis.totalFlow | number : '1.0-0' }} <small>M³</small></span>
+        <!-- Connection from Root -->
+        <div class="tree-line vertical-down"></div>
+
+        <!-- Level 2: Categories -->
+        <div class="tree-level">
+          <div class="tree-line horizontal" style="width: 250px;"></div>
+          <div class="level-nodes">
+            
+            <!-- Compressor Branch -->
+            <div class="node-branch">
+              <div class="tree-line vertical-up"></div>
+              <div class="node-card small-card border-blue-200 cursor-pointer" (click)="selectedStation.showCompressor = !selectedStation.showCompressor">
+                <i class="pi pi-cog text-blue-500"></i>
+                <span>Compressor</span>
+                <i class="pi" [ngClass]="selectedStation.showCompressor ? 'pi-chevron-up' : 'pi-chevron-down'" style="font-size: 10px; margin-left: auto;"></i>
+              </div>
+              
+              <!-- Expanded Compressor Details -->
+              <div class="tree-level" *ngIf="selectedStation.showCompressor && selectedStation.compressor">
+                <div class="tree-line vertical-down"></div>
+                <div class="node-card compressor-details-card">
+                  <div class="comp-stat-row">
+                    <div class="comp-stat"><label>Status</label><span>{{ selectedStation.compressor.status }}</span></div>
+                    <div class="comp-stat"><label>Vibration</label><span>{{ selectedStation.compressor.vibration }}</span></div>
+                    <div class="comp-stat"><label>Oil Press.</label><span>{{ selectedStation.compressor.oilPressure }}</span></div>
+                  </div>
+                  <div class="stages-grid" *ngIf="selectedStation.compressor.stages?.length">
+                    <div class="stage-box" *ngFor="let stage of selectedStation.compressor.stages; let i = index">
+                      <div class="stage-title">Stage {{ i + 1 }}</div>
+                      <div class="stage-val text-blue-600">{{ stage.pressure | number:'1.1-1' }} <small>BAR</small></div>
+                      <div class="stage-val text-orange-500">{{ stage.temperature | number:'1.0-0' }} <small>°C</small></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dispenser Branch -->
+            <div class="node-branch">
+              <div class="tree-line vertical-up"></div>
+              <div class="node-card small-card border-rose-200">
+                <i class="pi pi-filter text-rose-400"></i>
+                <span>Dispenser</span>
+              </div>
+              <div class="tree-line vertical-down" *ngIf="selectedStation.dispensers?.length"></div>
+              
+              <!-- Level 3: Dispensers -->
+              <div class="tree-level" *ngIf="selectedStation.dispensers?.length">
+                <div class="tree-line horizontal" [style.width.px]="(selectedStation.dispensers.length - 1) * 200"></div>
+                <div class="level-nodes">
+                  
+                  <div class="node-branch" *ngFor="let disp of selectedStation.dispensers">
+                    <div class="tree-line vertical-up"></div>
+                    
+                    <!-- Dispenser Shape -->
+                    <div class="dispenser-shape" [ngClass]="disp.status === 'Filling' ? 'bg-emerald-200 border-emerald-400' : 'bg-rose-200 border-rose-400'">
+                      <div class="disp-header-shape"></div>
+                      <div class="disp-name-badge">{{ disp.name }}</div>
+                    </div>
+                    
+                    <!-- Nozzles Connection -->
+                    <div class="nozzles-container">
+                      <div class="tree-line horizontal" style="width: 120px; position: absolute; top: -10px;"></div>
+                      
+                      <!-- Nozzle 2 (Left) -->
+                      <div class="nozzle-wrapper" *ngIf="disp.left">
+                        <div class="tree-line vertical-up" [ngClass]="disp.status === 'Filling' ? 'border-emerald-500' : 'border-rose-500'"></div>
+                        <span class="nozzle-lbl">Nozzle 2</span>
+                        <div class="nozzle-card detailed">
+                          <div class="n-metric"><label>Vol</label><span>{{ disp.left.volume | number:'1.2-2' }}</span></div>
+                          <div class="n-metric"><label>Rate</label><span>{{ disp.left.throughput | number:'1.2-2' }}</span></div>
+                        </div>
+                        <div class="timestamp">{{ selectedStation.lastSignal | date:'yy-MM-dd HH:mm:ss' }}</div>
+                      </div>
+                      
+                      <!-- Nozzle 1 (Right) -->
+                      <div class="nozzle-wrapper" *ngIf="disp.right">
+                        <div class="tree-line vertical-up" [ngClass]="disp.status === 'Filling' ? 'border-emerald-500' : 'border-rose-500'"></div>
+                        <span class="nozzle-lbl">Nozzle 1</span>
+                        <div class="nozzle-card detailed">
+                          <div class="n-metric"><label>Vol</label><span>{{ disp.right.volume | number:'1.2-2' }}</span></div>
+                          <div class="n-metric"><label>Rate</label><span>{{ disp.right.throughput | number:'1.2-2' }}</span></div>
+                        </div>
+                        <div class="timestamp">{{ selectedStation.lastSignal | date:'yy-MM-dd HH:mm:ss' }}</div>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
+
       </div>
-
-      <!-- 2. Compressor Data Section (Stages Table) -->
-      <section class="compressor-data-section">
-        <scada-compressor-icon
-          [vibration]="station.compressor?.vibration || 0"
-          [oilPressure]="station.compressor?.oilPressure || 0"
-          [stages]="station.compressor?.stages || []"
-          [status]="station.status"
-        >
-        </scada-compressor-icon>
-      </section>
-
-      <!-- 3. Dispensers Illustration Section -->
-      <section class="dispensers-graphic-section">
-        <div class="dispenser-row">
-          @for (disp of station.dispensers.slice(0, 2); track disp.id) {
-          <div class="dispenser-col">
-            <scada-dispenser-icon
-              [status]="disp.status"
-              [name]="disp.name"
-              [left]="disp.left"
-              [right]="disp.right"
-            >
-            </scada-dispenser-icon>
-          </div>
-          }
-        </div>
-      </section>
-
-      <!-- 4. Financial Footer -->
-      <footer class="box-footer">
-        <div class="financial-pill">
-          <i class="pi pi-wallet text-emerald-400"></i>
-          <span class="label">DAILY REVENUE:</span>
-          <span class="value">{{
-            station.kpis.revenue | currency : 'EGP ' : 'symbol' : '1.0-0'
-          }}</span>
-        </div>
-        <div class="zone-pill">
-          <i class="pi pi-map-marker"></i>
-          <span>{{ station.zone || 'Global' }}</span>
-        </div>
-      </footer>
     </div>
-    } @empty {
-    <div class="empty-state">
-      <i class="pi pi-spin pi-spinner"></i>
-      <h3>Establishing Field Connectivity...</h3>
-    </div>
-    }
-  </main>
+  </div>
 
-  <!-- System Events Sidebar -->
-  <p-drawer
-    [visible]="showLog()"
-    (visibleChange)="showLog.set($event)"
-    position="right"
-    [style]="{ width: '380px' }"
-  >
-    <div class="sidebar-container">
-      <div class="sidebar-header">
-        <i class="pi pi-exclamation-circle text-rose-500"></i>
-        <h2>SYSTEM LOGS</h2>
+  <!-- Event Log Drawer (Left Side) -->
+  <div class="log-overlay" [class.active]="showLog">
+    <div class="log-header">
+      <h2><i class="pi pi-exclamation-circle" style="color:#ef4444;margin-right:8px"></i> SYSTEM EVENTS</h2>
+      <button type="button" class="close-btn" style="width:28px;height:28px;border-radius:6px;border:1px solid rgba(100,255,218,0.1);background:rgba(30,41,59,0.6);color:#94a3b8;cursor:pointer" (click)="toggleLog()">
+        <i class="pi pi-times" style="font-size:12px"></i>
+      </button>
+    </div>
+    <div *ngFor="let event of eventLog()" class="log-item">
+      <div class="log-meta">
+        <span class="source">Station {{ event.stationId }}</span>
+        <span class="time">{{ event.timestamp | date:'HH:mm:ss' }}</span>
       </div>
-      <div class="event-list">
-        @for (event of eventLog(); track event.timestamp) {
-        <div class="event-item" [class.command]="event.type === 'COMMAND'">
-          <div class="event-meta">
-            <span class="source">{{ event.stationId }}</span>
-            <span class="time">{{ event.timestamp | date : 'HH:mm:ss' }}</span>
-          </div>
-          <p class="message">{{ event.message }}</p>
-        </div>
-        }
-      </div>
+      <p class="log-msg">{{ event.message || event.className }}</p>
     </div>
-  </p-drawer>
+  </div>
 </div>

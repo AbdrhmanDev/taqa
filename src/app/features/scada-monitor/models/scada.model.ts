@@ -4,6 +4,9 @@ export interface ScadaStation {
   status: 'Online' | 'Offline' | 'Alarm' | 'Running';
   zone?: string;
   lastSignal?: string;
+  beaconAvailability?: number;
+  compressorType?: string;
+  showCompressor?: boolean;
   compressor?: ScadaCompressor;
   dispensers: ScadaDispenser[];
   kpis: {

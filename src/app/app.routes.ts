@@ -184,9 +184,9 @@ export const routes: Routes = [
       {
         path: 'signalr-test',
         loadComponent: () =>
-          import(
-            './features/stations/components/signalr-test-hub/signalr-test-hub.component'
-          ).then((m) => m.SignalrTestHubComponent),
+          import('./features/stations/components/signalr-test-hub/signalr-test-hub.component').then(
+            (m) => m.SignalrTestHubComponent
+          ),
         title: 'SignalR Diagnostics',
         children: [
           {

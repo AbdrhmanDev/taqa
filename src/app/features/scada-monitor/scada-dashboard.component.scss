@@ -1,189 +1,531 @@
-.scada-monitor-hub {
-  padding: 2.5rem;
-  background: #f1f5f9;
-  min-height: 100vh;
-  font-family: 'Inter', sans-serif;
-  color: #1e293b;
+/* ============================================
+   SCADA MAP VIEW - Dark/Light Theme with Tree Diagram
+   ============================================ */
 
-  .hub-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 3rem;
-    padding: 1.5rem 2rem;
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e2e8f0;
+:host {
+  display: block;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
 
-    .brand-section {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-      .logo-circle {
-        width: 50px; height: 50px; background: #eff6ff; border-radius: 14px;
-        display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
-      }
-      .brand-text {
-        h1 { font-size: 1.75rem; font-weight: 900; margin: 0; letter-spacing: -0.04em; .highlight { color: #3b82f6; } }
-        p { font-size: 0.75rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-      }
-    }
+.scada-map-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: #f8fafc;
+}
 
-    .controls-section {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
+/* ---- Map ---- */
+#scada-map {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
 
-      .search-bar {
-        position: relative;
-        i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; }
-        input {
-          padding: 0.75rem 1rem 0.75rem 2.75rem; border-radius: 12px; border: 1px solid #e2e8f0; width: 300px;
-          background: #f8fafc; font-size: 0.875rem; transition: all 0.2s;
-          &:focus { outline: none; border-color: #3b82f6; background: white; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
-        }
-      }
+/* ---- Leaflet Overrides ---- */
+.leaflet-container {
+  background: #f8fafc !important;
+}
 
-      .mode-selector {
-        display: flex; align-items: center; gap: 0.75rem;
-        .mode-label { font-size: 0.75rem; font-weight: 800; color: #64748b; text-transform: uppercase; }
-      }
+/* ---- Custom Markers ---- */
+:host ::ng-deep .scada-marker {
+  background: none !important;
+  border: none !important;
+}
 
-      .alert-btn {
-        width: 48px; height: 48px; border-radius: 14px; border: 1px solid #e2e8f0; background: white;
-        color: #64748b; cursor: pointer; position: relative; transition: all 0.2s;
-        &:hover { background: #f8fafc; color: #3b82f6; border-color: #3b82f6; }
-        &.has-alerts { color: #ef4444; border-color: #fecaca; background: #fef2f2; }
-        .badge {
-          position: absolute; -top: 8px; -right: 8px; background: #ef4444; color: white;
-          font-size: 0.65rem; font-weight: 900; min-width: 20px; height: 20px; border-radius: 10px;
-          display: flex; align-items: center; justify-content: center; padding: 0 5px;
-        }
-      }
-    }
+:host ::ng-deep .marker-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    opacity: 0.3;
+    animation: pulse-ring 2.5s infinite;
   }
 
-  .stations-vertical-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
-    gap: 2.5rem;
-
-    .station-box {
-      background: white;
-      border-radius: 28px;
-      padding: 1.75rem;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-      &:hover { transform: translateY(-10px); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1); border-color: #3b82f6; }
-      &.in-alarm { border-color: #ef4444; background: #fffafb; .station-name { color: #991b1b; } }
-
-      .box-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        padding-bottom: 1.25rem;
-        border-bottom: 1px solid #f1f5f9;
-
-        .station-info {
-          .station-name { font-size: 1.75rem; font-weight: 900; margin: 0; color: #0f172a; letter-spacing: -0.04em; }
-          .status-indicator {
-            display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;
-            .dot {
-              width: 10px; height: 10px; border-radius: 50%; background: #94a3b8;
-              &.Compression, &.Running { background: #10b981; box-shadow: 0 0 10px #10b981; }
-              &.Alarm { background: #ef4444; box-shadow: 0 0 10px #ef4444; }
-            }
-            .text { font-size: 0.75rem; font-weight: 800; color: #64748b; text-transform: uppercase; }
-          }
-        }
-
-        .quick-kpis {
-          display: flex; flex-direction: column; gap: 0.5rem;
-          .kpi-pill {
-            background: #f8fafc; padding: 0.4rem 1rem; border-radius: 10px; border: 1px solid #f1f5f9;
-            display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; min-width: 140px;
-            .l { font-size: 0.6rem; font-weight: 800; color: #94a3b8; }
-            .v { font-size: 0.95rem; font-weight: 900; color: #1e293b; small { font-size: 0.6rem; color: #94a3b8; } }
-          }
-        }
-      }
-
-      .compressor-data-section {
-        width: 100%;
-      }
-
-      .dispensers-graphic-section {
-        .dispenser-row {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 1rem;
-        }
-      }
-
-      .box-footer {
-        margin-top: auto;
-        padding-top: 1.25rem;
-        border-top: 1px solid #f1f5f9;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        .financial-pill {
-          background: #0f172a; color: white; padding: 0.75rem 1.25rem; border-radius: 16px;
-          display: flex; align-items: center; gap: 0.75rem;
-          .label { font-size: 0.65rem; font-weight: 800; color: #94a3b8; }
-          .value { font-size: 1.1rem; font-weight: 900; color: #10b981; }
-        }
-
-        .zone-pill {
-          display: flex; align-items: center; gap: 0.4rem; color: #94a3b8; font-size: 0.75rem; font-weight: 700;
-        }
-      }
-    }
+  &:hover {
+    transform: scale(1.8);
   }
 
-  .empty-state {
-    grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 10rem 0; color: #94a3b8;
-    i { font-size: 3rem; margin-bottom: 1.5rem; }
-    h3 { font-size: 1.25rem; font-weight: 800; }
+  &.status-online, &.status-running, &.status-active {
+    background: #10b981;
+    color: #10b981;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+  }
+  &.status-offline {
+    background: #64748b;
+    color: #64748b;
+    box-shadow: 0 0 8px rgba(100, 116, 139, 0.2);
+    &::before { animation: none; opacity: 0.15; }
+  }
+  &.status-alarm {
+    background: #ef4444;
+    color: #ef4444;
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.5);
+    animation: alarm-blink 1s infinite;
   }
 }
 
-// Side Drawer Styling
-:host ::ng-deep {
-  .p-drawer {
-    background: #f8fafc !important; border-left: 1px solid #e2e8f0 !important;
-    .sidebar-container {
-      padding: 2rem;
-      .sidebar-header {
-        display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem;
-        h2 { font-size: 1.25rem; font-weight: 900; color: #0f172a; margin: 0; }
-        i { font-size: 1.5rem; }
-      }
-      .event-list {
-        display: flex; flex-direction: column; gap: 1rem;
-        .event-item {
-          background: white; padding: 1.25rem; border-radius: 16px; border: 1px solid #e2e8f0;
-          &.command { border-left: 4px solid #3b82f6; }
-          .event-meta {
-            display: flex; justify-content: space-between; margin-bottom: 0.5rem;
-            .source { font-size: 0.65rem; font-weight: 900; color: #3b82f6; text-transform: uppercase; }
-            .time { font-size: 0.65rem; color: #94a3b8; }
-          }
-          .message { font-size: 0.875rem; color: #1e293b; font-weight: 600; margin: 0; line-height: 1.4; }
-        }
+:host ::ng-deep .marker-label {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 600;
+  color: #1e293b;
+  text-shadow: 0 0 4px white;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+:host ::ng-deep .marker-dot:hover + .marker-label,
+:host ::ng-deep .marker-dot:hover ~ .marker-label,
+:host ::ng-deep .show-label .marker-label {
+  opacity: 1;
+}
+
+@keyframes pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.3; }
+  70%  { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+@keyframes alarm-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+/* ---- Top HUD Bar ---- */
+.hud-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  pointer-events: auto;
+}
+
+.hud-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  .logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #0ea5e9, #6366f1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+  h1 { font-size: 16px; font-weight: 700; color: #1e293b; margin: 0; span { color: #6366f1; } }
+  p { font-size: 10px; color: #64748b; margin: 0; }
+}
+
+.hud-stats {
+  display: flex;
+  gap: 20px;
+  .stat {
+    text-align: center;
+    .num { font-size: 18px; font-weight: 700; color: #1e293b; }
+    .lbl { font-size: 9px; color: #64748b; text-transform: uppercase; }
+    &.online .num { color: #10b981; }
+    &.alarm .num { color: #ef4444; }
+  }
+}
+
+.hud-actions {
+  display: flex;
+  gap: 8px;
+  .hud-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    &:hover { background: #f8fafc; color: #0f172a; }
+    .badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ef4444;
+      color: white;
+      font-size: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+  }
+}
+
+/* ---- Tree Modal Overlay ---- */
+.tree-modal-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(248, 250, 252, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.tree-modal-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  padding: 60px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.close-btn {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  z-index: 2001;
+  transition: all 0.2s;
+  &:hover { transform: scale(1.1); color: #ef4444; }
+}
+
+/* ---- Tree Diagram Layout ---- */
+.tree-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tree-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tree-level {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.level-nodes {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.node-branch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Lines connecting the tree */
+.tree-line {
+  background: #3b82f6; /* Blue connection line */
+}
+.tree-line.vertical-down {
+  width: 2px;
+  height: 30px;
+}
+.tree-line.vertical-up {
+  width: 2px;
+  height: 20px;
+}
+.tree-line.horizontal {
+  height: 2px;
+  background: #3b82f6;
+}
+
+/* ---- Node Cards ---- */
+.node-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 10;
+}
+
+.main-card {
+  width: 280px;
+  padding: 16px;
+
+  .node-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    .header-text {
+      small { color: #64748b; font-size: 10px; font-weight: 600; text-transform: uppercase; }
+      h3 { margin: 0; font-size: 14px; font-weight: 700; color: #1e293b; }
+    }
+  }
+
+  .info-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    .lbl { font-size: 10px; padding: 4px 8px; border-radius: 6px; font-weight: 500; }
+    .val { font-size: 10px; padding: 4px 8px; border-radius: 6px; }
+  }
+
+  .progress-row {
+    margin-bottom: 16px;
+    .lbl { display: block; font-size: 11px; color: #475569; margin-bottom: 4px; font-weight: 500; }
+    .progress-bar-container {
+      height: 12px;
+      background: #e2e8f0;
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      .progress-fill { height: 100%; border-radius: 10px; }
+      .progress-text { position: absolute; right: 6px; font-size: 9px; color: white; font-weight: 700; }
+    }
+  }
+
+  .stats-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid #f1f5f9;
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      strong { font-size: 14px; color: #0f172a; small { font-size: 9px; color: #64748b; } }
+    }
+  }
+}
+
+.small-card {
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+}
+
+/* Compressor Details */
+.compressor-details-card {
+  padding: 12px;
+  width: 250px;
+  margin-top: 0;
+  
+  .comp-stat-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 8px;
+    .comp-stat {
+      display: flex;
+      flex-direction: column;
+      label { font-size: 9px; color: #64748b; text-transform: uppercase; }
+      span { font-size: 12px; font-weight: 700; color: #0f172a; }
+    }
+  }
+  
+  .stages-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    
+    .stage-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 8px;
+      text-align: center;
+      .stage-title { font-size: 9px; font-weight: 600; color: #475569; margin-bottom: 4px; }
+      .stage-val {
+        font-size: 12px; font-weight: 700;
+        small { font-size: 8px; }
       }
     }
   }
-  .mode-toggle {
-    border-radius: 10px !important;
-    .p-button-label { font-size: 0.75rem !important; font-weight: 800 !important; }
+}
+
+/* ---- Dispenser & Nozzles ---- */
+.dispenser-shape {
+  width: 60px;
+  height: 80px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+  margin-bottom: 20px;
+  
+  .disp-header-shape {
+    width: 40px;
+    height: 20px;
+    background: white;
+    border-radius: 4px;
+    margin-bottom: 4px;
   }
+  .disp-name-badge {
+    font-size: 8px;
+    font-weight: 700;
+    color: #475569;
+    background: rgba(255,255,255,0.7);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+}
+
+.nozzles-container {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  position: relative;
+}
+
+.nozzle-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  .nozzle-line {
+    width: 2px;
+    height: 15px;
+    background: transparent;
+    border-left: 2px solid;
+  }
+
+  .nozzle-lbl {
+    font-size: 9px;
+    font-weight: 700;
+    color: #475569;
+    margin-bottom: 4px;
+  }
+
+  .nozzle-card {
+    width: 55px;
+    height: 65px;
+    background: #e2e8f0;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4px;
+    &.detailed {
+      align-items: flex-start;
+      background: white;
+      border: 1px solid #cbd5e1;
+      .n-metric {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 2px;
+        label { font-size: 8px; color: #64748b; }
+        span { font-size: 10px; font-weight: 700; color: #0f172a; }
+      }
+    }
+    .lines {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 60%;
+      .line { height: 3px; background: white; border-radius: 2px; }
+    }
+  }
+
+  .timestamp {
+    margin-top: 6px;
+    font-size: 8px;
+    color: #94a3b8;
+  }
+}
+
+/* ---- Empty State ---- */
+.map-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.9);
+  color: #64748b;
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e2e8f0;
+    border-top-color: #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+  }
+  p { font-size: 13px; font-weight: 500; }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---- Log Overlay ---- */
+.log-overlay {
+  display: none; /* Can implement side drawer or hide if not needed */
 }
