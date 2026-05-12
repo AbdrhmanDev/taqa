@@ -89,8 +89,8 @@ export class ScadaDashboardComponent implements OnInit, AfterViewInit, OnDestroy
       attributionControl: true
     });
 
-    // Light tile layer
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    // Dark tile layer (CartoDB Dark Matter)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
       attribution: '© CartoDB © OpenStreetMap contributors',
       maxZoom: 19,
       subdomains: 'abcd'
@@ -197,8 +197,7 @@ export class ScadaDashboardComponent implements OnInit, AfterViewInit, OnDestroy
       if (this.selectedStationId !== null) {
         const updated = this.stations().find(s => s.stationId === this.selectedStationId);
         if (updated) {
-          const currentShowCompressor = this.selectedStation?.showCompressor;
-          this.selectedStation = { ...updated, showCompressor: currentShowCompressor };
+          this.selectedStation = { ...updated };
         }
       }
     }, 1000);

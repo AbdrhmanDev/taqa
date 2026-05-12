@@ -44,154 +44,116 @@
   <!-- Leaflet Map -->
   <div id="scada-map"></div>
 
-  <!-- Station Detail Tree Modal -->
-  <div class="tree-modal-overlay" *ngIf="selectedStation" (click)="closeDetail()">
-    <div class="tree-modal-content" (click)="$event.stopPropagation()">
-      <button type="button" class="close-btn" (click)="closeDetail()">
-        <i class="pi pi-times"></i>
-      </button>
-      
-      <div class="tree-container">
-        
-        <!-- Level 1: Station Root -->
-        <div class="tree-node root-node">
-          <div class="node-card main-card">
-            <div class="node-header">
-              <i class="pi pi-building text-emerald-500" style="font-size: 1.5rem;"></i>
-              <div class="header-text">
-                <small>Source</small>
-                <h3>{{ selectedStation.name }}</h3>
-              </div>
-            </div>
-            
-            <div class="info-row">
-              <span class="lbl bg-emerald-100 text-emerald-700">Compressor type</span>
-              <span class="val bg-blue-50 text-blue-600 font-bold">{{ selectedStation.compressorType || 'IMPA' }}</span>
-            </div>
-
-            <div class="progress-row">
-              <span class="lbl">Beacon Availability</span>
-              <div class="progress-bar-container">
-                <div class="progress-fill bg-teal-500" [style.width.%]="selectedStation.beaconAvailability || 85"></div>
-                <span class="progress-text">{{ selectedStation.beaconAvailability || 85 }}%</span>
-              </div>
-            </div>
-
-            <div class="stats-row">
-              <div class="stat">
-                <i class="pi pi-car text-gray-500"></i>
-                <strong>{{ selectedStation.kpis.vehicles || 0 }}</strong>
-              </div>
-              <div class="stat">
-                <i class="pi pi-wallet text-gray-500"></i>
-                <strong>{{ (selectedStation.kpis.revenue || 0) | number:'1.2-2' }} <small>EGP</small></strong>
-              </div>
-              <div class="stat">
-                <i class="pi pi-bolt text-gray-500"></i>
-                <strong>{{ (selectedStation.kpis.totalFlow || 0) | number:'1.0-0' }} <small>L</small></strong>
-              </div>
+  <!-- Station Detail Overlay -->
+  <div class="detail-overlay" [class.active]="selectedStation !== null">
+    <ng-container *ngIf="selectedStation as station">
+      <!-- Header -->
+      <div class="detail-header">
+        <div class="header-top">
+          <div class="station-title">
+            <h2>{{ station.name }}</h2>
+            <div class="zone-tag">
+              <i class="pi pi-map-marker"></i>
+              {{ station.zone || 'Unassigned Zone' }}
             </div>
           </div>
+          <button type="button" class="close-btn" (click)="closeDetail()">
+            <i class="pi pi-times"></i>
+          </button>
         </div>
-
-        <!-- Connection from Root -->
-        <div class="tree-line vertical-down"></div>
-
-        <!-- Level 2: Categories -->
-        <div class="tree-level">
-          <div class="tree-line horizontal" style="width: 250px;"></div>
-          <div class="level-nodes">
-            
-            <!-- Compressor Branch -->
-            <div class="node-branch">
-              <div class="tree-line vertical-up"></div>
-              <div class="node-card small-card border-blue-200 cursor-pointer" (click)="selectedStation.showCompressor = !selectedStation.showCompressor">
-                <i class="pi pi-cog text-blue-500"></i>
-                <span>Compressor</span>
-                <i class="pi" [ngClass]="selectedStation.showCompressor ? 'pi-chevron-up' : 'pi-chevron-down'" style="font-size: 10px; margin-left: auto;"></i>
-              </div>
-              
-              <!-- Expanded Compressor Details -->
-              <div class="tree-level" *ngIf="selectedStation.showCompressor && selectedStation.compressor">
-                <div class="tree-line vertical-down"></div>
-                <div class="node-card compressor-details-card">
-                  <div class="comp-stat-row">
-                    <div class="comp-stat"><label>Status</label><span>{{ selectedStation.compressor.status }}</span></div>
-                    <div class="comp-stat"><label>Vibration</label><span>{{ selectedStation.compressor.vibration }}</span></div>
-                    <div class="comp-stat"><label>Oil Press.</label><span>{{ selectedStation.compressor.oilPressure }}</span></div>
-                  </div>
-                  <div class="stages-grid" *ngIf="selectedStation.compressor.stages?.length">
-                    <div class="stage-box" *ngFor="let stage of selectedStation.compressor.stages; let i = index">
-                      <div class="stage-title">Stage {{ i + 1 }}</div>
-                      <div class="stage-val text-blue-600">{{ stage.pressure | number:'1.1-1' }} <small>BAR</small></div>
-                      <div class="stage-val text-orange-500">{{ stage.temperature | number:'1.0-0' }} <small>°C</small></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Dispenser Branch -->
-            <div class="node-branch">
-              <div class="tree-line vertical-up"></div>
-              <div class="node-card small-card border-rose-200">
-                <i class="pi pi-filter text-rose-400"></i>
-                <span>Dispenser</span>
-              </div>
-              <div class="tree-line vertical-down" *ngIf="selectedStation.dispensers?.length"></div>
-              
-              <!-- Level 3: Dispensers -->
-              <div class="tree-level" *ngIf="selectedStation.dispensers?.length">
-                <div class="tree-line horizontal" [style.width.px]="(selectedStation.dispensers.length - 1) * 200"></div>
-                <div class="level-nodes">
-                  
-                  <div class="node-branch" *ngFor="let disp of selectedStation.dispensers">
-                    <div class="tree-line vertical-up"></div>
-                    
-                    <!-- Dispenser Shape -->
-                    <div class="dispenser-shape" [ngClass]="disp.status === 'Filling' ? 'bg-emerald-200 border-emerald-400' : 'bg-rose-200 border-rose-400'">
-                      <div class="disp-header-shape"></div>
-                      <div class="disp-name-badge">{{ disp.name }}</div>
-                    </div>
-                    
-                    <!-- Nozzles Connection -->
-                    <div class="nozzles-container">
-                      <div class="tree-line horizontal" style="width: 120px; position: absolute; top: -10px;"></div>
-                      
-                      <!-- Nozzle 2 (Left) -->
-                      <div class="nozzle-wrapper" *ngIf="disp.left">
-                        <div class="tree-line vertical-up" [ngClass]="disp.status === 'Filling' ? 'border-emerald-500' : 'border-rose-500'"></div>
-                        <span class="nozzle-lbl">Nozzle 2</span>
-                        <div class="nozzle-card detailed">
-                          <div class="n-metric"><label>Vol</label><span>{{ disp.left.volume | number:'1.2-2' }}</span></div>
-                          <div class="n-metric"><label>Rate</label><span>{{ disp.left.throughput | number:'1.2-2' }}</span></div>
-                        </div>
-                        <div class="timestamp">{{ selectedStation.lastSignal | date:'yy-MM-dd HH:mm:ss' }}</div>
-                      </div>
-                      
-                      <!-- Nozzle 1 (Right) -->
-                      <div class="nozzle-wrapper" *ngIf="disp.right">
-                        <div class="tree-line vertical-up" [ngClass]="disp.status === 'Filling' ? 'border-emerald-500' : 'border-rose-500'"></div>
-                        <span class="nozzle-lbl">Nozzle 1</span>
-                        <div class="nozzle-card detailed">
-                          <div class="n-metric"><label>Vol</label><span>{{ disp.right.volume | number:'1.2-2' }}</span></div>
-                          <div class="n-metric"><label>Rate</label><span>{{ disp.right.throughput | number:'1.2-2' }}</span></div>
-                        </div>
-                        <div class="timestamp">{{ selectedStation.lastSignal | date:'yy-MM-dd HH:mm:ss' }}</div>
-                      </div>
-                    </div>
-
-                  </div>
-
-                </div>
-              </div>
-
-            </div>
+        <div class="status-row">
+          <div class="status-chip" [ngClass]="getStatusClass(station.status)">
+            <span class="dot"></span>
+            {{ station.status }}
           </div>
+          <span class="last-signal">
+            Last Signal: {{ station.lastSignal | date:'HH:mm:ss' }}
+          </span>
         </div>
-
       </div>
-    </div>
+
+      <!-- KPIs Section -->
+      <div class="detail-section">
+        <div class="section-title"><i class="pi pi-chart-bar"></i> Key Performance Indicators</div>
+        <div class="kpi-grid">
+          <div class="kpi-card highlight">
+            <div class="kpi-label">Daily Revenue</div>
+            <div class="kpi-value">{{ (station.kpis.revenue || 0) | number:'1.0-0' }} <small>EGP</small></div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Gas Volume Sold</div>
+            <div class="kpi-value">{{ (station.kpis.totalFlow || 0) | number:'1.0-0' }} <small>M³</small></div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Vehicles Charged</div>
+            <div class="kpi-value">{{ station.kpis.vehicles || 0 }}</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Inlet Pressure</div>
+            <div class="kpi-value">{{ (station.kpis.inletPressure || 0) | number:'1.1-1' }} <small>BAR</small></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compressor Section -->
+      <div class="detail-section" *ngIf="station.compressor">
+        <div class="section-title"><i class="pi pi-cog"></i> Compressor Telemetry</div>
+        
+        <div class="comp-status-bar">
+          <div class="comp-stat">
+            <div class="comp-label">Status</div>
+            <div class="comp-val">{{ station.compressor.status }}</div>
+          </div>
+          <div class="comp-stat">
+            <div class="comp-label">Vibration</div>
+            <div class="comp-val">{{ station.compressor.vibration }}</div>
+          </div>
+          <div class="comp-stat">
+            <div class="comp-label">Oil Pressure</div>
+            <div class="comp-val">{{ station.compressor.oilPressure }}</div>
+          </div>
+        </div>
+
+        <div class="compressor-grid">
+          <div class="stage-card" *ngFor="let stage of station.compressor.stages; let i = index">
+            <div class="stage-label">Stage {{ i + 1 }}</div>
+            <div class="stage-value pressure">
+              {{ stage.pressure | number:'1.1-1' }}
+              <small>BAR</small>
+            </div>
+            <div class="stage-value temperature">
+              {{ stage.temperature | number:'1.0-0' }}
+              <small>°C</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dispensers Section -->
+      <div class="detail-section" *ngIf="station.dispensers && station.dispensers.length > 0">
+        <div class="section-title"><i class="pi pi-bolt"></i> Dispensers ({{ station.dispensers.length }})</div>
+        <div class="dispenser-list">
+          <div class="disp-card" *ngFor="let disp of station.dispensers">
+            <div class="disp-header">
+              <span class="disp-name">{{ disp.name }}</span>
+              <span class="disp-status" [ngClass]="disp.status === 'Filling' ? 'filling' : 'idle'">
+                {{ disp.status }}
+              </span>
+            </div>
+            <div class="nozzle-row">
+              <div class="nozzle" *ngIf="disp.left">
+                <div class="nozzle-label">Left Nozzle</div>
+                <div class="nozzle-val">{{ disp.left.volume | number:'1.1-1' }} <small>M³</small></div>
+              </div>
+              <div class="nozzle" *ngIf="disp.right">
+                <div class="nozzle-label">Right Nozzle</div>
+                <div class="nozzle-val">{{ disp.right.volume | number:'1.1-1' }} <small>M³</small></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
   </div>
 
   <!-- Event Log Drawer (Left Side) -->

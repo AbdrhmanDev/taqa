@@ -206,9 +206,6 @@ export class ScadaDataBridgeService implements OnDestroy {
           // Optionally map other basic fields if they aren't provided by detailed hubs
           if (!station.kpis.revenue && item.totalRevenue) station.kpis.revenue = item.totalRevenue;
           
-          station.beaconAvailability = item.beaconAvailability ?? 85; // Default to 85% for illustrative purposes
-          station.compressorType = item.compressorType || 'IMPA';
-          
           stations[index] = station;
         }
       });
