@@ -3,6 +3,7 @@ import { RealtimeStationDetails } from '../../stations/service/realtime-station-
 import { AlarmsStationDetails } from '../../stations/service/alarms-station-details';
 import { StationConfigService } from '../../station-config/service/station-config.service';
 import { TechOpsRealtime } from '../../dashboard/service/tech-ops-realtime';
+import { StationDetails } from '../../stations/service/station-details';
 import { Subscription, firstValueFrom } from 'rxjs';
 import { ScadaStation, ScadaCompressor, ScadaDispenser } from '../models/scada.model';
 
@@ -14,6 +15,7 @@ export class ScadaDataBridgeService implements OnDestroy {
   private alarms = inject(AlarmsStationDetails);
   private config = inject(StationConfigService);
   private techOps = inject(TechOpsRealtime);
+  private stationDetails = inject(StationDetails);
 
   // Writable Signals for state
   public activeStations: WritableSignal<ScadaStation[]> = signal([]);
@@ -93,6 +95,28 @@ export class ScadaDataBridgeService implements OnDestroy {
       ]);
     } catch (e) {
       console.warn(`Failed to leave groups for station ${sid}:`, e);
+    }
+  }
+
+  public async fetchStationMetadata(sid: number) {
+    try {
+      const details = await firstValueFrom(this.stationDetails.getStationById(sid));
+      if (details) {
+        this.activeStations.update(stations => {
+          const index = stations.findIndex(s => s.stationId === sid);
+          if (index !== -1) {
+            stations[index] = {
+              ...stations[index],
+              tariff: details.tariff,
+              model: details.model || details.stationModel
+            };
+            return [...stations];
+          }
+          return stations;
+        });
+      }
+    } catch (e) {
+      console.warn(`Could not fetch metadata for station ${sid}:`, e);
     }
   }
 

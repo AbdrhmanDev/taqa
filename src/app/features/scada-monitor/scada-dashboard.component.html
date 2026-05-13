@@ -51,9 +51,10 @@
         <div style="display: flex; justify-content: space-between; align-items: flex-start;">
           <div class="station-info">
             <h2>{{ station.name }}</h2>
-            <div class="sector">
-              <i class="pi pi-map-marker"></i>
-              {{ station.zone || 'UNASSIGNED' }}
+            <div class="sector" style="display: flex; gap: 12px; align-items: center;">
+              <span><i class="pi pi-map-marker"></i> {{ station.zone || 'UNASSIGNED' }}</span>
+              <span *ngIf="station.model" style="color: #64748b;"><i class="pi pi-tag"></i> {{ station.model }}</span>
+              <span *ngIf="station.tariff" style="color: #64748b;"><i class="pi pi-wallet"></i> {{ station.tariff }} <small>EGP</small></span>
             </div>
           </div>
           <button type="button" class="close-panel" (click)="closeDetail()">

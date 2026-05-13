@@ -14,6 +14,8 @@ export interface ScadaStation {
     vehicles?: number;
     shiftStartTime?: string;
   };
+  tariff?: number;
+  model?: string;
 }
 
 export interface ScadaCompressor {

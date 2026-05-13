@@ -173,8 +173,9 @@ export class ScadaDashboardComponent implements OnInit, AfterViewInit, OnDestroy
     // 2. Set selectedStationId immediately to trigger UI Sidebar
     this.selectedStationId.set(stationId);
 
-    // 3. Join SignalR groups in background for detailed telemetry
+    // 3. Join SignalR groups and fetch metadata in background
     this.bridge.joinStationGroups(stationId);
+    this.bridge.fetchStationMetadata(stationId);
 
     // 4. Fly to station location
     if (this.map) {
