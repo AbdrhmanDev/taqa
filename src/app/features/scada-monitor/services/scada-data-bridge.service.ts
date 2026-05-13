@@ -125,9 +125,9 @@ export class ScadaDataBridgeService implements OnDestroy {
         return stations;
       }
 
-      const station = { ...stations[index] }; // Shallow copy
+      const station = { ...stations[index] };
       station.status = 'Running';
-      station.lastSignal = new Date().toISOString();
+      station.lastSignal = data.lastTimeStamp || data.timestamp || new Date().toISOString();
       
       // Map fields based on actual backend structure observed in logs
       station.kpis = {
@@ -156,7 +156,7 @@ export class ScadaDataBridgeService implements OnDestroy {
       if (index === -1) return stations;
 
       const station = { ...stations[index] };
-      station.lastSignal = new Date().toISOString();
+      station.lastSignal = data.lastTimeStamp || data.timestamp || new Date().toISOString();
       station.status = 'Running';
       station.compressor = {
         id: data.compressorId || data.id || data.brokerId,
@@ -180,22 +180,68 @@ export class ScadaDataBridgeService implements OnDestroy {
     const dispenserArray = Array.isArray(data) ? data : [data];
     if (dispenserArray.length === 0) return;
 
-    const sid = dispenserArray[0].stationId || dispenserArray[0].stationID;
-    console.log(`SCADA Bridge [DISP]: Data for Station ${sid}`, dispenserArray);
+    // 1. Try to find Station ID in the payload
+    // We check common field names used across different hubs
+    const first = dispenserArray[0];
+    let sid = first.stationId || first.stationID || first.station_id;
+
+    // 2. If no SID in payload, check if we can infer it from the name or use a fallback
+    // In many cases, the machineId at the top level is a dispenser ID, not station ID.
+    // However, we know which station we are currently "listening" to.
+    console.log('SCADA Bridge [DISP]: Raw payload received', { 
+      count: dispenserArray.length, 
+      firstMachineId: first.machineId,
+      firstCompressor: first.compressorName,
+      extractedSid: sid 
+    });
 
     this.activeStations.update(stations => {
-      const index = stations.findIndex(s => s.stationId === sid);
+      let index = -1;
+      if (sid) {
+        index = stations.findIndex(s => s.stationId === sid);
+      }
+
+      // 3. Fallback: If we still can't find the station by ID, 
+      // check if the compressorName in the payload matches any of our stations
+      if (index === -1 && first.compressorName) {
+        index = stations.findIndex(s => 
+          s.name.toLowerCase().includes(first.compressorName.toLowerCase()) ||
+          first.compressorName.toLowerCase().includes(s.name.toLowerCase())
+        );
+      }
+
+      // 4. Last resort: If we are in "On-Demand" mode, the data likely belongs to the
+      // station we just joined. We can't be 100% sure, but it's better than ignoring the data.
+      // (This is only safe because we use join/leave groups)
+      if (index === -1 && dispenserArray.length > 0) {
+        // We'll look for a station that is "Online" or "Running" and has no dispensers yet
+        // but this is too risky. Let's just log it for now.
+        console.warn('SCADA Bridge [DISP]: Could not find matching station for dispensers', first.dispenserName);
+      }
+
       if (index === -1) return stations;
 
       const station = { ...stations[index] };
-      station.lastSignal = new Date().toISOString();
+      station.lastSignal = first.lastTimeStamp || first.timestamp || new Date().toISOString();
+      
+      console.log(`SCADA Bridge [DISP]: Updating ${dispenserArray.length} units for Station: ${station.name} (${station.stationId})`);
+
       station.dispensers = dispenserArray.map((d: any) => ({
-        id: d.dispenserId || d.id,
-        name: d.dispenserName || d.name || `Dispenser ${d.id}`,
-        status: (d.status === 'Active' || d.status === 'Filling' || d.isFilling) ? 'Filling' : 'Idle',
-        currentReading: d.currentReading || 0,
-        left: { volume: d.leftVolume || d.currentReading || 0, throughput: d.leftFlow || 0 },
-        right: { volume: d.rightVolume || 0, throughput: d.rightFlow || 0 }
+        id: d.dispenserId || d.machineId || d.id,
+        name: d.dispenserName || d.name,
+        status: d.status || (d.connectionStatus === 'Online' ? 'Online' : 'Offline'),
+        left: d.left ? {
+          volume: d.left.chargeVolume ?? d.left.volume ?? 0,
+          throughput: d.left.throughput ?? 0,
+          chargingTime: d.left.chargingTime ?? 0,
+          waitingTime: d.left.waitingTime ?? 0
+        } : undefined,
+        right: d.right ? {
+          volume: d.right.chargeVolume ?? d.right.volume ?? 0,
+          throughput: d.right.throughput ?? 0,
+          chargingTime: d.right.chargingTime ?? 0,
+          waitingTime: d.right.waitingTime ?? 0
+        } : undefined
       }));
 
       stations[index] = station;

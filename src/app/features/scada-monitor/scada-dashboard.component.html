@@ -61,14 +61,16 @@
           </button>
         </div>
         
-        <div style="display: flex; align-items: center; gap: 12px; margin-top: 16px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px;">
           <div class="status-badge" [ngClass]="getStatusClass(station.status)" 
                style="padding: 4px 12px; border-radius: 4px; border: 1px solid currentColor; font-family: var(--monofont); font-size: 11px; font-weight: 700;">
             {{ station.status | uppercase }}
           </div>
-          <span style="font-family: var(--monofont); font-size: 10px; color: #94a3b8; margin-left: auto;">
-            REF: {{ station.stationId }}
-          </span>
+          
+          <div style="text-align: right; font-family: var(--monofont); font-size: 10px; color: #94a3b8; line-height: 1.4;">
+            <div>LAST UPDATE: {{ station.lastSignal | date:'HH:mm:ss dd/MM' }}</div>
+            <div>REF ID: {{ station.stationId }}</div>
+          </div>
         </div>
       </div>
 
@@ -150,26 +152,52 @@
 
         <!-- Dispensers Section -->
         <div class="detail-section" *ngIf="station.dispensers && station.dispensers.length > 0">
-          <div class="section-label">Asset Grid: Dispensers ({{ station.dispensers.length }})</div>
+          <div class="section-label">Operational Assets: Dispensers ({{ station.dispensers.length }})</div>
           <div class="dispenser-grid">
-            <div class="disp-card" *ngFor="let disp of station.dispensers">
+            <div class="disp-card" *ngFor="let disp of station.dispensers" [class.offline]="disp.status === 'Offline'">
               <div class="disp-head">
                 <span class="name">{{ disp.name | uppercase }}</span>
-                <span class="status">{{ disp.status | uppercase }}</span>
+                <span class="status" [ngClass]="disp.status.toLowerCase() === 'online' ? 'online' : 'offline'">
+                  {{ disp.status | uppercase }}
+                </span>
               </div>
               <div class="nozzles">
-                <div class="nozzle-box" *ngIf="disp.left">
-                  <div class="nz-lbl">PRIMARY</div>
-                  <div class="nz-val">
-                    <ng-container *ngIf="(disp.left.volume || 0) === 0; else lVolVal">0.00</ng-container>
-                    <ng-template #lVolVal>{{ disp.left.volume | number:'1.2-2' }} <small>M³</small></ng-template>
+                <!-- Left Nozzle -->
+                <div class="nozzle-box left-side" *ngIf="disp.left">
+                  <div class="nz-lbl"><i class="pi pi-angle-double-left"></i> LEFT NOZZLE</div>
+                  <div class="nz-val">{{ disp.left.volume | number:'1.2-2' }} <small>M³</small></div>
+                  <div class="nz-stats">
+                    <div class="nz-stat">
+                      <label>Flow Rate</label>
+                      <span>{{ disp.left.throughput | number:'1.2-2' }}</span>
+                    </div>
+                    <div class="nz-stat">
+                      <label>Charge Time</label>
+                      <span>{{ disp.left.chargingTime | number:'1.1-1' }}m</span>
+                    </div>
+                    <div class="nz-stat">
+                      <label>Wait Time</label>
+                      <span>{{ disp.left.waitingTime | number:'1.1-1' }}m</span>
+                    </div>
                   </div>
                 </div>
-                <div class="nozzle-box" *ngIf="disp.right">
-                  <div class="nz-lbl">SECONDARY</div>
-                  <div class="nz-val">
-                    <ng-container *ngIf="(disp.right.volume || 0) === 0; else rVolVal">0.00</ng-container>
-                    <ng-template #rVolVal>{{ disp.right.volume | number:'1.2-2' }} <small>M³</small></ng-template>
+                <!-- Right Nozzle -->
+                <div class="nozzle-box right-side" *ngIf="disp.right">
+                  <div class="nz-lbl"><i class="pi pi-angle-double-right"></i> RIGHT NOZZLE</div>
+                  <div class="nz-val">{{ disp.right.volume | number:'1.2-2' }} <small>M³</small></div>
+                  <div class="nz-stats">
+                    <div class="nz-stat">
+                      <label>Flow Rate</label>
+                      <span>{{ disp.right.throughput | number:'1.2-2' }}</span>
+                    </div>
+                    <div class="nz-stat">
+                      <label>Charge Time</label>
+                      <span>{{ disp.right.chargingTime | number:'1.1-1' }}m</span>
+                    </div>
+                    <div class="nz-stat">
+                      <label>Wait Time</label>
+                      <span>{{ disp.right.waitingTime | number:'1.1-1' }}m</span>
+                    </div>
                   </div>
                 </div>
               </div>

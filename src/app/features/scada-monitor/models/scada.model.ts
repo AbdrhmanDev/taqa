@@ -31,8 +31,18 @@ export interface ScadaCompressor {
 export interface ScadaDispenser {
   id: number;
   name: string;
-  status: 'Idle' | 'Filling' | 'Fault';
-  currentReading: number;
-  left?: { volume: number; throughput: number };
-  right?: { volume: number; throughput: number };
+  status: string;
+  currentReading?: number;
+  left?: { 
+    volume: number; 
+    throughput: number;
+    chargingTime?: number;
+    waitingTime?: number;
+  };
+  right?: { 
+    volume: number; 
+    throughput: number;
+    chargingTime?: number;
+    waitingTime?: number;
+  };
 }
