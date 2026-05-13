@@ -1,4 +1,4 @@
-<div class="scada-map-container">
+<div class="scada-map-container" [class.panel-active]="selectedStation !== null">
   <!-- Loading State -->
   <div class="map-loading" *ngIf="isMapLoading">
     <div class="spinner"></div>
@@ -78,19 +78,31 @@
         <div class="kpi-grid">
           <div class="kpi-card highlight">
             <div class="kpi-label">Daily Revenue</div>
-            <div class="kpi-value">{{ (station.kpis.revenue || 0) | number:'1.0-0' }} <small>EGP</small></div>
+            <div class="kpi-value">
+              <ng-container *ngIf="(station.kpis.revenue || 0) === 0; else revVal">N/A</ng-container>
+              <ng-template #revVal>{{ station.kpis.revenue | number:'1.0-0' }} <small>EGP</small></ng-template>
+            </div>
           </div>
           <div class="kpi-card">
             <div class="kpi-label">Gas Volume Sold</div>
-            <div class="kpi-value">{{ (station.kpis.totalFlow || 0) | number:'1.0-0' }} <small>M³</small></div>
+            <div class="kpi-value">
+              <ng-container *ngIf="(station.kpis.totalFlow || 0) === 0; else flowVal">N/A</ng-container>
+              <ng-template #flowVal>{{ station.kpis.totalFlow | number:'1.0-0' }} <small>M³</small></ng-template>
+            </div>
           </div>
           <div class="kpi-card">
             <div class="kpi-label">Vehicles Charged</div>
-            <div class="kpi-value">{{ station.kpis.vehicles || 0 }}</div>
+            <div class="kpi-value">
+              <ng-container *ngIf="(station.kpis.vehicles || 0) === 0; else vehVal">N/A</ng-container>
+              <ng-template #vehVal>{{ station.kpis.vehicles }}</ng-template>
+            </div>
           </div>
           <div class="kpi-card">
             <div class="kpi-label">Inlet Pressure</div>
-            <div class="kpi-value">{{ (station.kpis.inletPressure || 0) | number:'1.1-1' }} <small>BAR</small></div>
+            <div class="kpi-value">
+              <ng-container *ngIf="(station.kpis.inletPressure || 0) === 0; else pressVal">N/A</ng-container>
+              <ng-template #pressVal>{{ station.kpis.inletPressure | number:'1.1-1' }} <small>BAR</small></ng-template>
+            </div>
           </div>
         </div>
       </div>
@@ -102,15 +114,21 @@
         <div class="comp-status-bar">
           <div class="comp-stat">
             <div class="comp-label">Status</div>
-            <div class="comp-val">{{ station.compressor.status }}</div>
+            <div class="comp-val">{{ station.compressor.status || 'N/A' }}</div>
           </div>
           <div class="comp-stat">
             <div class="comp-label">Vibration</div>
-            <div class="comp-val">{{ station.compressor.vibration }}</div>
+            <div class="comp-val">
+              <ng-container *ngIf="(station.compressor.vibration || 0) === 0; else vibVal">N/A</ng-container>
+              <ng-template #vibVal>{{ station.compressor.vibration }}</ng-template>
+            </div>
           </div>
           <div class="comp-stat">
             <div class="comp-label">Oil Pressure</div>
-            <div class="comp-val">{{ station.compressor.oilPressure }}</div>
+            <div class="comp-val">
+              <ng-container *ngIf="(station.compressor.oilPressure || 0) === 0; else oilVal">N/A</ng-container>
+              <ng-template #oilVal>{{ station.compressor.oilPressure }}</ng-template>
+            </div>
           </div>
         </div>
 
@@ -118,12 +136,12 @@
           <div class="stage-card" *ngFor="let stage of station.compressor.stages; let i = index">
             <div class="stage-label">Stage {{ i + 1 }}</div>
             <div class="stage-value pressure">
-              {{ stage.pressure | number:'1.1-1' }}
-              <small>BAR</small>
+              <ng-container *ngIf="(stage.pressure || 0) === 0; else sPressVal">N/A</ng-container>
+              <ng-template #sPressVal>{{ stage.pressure | number:'1.1-1' }} <small>BAR</small></ng-template>
             </div>
             <div class="stage-value temperature">
-              {{ stage.temperature | number:'1.0-0' }}
-              <small>°C</small>
+              <ng-container *ngIf="(stage.temperature || 0) === 0; else sTempVal">N/A</ng-container>
+              <ng-template #sTempVal>{{ stage.temperature | number:'1.0-0' }} <small>°C</small></ng-template>
             </div>
           </div>
         </div>
@@ -143,11 +161,17 @@
             <div class="nozzle-row">
               <div class="nozzle" *ngIf="disp.left">
                 <div class="nozzle-label">Left Nozzle</div>
-                <div class="nozzle-val">{{ disp.left.volume | number:'1.1-1' }} <small>M³</small></div>
+                <div class="nozzle-val">
+                  <ng-container *ngIf="(disp.left.volume || 0) === 0; else lVolVal">N/A</ng-container>
+                  <ng-template #lVolVal>{{ disp.left.volume | number:'1.1-1' }} <small>M³</small></ng-template>
+                </div>
               </div>
               <div class="nozzle" *ngIf="disp.right">
                 <div class="nozzle-label">Right Nozzle</div>
-                <div class="nozzle-val">{{ disp.right.volume | number:'1.1-1' }} <small>M³</small></div>
+                <div class="nozzle-val">
+                  <ng-container *ngIf="(disp.right.volume || 0) === 0; else rVolVal">N/A</ng-container>
+                  <ng-template #rVolVal>{{ disp.right.volume | number:'1.1-1' }} <small>M³</small></ng-template>
+                </div>
               </div>
             </div>
           </div>

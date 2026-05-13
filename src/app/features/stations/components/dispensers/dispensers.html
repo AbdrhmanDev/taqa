@@ -19,17 +19,17 @@
             <div class="metric" (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'chargeVolume')"
               [class.data-flash]="dispenser.left?.chargeVolumeChanged">
               <label>Vol</label>
-              <span class="val">{{ dispenser.left?.chargeVolume | number:'1.2-2' }}</span>
+              <span class="val">{{ dispenser.left?.chargeVolume === 0 ? 'N/A' : (dispenser.left?.chargeVolume | number:'1.2-2') }}</span>
             </div>
             <div class="metric" (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'chargingTime')"
               [class.data-flash]="dispenser.left?.chargingTimeChanged">
               <label>Time</label>
-              <span class="val">{{ dispenser.left?.chargingTime | number:'1.2-2' }}</span>
+              <span class="val">{{ dispenser.left?.chargingTime === 0 ? 'N/A' : (dispenser.left?.chargingTime | number:'1.2-2') }}</span>
             </div>
             <div class="metric" (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'throughput')"
               [class.data-flash]="dispenser.left?.throughputChanged">
               <label>Rate</label>
-              <span class="val">{{ dispenser.left?.throughput | number:'1.2-2' }}</span>
+              <span class="val">{{ dispenser.left?.throughput === 0 ? 'N/A' : (dispenser.left?.throughput | number:'1.2-2') }}</span>
             </div>
           </div>
         </div>
@@ -47,7 +47,12 @@
           <div class="lcd-numbers">
             <span class="ghost">88888.88</span>
             <span class="actual" [class.data-flash]="dispenser.left?.chargeVolumeChanged || dispenser.right?.chargeVolumeChanged">
-              {{ (dispenser.left?.chargeVolume || 0) + (dispenser.right?.chargeVolume || 0) | number:'1.2-2' }}
+              <ng-container *ngIf="((dispenser.left?.chargeVolume || 0) + (dispenser.right?.chargeVolume || 0)) === 0; else totalVol">
+                N/A
+              </ng-container>
+              <ng-template #totalVol>
+                {{ (dispenser.left?.chargeVolume || 0) + (dispenser.right?.chargeVolume || 0) | number:'1.2-2' }}
+              </ng-template>
             </span>
           </div>
           <div class="lcd-unit">m³</div>
@@ -74,17 +79,17 @@
             <div class="metric" (click)="openDialog(dispenser.dispenserName, dispenser.right?.dispenserNo, 'chargeVolume')"
               [class.data-flash]="dispenser.right?.chargeVolumeChanged">
               <label>Vol</label>
-              <span class="val">{{ dispenser.right?.chargeVolume | number:'1.2-2' }}</span>
+              <span class="val">{{ dispenser.right?.chargeVolume === 0 ? 'N/A' : (dispenser.right?.chargeVolume | number:'1.2-2') }}</span>
             </div>
             <div class="metric" (click)="openDialog(dispenser.dispenserName, dispenser.right?.dispenserNo, 'chargingTime')"
               [class.data-flash]="dispenser.right?.chargingTimeChanged">
               <label>Time</label>
-              <span class="val">{{ dispenser.right?.chargingTime | number:'1.2-2' }}</span>
+              <span class="val">{{ dispenser.right?.chargingTime === 0 ? 'N/A' : (dispenser.right?.chargingTime | number:'1.2-2') }}</span>
             </div>
             <div class="metric" (click)="openDialog(dispenser.dispenserName, dispenser.right?.dispenserNo, 'throughput')"
               [class.data-flash]="dispenser.right?.throughputChanged">
               <label>Rate</label>
-              <span class="val">{{ dispenser.right?.throughput | number:'1.2-2' }}</span>
+              <span class="val">{{ dispenser.right?.throughput === 0 ? 'N/A' : (dispenser.right?.throughput | number:'1.2-2') }}</span>
             </div>
           </div>
         </div>

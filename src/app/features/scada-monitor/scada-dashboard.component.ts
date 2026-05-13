@@ -89,8 +89,8 @@ export class ScadaDashboardComponent implements OnInit, AfterViewInit, OnDestroy
       attributionControl: true
     });
 
-    // Dark tile layer (CartoDB Dark Matter)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    // Gray/Light tile layer (CartoDB Positron)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
       attribution: '© CartoDB © OpenStreetMap contributors',
       maxZoom: 19,
       subdomains: 'abcd'

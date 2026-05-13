@@ -128,21 +128,21 @@
         <div class="bg-indigo-200 rounded-lg shadow p-4">
           <p class="text-xs text-gray-500 uppercase tracking-wide">Average Pressure</p>
           <p class="text-3xl font-bold text-black mt-1">
-            {{ compressorDetailsData?.avg | number : '1.0-2' }}
+            {{ compressorDetailsData?.avg === 0 ? 'N/A' : (compressorDetailsData?.avg | number : '1.0-2') }}
           </p>
         </div>
 
         <div class="bg-[#F0FDF4] rounded-lg shadow p-4">
           <p class="text-xs text-gray-500 uppercase tracking-wide">Max Pressure</p>
           <p class="text-3xl font-bold text-black mt-1">
-            {{ compressorDetailsData?.max | number : '1.0-2' }}
+            {{ compressorDetailsData?.max === 0 ? 'N/A' : (compressorDetailsData?.max | number : '1.0-2') }}
           </p>
         </div>
 
         <div class="bg-yellow-100 rounded-lg shadow p-4">
           <p class="text-xs text-gray-500 uppercase tracking-wide">Min Pressure</p>
           <p class="text-3xl font-bold text-black mt-1">
-            {{ compressorDetailsData?.min | number : '1.0-2' }}
+            {{ compressorDetailsData?.min === 0 ? 'N/A' : (compressorDetailsData?.min | number : '1.0-2') }}
           </p>
         </div>
 
@@ -222,7 +222,7 @@
             class="font-bold"
           ></span>
           <p class="font-bold text-lg" [style.color]="getColor(stage.value)">
-            {{ stage.value !== null ? (stage.value | number : '1.0-2') : 'N/A' }}
+            {{ isInvalidValue(stage.value) ? 'N/A' : (stage.value | number : '1.0-2') }}
           </p>
 
           <p class="text-gray-400 text-xs">bar</p>
@@ -263,21 +263,21 @@
       <div class="bg-indigo-200 rounded-lg shadow p-4">
         <p class="text-xs text-gray-500 uppercase tracking-wide">Average Temperature</p>
         <p class="text-3xl font-bold text-black mt-1">
-          {{ compressorDetailsData?.avg_T | number : '1.0-2' }}
+          {{ compressorDetailsData?.avg_T === 0 ? 'N/A' : (compressorDetailsData?.avg_T | number : '1.0-2') }}
         </p>
       </div>
 
       <div class="bg-[#F0FDF4] rounded-lg shadow p-4">
         <p class="text-xs text-gray-500 uppercase tracking-wide">Max Temperature</p>
         <p class="text-3xl font-bold text-black mt-1">
-          {{ compressorDetailsData?.max_T | number : '1.0-2' }}
+          {{ compressorDetailsData?.max_T === 0 ? 'N/A' : (compressorDetailsData?.max_T | number : '1.0-2') }}
         </p>
       </div>
 
       <div class="bg-yellow-100 rounded-lg shadow p-4">
         <p class="text-xs text-gray-500 uppercase tracking-wide">Min Temperature</p>
         <p class="text-3xl font-bold text-black mt-1">
-          {{ compressorDetailsData?.min_T | number : '1.0-2' }}
+          {{ compressorDetailsData?.min_T === 0 ? 'N/A' : (compressorDetailsData?.min_T | number : '1.0-2') }}
         </p>
       </div>
 

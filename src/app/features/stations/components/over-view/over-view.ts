@@ -83,6 +83,7 @@ export class OverView implements OnInit, OnDestroy {
   fromDate!: string;
   toDate!: string;
   dateRange: Date[] = [];
+  stationStaticInfo: any;
   private loadingItems = new Set<string>();
   @Output() connectionReady = new EventEmitter<void>(); // Keep for compatibility if still used in parent, but we won't emit manually
 
@@ -135,10 +136,21 @@ export class OverView implements OnInit, OnDestroy {
       this.stationDetailsData = this.stationDetails;
       this.loadingItems.delete('summary');
     }
+    this.getStationStaticInfo();
     this.onGetComproser();
     this.onGetAllGasConsumption();
     this.subscribeToRealtimeData();
     this.subscribeToAlarms();
+  }
+
+  getStationStaticInfo() {
+    this._stationDetails.getStationById(this.stationId).subscribe({
+      next: (data) => {
+        this.stationStaticInfo = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error fetching station static info:', err),
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {

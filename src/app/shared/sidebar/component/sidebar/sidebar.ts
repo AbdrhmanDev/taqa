@@ -47,7 +47,7 @@ export class Sidebar {
       title: 'Monitoring',
       items: [
         { name: 'Stations', icon: 'stations', route: '/dashboard/station' },
-        { name: 'Map View', icon: 'map', route: '/dashboard/map' },
+        { name: 'Map View', icon: 'map', route: '/dashboard/scada-monitor' },
         { name: 'QR', icon: 'qr', route: '/dashboard/qr' },
       ],
     },
