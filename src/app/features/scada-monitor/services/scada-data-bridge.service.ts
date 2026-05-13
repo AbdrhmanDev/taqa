@@ -69,13 +69,30 @@ export class ScadaDataBridgeService implements OnDestroy {
 
       console.log('SCADA Bridge: Subscriptions active. Joining groups...');
 
-      // 4. Attempt to join groups for each station
-      for (const station of stationsFromApi) {
-        this.safeJoin(station.id);
-      }
-
+      console.log('SCADA Bridge: Core subscriptions active. Waiting for manual station selection for detailed telemetry.');
+      // 4. Join TechOps for all to get basic Online/Offline status on map
+      // But we DO NOT join the heavy Realtime hubs here for all stations.
     } catch (error) {
       console.error('SCADA Bridge Init Error:', error);
+    }
+  }
+
+  public async joinStationGroups(sid: number) {
+    console.log(`SCADA Bridge: Joining detailed telemetry groups for station ${sid}`);
+    this.safeJoin(sid);
+  }
+
+  public async leaveStationGroups(sid: number) {
+    console.log(`SCADA Bridge: Leaving detailed telemetry groups for station ${sid}`);
+    try {
+      await Promise.allSettled([
+        this.realtime.leaveStation(sid),
+        this.realtime.leaveCompressor(sid),
+        this.realtime.leaveDispenser(sid),
+        this.alarms.leaveStation(sid)
+      ]);
+    } catch (e) {
+      console.warn(`Failed to leave groups for station ${sid}:`, e);
     }
   }
 

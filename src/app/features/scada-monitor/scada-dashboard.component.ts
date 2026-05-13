@@ -29,17 +29,24 @@ export class ScadaDashboardComponent implements OnInit, AfterViewInit, OnDestroy
   stations = this.bridge.activeStations;
   eventLog = this.bridge.eventLog;
 
-  // Selected station for detail panel
-  selectedStation: ScadaStation | null = null;
-  private selectedStationId: number | null = null;
+  // Selected station ID as a signal
+  private selectedStationId = signal<number | null>(null);
+
+  // Selected station data as a reactive computed signal
+  // This updates AUTOMATICALLY whenever bridge.activeStations changes
+  selectedStation = computed(() => {
+    const id = this.selectedStationId();
+    if (!id) return null;
+    return this.bridge.activeStations().find(s => s.stationId === id) || null;
+  });
 
   // Map stations from API (have coordinates)
   private mapStations: any[] = [];
 
   // Computed stats
-  totalStations = computed(() => this.stations().length);
-  onlineCount = computed(() => this.stations().filter(s => s.status === 'Online' || s.status === 'Running').length);
-  alarmCount = computed(() => this.stations().filter(s => s.status === 'Alarm').length);
+  totalStations = computed(() => this.bridge.activeStations().length);
+  onlineCount = computed(() => this.bridge.activeStations().filter(s => s.status === 'Online' || s.status === 'Running').length);
+  alarmCount = computed(() => this.bridge.activeStations().filter(s => s.status === 'Alarm').length);
   newEventsCount = computed(() => this.eventLog().length);
 
   ngOnInit() {
@@ -157,63 +164,31 @@ export class ScadaDashboardComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   selectStation(stationId: number, lat: number, lng: number) {
-    this.selectedStationId = stationId;
-
-    // Find real-time data from bridge
-    const bridgeStation = this.stations().find(s => s.stationId === stationId);
-    if (bridgeStation) {
-      this.selectedStation = bridgeStation;
-    } else {
-      // Fallback: create minimal station from map data
-      const mapStation = this.mapStations.find(s => (s.stationId || s.id) === stationId);
-      this.selectedStation = {
-        stationId,
-        name: mapStation?.stationName || mapStation?.name || `Station ${stationId}`,
-        status: mapStation?.status === 'Active' ? 'Online' : 'Offline',
-        zone: mapStation?.zoneName,
-        dispensers: [],
-        kpis: { totalFlow: 0, inletPressure: 0, outletPressure: 0 }
-      };
+    // 1. Leave previous station groups if any
+    const prevId = this.selectedStationId();
+    if (prevId !== null && prevId !== stationId) {
+      this.bridge.leaveStationGroups(prevId);
     }
 
-    // Fly to station location with smooth animation
+    // 2. Set selectedStationId immediately to trigger UI Sidebar
+    this.selectedStationId.set(stationId);
+
+    // 3. Join SignalR groups in background for detailed telemetry
+    this.bridge.joinStationGroups(stationId);
+
+    // 4. Fly to station location
     if (this.map) {
-      this.map.flyTo([lat, lng], 14, {
-        duration: 1.8,
-        easeLinearity: 0.25
-      });
-    }
-
-    // Keep updating selected station from bridge signals
-    this.startRealtimeSync();
-  }
-
-  private realtimeSyncInterval: any = null;
-
-  private startRealtimeSync() {
-    // Poll the bridge signal every second to keep detail panel in sync
-    this.stopRealtimeSync();
-    this.realtimeSyncInterval = setInterval(() => {
-      if (this.selectedStationId !== null) {
-        const updated = this.stations().find(s => s.stationId === this.selectedStationId);
-        if (updated) {
-          this.selectedStation = { ...updated };
-        }
-      }
-    }, 1000);
-  }
-
-  private stopRealtimeSync() {
-    if (this.realtimeSyncInterval) {
-      clearInterval(this.realtimeSyncInterval);
-      this.realtimeSyncInterval = null;
+      this.map.flyTo([lat, lng], 14, { duration: 1.5 });
     }
   }
 
   closeDetail() {
-    this.selectedStation = null;
-    this.selectedStationId = null;
-    this.stopRealtimeSync();
+    const id = this.selectedStationId();
+    if (id !== null) {
+      this.bridge.leaveStationGroups(id);
+    }
+    
+    this.selectedStationId.set(null);
 
     // Fly back to default view
     if (this.map && this.defaultBounds) {
@@ -248,7 +223,6 @@ export class ScadaDashboardComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngOnDestroy() {
-    this.stopRealtimeSync();
     if (this.map) {
       this.map.remove();
     }

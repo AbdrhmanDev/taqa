@@ -1,17 +1,16 @@
-<div class="scada-map-container" [class.panel-active]="selectedStation !== null">
+<div class="scada-map-container" [class.panel-active]="selectedStation() !== null">
   <!-- Loading State -->
   <div class="map-loading" *ngIf="isMapLoading">
     <div class="spinner"></div>
-    <p>Establishing Field Connectivity...</p>
   </div>
 
   <!-- HUD Top Bar -->
   <div class="hud-bar">
     <div class="hud-brand">
-      <div class="logo"><i class="pi pi-shield"></i></div>
+      <div class="logo"><i class="pi pi-cog"></i></div>
       <div>
-        <h1>SCADA <span>COMMAND</span></h1>
-        <p>Live Map Operations • v2.1</p>
+        <h1>SCADA <span>SYSTEMS</span></h1>
+        <p>Operational Intelligence v4.0</p>
       </div>
     </div>
 
@@ -22,11 +21,11 @@
       </div>
       <div class="stat alarm">
         <div class="num">{{ alarmCount() }}</div>
-        <div class="lbl">Alarms</div>
+        <div class="lbl">Faults</div>
       </div>
       <div class="stat">
         <div class="num">{{ totalStations() }}</div>
-        <div class="lbl">Total</div>
+        <div class="lbl">Assets</div>
       </div>
     </div>
 
@@ -34,8 +33,8 @@
       <button type="button" class="hud-btn" (click)="resetMapView()" title="Reset View">
         <i class="pi pi-compass"></i>
       </button>
-      <button type="button" class="hud-btn" (click)="toggleLog()" title="Event Log">
-        <i class="pi pi-bell"></i>
+      <button type="button" class="hud-btn" (click)="toggleLog()" title="Event Console">
+        <i class="pi pi-exclamation-triangle"></i>
         <span class="badge" *ngIf="newEventsCount() > 0">{{ newEventsCount() }}</span>
       </button>
     </div>
@@ -44,133 +43,134 @@
   <!-- Leaflet Map -->
   <div id="scada-map"></div>
 
-  <!-- Station Detail Overlay -->
-  <div class="detail-overlay" [class.active]="selectedStation !== null">
-    <ng-container *ngIf="selectedStation as station">
+  <!-- Station Detail Overlay (Full Screen Technical) -->
+  <div class="detail-overlay" [class.active]="selectedStation() !== null">
+    <ng-container *ngIf="selectedStation() as station">
       <!-- Header -->
       <div class="detail-header">
-        <div class="header-top">
-          <div class="station-title">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div class="station-info">
             <h2>{{ station.name }}</h2>
-            <div class="zone-tag">
+            <div class="sector">
               <i class="pi pi-map-marker"></i>
-              {{ station.zone || 'Unassigned Zone' }}
+              {{ station.zone || 'UNASSIGNED' }}
             </div>
           </div>
-          <button type="button" class="close-btn" (click)="closeDetail()">
+          <button type="button" class="close-panel" (click)="closeDetail()">
             <i class="pi pi-times"></i>
           </button>
         </div>
-        <div class="status-row">
-          <div class="status-chip" [ngClass]="getStatusClass(station.status)">
-            <span class="dot"></span>
-            {{ station.status }}
+        
+        <div style="display: flex; align-items: center; gap: 12px; margin-top: 16px;">
+          <div class="status-badge" [ngClass]="getStatusClass(station.status)" 
+               style="padding: 4px 12px; border-radius: 4px; border: 1px solid currentColor; font-family: var(--monofont); font-size: 11px; font-weight: 700;">
+            {{ station.status | uppercase }}
           </div>
-          <span class="last-signal">
-            Last Signal: {{ station.lastSignal | date:'HH:mm:ss' }}
+          <span style="font-family: var(--monofont); font-size: 10px; color: #94a3b8; margin-left: auto;">
+            REF: {{ station.stationId }}
           </span>
         </div>
       </div>
 
-      <!-- KPIs Section -->
-      <div class="detail-section">
-        <div class="section-title"><i class="pi pi-chart-bar"></i> Key Performance Indicators</div>
-        <div class="kpi-grid">
-          <div class="kpi-card highlight">
-            <div class="kpi-label">Daily Revenue</div>
-            <div class="kpi-value">
-              <ng-container *ngIf="(station.kpis.revenue || 0) === 0; else revVal">N/A</ng-container>
-              <ng-template #revVal>{{ station.kpis.revenue | number:'1.0-0' }} <small>EGP</small></ng-template>
-            </div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">Gas Volume Sold</div>
-            <div class="kpi-value">
-              <ng-container *ngIf="(station.kpis.totalFlow || 0) === 0; else flowVal">N/A</ng-container>
-              <ng-template #flowVal>{{ station.kpis.totalFlow | number:'1.0-0' }} <small>M³</small></ng-template>
-            </div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">Vehicles Charged</div>
-            <div class="kpi-value">
-              <ng-container *ngIf="(station.kpis.vehicles || 0) === 0; else vehVal">N/A</ng-container>
-              <ng-template #vehVal>{{ station.kpis.vehicles }}</ng-template>
-            </div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">Inlet Pressure</div>
-            <div class="kpi-value">
-              <ng-container *ngIf="(station.kpis.inletPressure || 0) === 0; else pressVal">N/A</ng-container>
-              <ng-template #pressVal>{{ station.kpis.inletPressure | number:'1.1-1' }} <small>BAR</small></ng-template>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Compressor Section -->
-      <div class="detail-section" *ngIf="station.compressor">
-        <div class="section-title"><i class="pi pi-cog"></i> Compressor Telemetry</div>
-        
-        <div class="comp-status-bar">
-          <div class="comp-stat">
-            <div class="comp-label">Status</div>
-            <div class="comp-val">{{ station.compressor.status || 'N/A' }}</div>
-          </div>
-          <div class="comp-stat">
-            <div class="comp-label">Vibration</div>
-            <div class="comp-val">
-              <ng-container *ngIf="(station.compressor.vibration || 0) === 0; else vibVal">N/A</ng-container>
-              <ng-template #vibVal>{{ station.compressor.vibration }}</ng-template>
-            </div>
-          </div>
-          <div class="comp-stat">
-            <div class="comp-label">Oil Pressure</div>
-            <div class="comp-val">
-              <ng-container *ngIf="(station.compressor.oilPressure || 0) === 0; else oilVal">N/A</ng-container>
-              <ng-template #oilVal>{{ station.compressor.oilPressure }}</ng-template>
-            </div>
-          </div>
-        </div>
-
-        <div class="compressor-grid">
-          <div class="stage-card" *ngFor="let stage of station.compressor.stages; let i = index">
-            <div class="stage-label">Stage {{ i + 1 }}</div>
-            <div class="stage-value pressure">
-              <ng-container *ngIf="(stage.pressure || 0) === 0; else sPressVal">N/A</ng-container>
-              <ng-template #sPressVal>{{ stage.pressure | number:'1.1-1' }} <small>BAR</small></ng-template>
-            </div>
-            <div class="stage-value temperature">
-              <ng-container *ngIf="(stage.temperature || 0) === 0; else sTempVal">N/A</ng-container>
-              <ng-template #sTempVal>{{ stage.temperature | number:'1.0-0' }} <small>°C</small></ng-template>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Dispensers Section -->
-      <div class="detail-section" *ngIf="station.dispensers && station.dispensers.length > 0">
-        <div class="section-title"><i class="pi pi-bolt"></i> Dispensers ({{ station.dispensers.length }})</div>
-        <div class="dispenser-list">
-          <div class="disp-card" *ngFor="let disp of station.dispensers">
-            <div class="disp-header">
-              <span class="disp-name">{{ disp.name }}</span>
-              <span class="disp-status" [ngClass]="disp.status === 'Filling' ? 'filling' : 'idle'">
-                {{ disp.status }}
-              </span>
-            </div>
-            <div class="nozzle-row">
-              <div class="nozzle" *ngIf="disp.left">
-                <div class="nozzle-label">Left Nozzle</div>
-                <div class="nozzle-val">
-                  <ng-container *ngIf="(disp.left.volume || 0) === 0; else lVolVal">N/A</ng-container>
-                  <ng-template #lVolVal>{{ disp.left.volume | number:'1.1-1' }} <small>M³</small></ng-template>
-                </div>
+      <div class="detail-content">
+        <!-- KPIs Section -->
+        <div class="detail-section">
+          <div class="section-label">Operational Metrics</div>
+          <div class="kpi-grid">
+            <div class="kpi-card highlight">
+              <div class="kpi-title">Daily Revenue</div>
+              <div class="kpi-val">
+                <ng-container *ngIf="(station.kpis.revenue || 0) === 0; else revVal">0.00</ng-container>
+                <ng-template #revVal>{{ station.kpis.revenue | number:'1.2-2' }} <small>EGP</small></ng-template>
               </div>
-              <div class="nozzle" *ngIf="disp.right">
-                <div class="nozzle-label">Right Nozzle</div>
-                <div class="nozzle-val">
-                  <ng-container *ngIf="(disp.right.volume || 0) === 0; else rVolVal">N/A</ng-container>
-                  <ng-template #rVolVal>{{ disp.right.volume | number:'1.1-1' }} <small>M³</small></ng-template>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-title">Gas Throughput</div>
+              <div class="kpi-val">
+                <ng-container *ngIf="(station.kpis.totalFlow || 0) === 0; else flowVal">0.00</ng-container>
+                <ng-template #flowVal>{{ station.kpis.totalFlow | number:'1.2-2' }} <small>M³</small></ng-template>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-title">Traffic Load</div>
+              <div class="kpi-val">
+                <ng-container *ngIf="(station.kpis.vehicles || 0) === 0; else vehVal">0</ng-container>
+                <ng-template #vehVal>{{ station.kpis.vehicles }}</ng-template>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-title">Inlet Pressure</div>
+              <div class="kpi-val">
+                <ng-container *ngIf="(station.kpis.inletPressure || 0) === 0; else pressVal">0.0</ng-container>
+                <ng-template #pressVal>{{ station.kpis.inletPressure | number:'1.1-1' }} <small>BAR</small></ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compressor Section -->
+        <div class="detail-section" *ngIf="station.compressor">
+          <div class="section-label">Compressor Systems Telemetry</div>
+          
+          <div class="comp-summary">
+            <div class="sum-item">
+              <div class="sum-lbl">System State</div>
+              <div class="sum-val">{{ station.compressor.status || 'OFFLINE' }}</div>
+            </div>
+            <div class="sum-item">
+              <div class="sum-lbl">Vibration Index</div>
+              <div class="sum-val">
+                <ng-container *ngIf="(station.compressor.vibration || 0) === 0; else vibVal">0.00</ng-container>
+                <ng-template #vibVal>{{ station.compressor.vibration | number:'1.2-2' }}</ng-template>
+              </div>
+            </div>
+            <div class="sum-item">
+              <div class="sum-lbl">Oil Pressure</div>
+              <div class="sum-val">
+                <ng-container *ngIf="(station.compressor.oilPressure || 0) === 0; else oilVal">0.00</ng-container>
+                <ng-template #oilVal>{{ station.compressor.oilPressure | number:'1.2-2' }}</ng-template>
+              </div>
+            </div>
+          </div>
+
+          <div class="stage-grid">
+            <div class="stage-card" *ngFor="let stage of station.compressor.stages; let i = index">
+              <div class="stg-lbl">STAGE {{ i + 1 }}</div>
+              <div class="stg-val pressure">
+                <ng-container *ngIf="(stage.pressure || 0) === 0; else sPressVal">0.0</ng-container>
+                <ng-template #sPressVal>{{ stage.pressure | number:'1.1-1' }} <small>BAR</small></ng-template>
+              </div>
+              <div class="stg-val temp">
+                <ng-container *ngIf="(stage.temperature || 0) === 0; else sTempVal">0</ng-container>
+                <ng-template #sTempVal>{{ stage.temperature | number:'1.0-0' }} <small>°C</small></ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dispensers Section -->
+        <div class="detail-section" *ngIf="station.dispensers && station.dispensers.length > 0">
+          <div class="section-label">Asset Grid: Dispensers ({{ station.dispensers.length }})</div>
+          <div class="dispenser-grid">
+            <div class="disp-card" *ngFor="let disp of station.dispensers">
+              <div class="disp-head">
+                <span class="name">{{ disp.name | uppercase }}</span>
+                <span class="status">{{ disp.status | uppercase }}</span>
+              </div>
+              <div class="nozzles">
+                <div class="nozzle-box" *ngIf="disp.left">
+                  <div class="nz-lbl">PRIMARY</div>
+                  <div class="nz-val">
+                    <ng-container *ngIf="(disp.left.volume || 0) === 0; else lVolVal">0.00</ng-container>
+                    <ng-template #lVolVal>{{ disp.left.volume | number:'1.2-2' }} <small>M³</small></ng-template>
+                  </div>
+                </div>
+                <div class="nozzle-box" *ngIf="disp.right">
+                  <div class="nz-lbl">SECONDARY</div>
+                  <div class="nz-val">
+                    <ng-container *ngIf="(disp.right.volume || 0) === 0; else rVolVal">0.00</ng-container>
+                    <ng-template #rVolVal>{{ disp.right.volume | number:'1.2-2' }} <small>M³</small></ng-template>
+                  </div>
                 </div>
               </div>
             </div>
@@ -180,20 +180,20 @@
     </ng-container>
   </div>
 
-  <!-- Event Log Drawer (Left Side) -->
+  <!-- Event Log Side Drawer -->
   <div class="log-overlay" [class.active]="showLog">
-    <div class="log-header">
-      <h2><i class="pi pi-exclamation-circle" style="color:#ef4444;margin-right:8px"></i> SYSTEM EVENTS</h2>
-      <button type="button" class="close-btn" style="width:28px;height:28px;border-radius:6px;border:1px solid rgba(100,255,218,0.1);background:rgba(30,41,59,0.6);color:#94a3b8;cursor:pointer" (click)="toggleLog()">
-        <i class="pi pi-times" style="font-size:12px"></i>
+    <div class="log-head">
+      <h2>FAULTS & ALERTS</h2>
+      <button type="button" class="close-panel" style="width:32px;height:32px;font-size:14px" (click)="toggleLog()">
+        <i class="pi pi-times"></i>
       </button>
     </div>
     <div *ngFor="let event of eventLog()" class="log-item">
       <div class="log-meta">
-        <span class="source">Station {{ event.stationId }}</span>
+        <span class="source">UNIT: {{ event.stationId }}</span>
         <span class="time">{{ event.timestamp | date:'HH:mm:ss' }}</span>
       </div>
-      <p class="log-msg">{{ event.message || event.className }}</p>
+      <p class="msg">{{ event.message || event.className }}</p>
     </div>
   </div>
 </div>

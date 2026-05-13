@@ -4,6 +4,6 @@ import { ScadaDashboardComponent } from './scada-dashboard.component';
 export const SCADA_MONITOR_ROUTES: Routes = [
   {
     path: '',
-    component: ScadaDashboardComponent
-  }
+    component: ScadaDashboardComponent,
+  },
 ];
