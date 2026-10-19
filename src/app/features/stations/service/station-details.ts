@@ -60,8 +60,11 @@ export class StationDetails {
   getAvaliavleAssets(): Observable<any> {
     return this.http.get(`${environment.url}Asset/available`);
   }
-  getAvailableStations(): Observable<any> {
-    return this.http.get(`${environment.url}Stations/All-Stations`);
+  getAvailableStations(search?: string, pageSize?: number): Observable<any> {
+    const params: any = {};
+    if (search) params.Search = search;
+    if (pageSize) params.PageSize = pageSize;
+    return this.http.get(`${environment.url}Stations/All-Stations`, { params });
   }
 
   addAsset(body: { name: string; serialNumber: string; stationId: number }): Observable<any> {

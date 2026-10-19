@@ -49,6 +49,7 @@ export class Dispensers implements OnInit {
   selectedMachineId: any;
   selectedDispenserNo: any;
   selectedParamName: any;
+  private hasRealtimeData = false;
   constructor(
     private _stationDetails: StationDetails,
     private _Router: Router,
@@ -58,8 +59,8 @@ export class Dispensers implements OnInit {
     private cdr: ChangeDetectorRef,
   ) {}
   ngOnInit(): void {
-    this.getAllDispensers();
     this.subscribeToRealtimeData();
+    this.getAllDispensers();
   }
 
   ngOnChanges(changes: SimpleChanges): void {}
@@ -68,14 +69,24 @@ export class Dispensers implements OnInit {
     { label: 'Offline', value: 'Offline' },
   ];
   getAllDispensers() {
+    if (this.hasRealtimeData) return;
+
     this.isLoading = true;
     this._stationDetails.getDispenserById(this.stationId).subscribe({
       next: (res) => {
         console.log('Initial Dispensers:', res);
+
+        // Once SignalR has emitted, its payload is the source of truth.
+        // A slower initial API response must not overwrite realtime data.
+        if (this.hasRealtimeData) {
+          console.log('[Dispenser API] Initial response ignored; realtime data already arrived');
+          return;
+        }
+
         this.DispenserDetails = res;
         this.allDispensers = res;
         this.filteredDispensers = this.selectedStatus 
-          ? res.filter((d: any) => d.status === this.selectedStatus)
+          ? res.filter((d: any) => this.getComputedStatus(d) === this.selectedStatus)
           : res;
         
         this.isLoading = false;
@@ -103,6 +114,8 @@ export class Dispensers implements OnInit {
 
           console.log(`📦 [Dispenser Signal] ${data.length} items received at ${new Date().toLocaleTimeString()}`);
 
+          this.hasRealtimeData = true;
+
           if (this.allDispensers && this.allDispensers.length > 0) {
             this.detectDataChanges(data);
           }
@@ -114,7 +127,9 @@ export class Dispensers implements OnInit {
             this.filteredDispensers = data;
           }
           this.isLoading = false;
+          this.cdr.markForCheck();
           this.cdr.detectChanges();
+          console.log('[Dispenser UI] View updated with', this.filteredDispensers.length, 'dispensers');
         }
       },
       error: (err) => console.error(err),
@@ -124,11 +139,13 @@ export class Dispensers implements OnInit {
     if (!dispenser.lastTimeStamp) return 'Offline';
 
     const lastTime = new Date(dispenser.lastTimeStamp).getTime();
+    if (Number.isNaN(lastTime)) return 'Offline';
+
     const now = new Date().getTime();
 
     const diffInHours = (now - lastTime) / (1000 * 60 * 60);
 
-    return diffInHours <= 3 ? 'Online' : 'Offline';
+    return diffInHours >= 0 && diffInHours <= 24 ? 'Online' : 'Offline';
   }
   formatTimestamp(isoString: string): string {
     if (!isoString) return '--:--:---- -- --';
@@ -153,7 +170,7 @@ export class Dispensers implements OnInit {
       this.filteredDispensers = this.DispenserDetails;
     } else {
       this.filteredDispensers = this.DispenserDetails.filter(
-        (d: any) => d.status === this.selectedStatus,
+        (d: any) => this.getComputedStatus(d) === this.selectedStatus,
       );
     }
   }

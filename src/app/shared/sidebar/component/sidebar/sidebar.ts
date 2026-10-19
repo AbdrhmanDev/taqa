@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SidebarItem, SidebarSection } from '../../models/sidebar';
 import { RouterModule } from '@angular/router';
 import { Authen } from '../../../../features/auth/service/authen';
+import { User } from '../../../../features/user-management/services/user';
 @Component({
   selector: 'app-sidebar',
   imports: [RouterModule],
@@ -9,13 +10,19 @@ import { Authen } from '../../../../features/auth/service/authen';
   styleUrl: './sidebar.scss',
 })
 export class Sidebar {
-  constructor(private _Authen: Authen) {}
+  constructor(
+    private _Authen: Authen,
+    private _User: User,
+  ) {}
   @Input() isDrawer: boolean = false;
   @Input() isCollapsed: boolean = true;
   menuItems: any[] = [];
+  userName = '';
+  userRole = localStorage.getItem('roles') || '';
   @Output() toggleSidebar = new EventEmitter<boolean>();
   ngOnInit(): void {
     const role = localStorage.getItem('roles');
+    this.onGetMyProfile();
 
     this.menuItems = this.links.map((section) => ({
       ...section,
@@ -93,6 +100,18 @@ export class Sidebar {
       ],
     },
   ];
+  onGetMyProfile() {
+    this._User.getMyProfile().subscribe({
+      next: (res) => {
+        const profile = res?.data ?? res;
+        this.userName =
+          profile?.userName ?? profile?.username ?? profile?.UserName ?? profile?.email ?? '';
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
   logout() {
     this._Authen.logout();
   }

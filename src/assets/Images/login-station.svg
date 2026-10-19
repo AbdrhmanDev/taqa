@@ -1,0 +1,213 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9fc4d8"/>
+      <stop offset="0.45" stop-color="#d9e6ea"/>
+      <stop offset="0.75" stop-color="#f3e6d6"/>
+      <stop offset="1" stop-color="#f6d9bd"/>
+    </linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#cfd2d4"/>
+      <stop offset="1" stop-color="#a9aeb2"/>
+    </linearGradient>
+    <linearGradient id="fascia" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#23b5ab"/>
+      <stop offset="1" stop-color="#0c8a82"/>
+    </linearGradient>
+    <linearGradient id="underside" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8e9aa1"/>
+      <stop offset="0.45" stop-color="#dfe5e8"/>
+      <stop offset="1" stop-color="#aab5bb"/>
+    </linearGradient>
+    <linearGradient id="pillar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0a716b"/>
+      <stop offset="0.35" stop-color="#1fab9f"/>
+      <stop offset="1" stop-color="#086560"/>
+    </linearGradient>
+    <linearGradient id="warehouse" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3577bf"/>
+      <stop offset="1" stop-color="#25599a"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4a5d68"/>
+      <stop offset="0.5" stop-color="#2c3a42"/>
+      <stop offset="1" stop-color="#45575f"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff4e0" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#fff4e0" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="ribs" width="12" height="10" patternUnits="userSpaceOnUse">
+      <rect width="12" height="10" fill="url(#warehouse)"/>
+      <rect width="2" height="10" fill="#1d4a7e" opacity="0.55"/>
+    </pattern>
+    <pattern id="panels" width="60" height="22" patternUnits="userSpaceOnUse">
+      <rect width="60" height="22" fill="none"/>
+      <rect x="4" y="5" width="52" height="12" rx="2" fill="#ffffff" opacity="0.55"/>
+    </pattern>
+
+    <!-- Minibus (body colour = currentColor) -->
+    <symbol id="van" viewBox="0 0 220 110">
+      <ellipse cx="110" cy="102" rx="104" ry="7" fill="#000" opacity="0.18"/>
+      <path d="M8 92 L8 40 Q10 18 40 14 L160 11 Q186 11 197 34 L210 62 L212 92 Z" fill="currentColor"/>
+      <path d="M8 92 L8 40 Q10 18 40 14 L160 11 Q186 11 197 34 L210 62 L212 92 Z" fill="none" stroke="#7e888e" stroke-width="1.5"/>
+      <path d="M8 70 L212 70 L212 92 L8 92 Z" fill="#000" opacity="0.07"/>
+      <path d="M22 26 L154 21 L154 48 L22 50 Z" fill="url(#glass)"/>
+      <path d="M162 21 Q182 21 190 37 L199 55 L162 52 Z" fill="url(#glass)"/>
+      <path d="M30 27 L60 26 L44 48 L26 49 Z" fill="#fff" opacity="0.12"/>
+      <line x1="66" y1="23" x2="66" y2="49" stroke="currentColor" stroke-width="5"/>
+      <line x1="110" y1="22" x2="110" y2="49" stroke="currentColor" stroke-width="5"/>
+      <line x1="120" y1="54" x2="120" y2="88" stroke="#7e888e" stroke-width="1.2"/>
+      <rect x="201" y="64" width="11" height="9" rx="2" fill="#f5cf55"/>
+      <rect x="8" y="64" width="7" height="9" rx="1" fill="#d24a3a"/>
+      <rect x="196" y="82" width="18" height="8" rx="2" fill="#5f686d"/>
+      <circle cx="52" cy="92" r="15" fill="#22262a"/>
+      <circle cx="52" cy="92" r="6" fill="#b9c0c4"/>
+      <circle cx="170" cy="92" r="15" fill="#22262a"/>
+      <circle cx="170" cy="92" r="6" fill="#b9c0c4"/>
+    </symbol>
+
+    <!-- CNG dispenser -->
+    <symbol id="dispenser" viewBox="0 0 70 170">
+      <rect x="4" y="0" width="62" height="20" rx="3" fill="#0c8a82"/>
+      <rect x="10" y="6" width="50" height="8" rx="2" fill="#ffffff" opacity="0.85"/>
+      <rect x="4" y="20" width="62" height="150" fill="#f1f4f5"/>
+      <rect x="4" y="20" width="10" height="150" fill="#d7dde0"/>
+      <rect x="18" y="30" width="40" height="26" rx="2" fill="#1b282f"/>
+      <rect x="21" y="34" width="34" height="8" fill="#4fe3c7" opacity="0.9"/>
+      <rect x="21" y="45" width="22" height="6" fill="#4fe3c7" opacity="0.55"/>
+      <rect x="18" y="62" width="40" height="40" rx="2" fill="#d6363a"/>
+      <text x="38" y="88" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#fff">CNG</text>
+      <rect x="18" y="110" width="40" height="7" fill="#0c8a82"/>
+      <rect x="60" y="72" width="9" height="16" rx="2" fill="#2e3336"/>
+      <path d="M64 88 Q84 112 70 160" stroke="#1f2326" stroke-width="3.5" fill="none"/>
+    </symbol>
+
+    <symbol id="cone" viewBox="0 0 30 42">
+      <rect x="1" y="37" width="28" height="5" rx="1" fill="#c9481c"/>
+      <path d="M15 0 L25 37 L5 37 Z" fill="#f26a2e"/>
+      <path d="M10.5 15 L19.5 15 L21.2 22 L8.8 22 Z" fill="#fff"/>
+    </symbol>
+
+    <!-- master gas logo -->
+    <symbol id="logo" viewBox="0 0 300 120">
+      <text x="150" y="58" text-anchor="middle" font-family="'Arial Rounded MT Bold', 'Nunito', Inter, Arial, sans-serif"
+        font-size="68" font-weight="800" fill="#ffffff" stroke="#3f4a50" stroke-width="3" paint-order="stroke"
+        letter-spacing="1">master</text>
+      <text x="196" y="108" text-anchor="middle" font-family="'Arial Rounded MT Bold', 'Nunito', Inter, Arial, sans-serif"
+        font-size="46" font-weight="800" fill="#e2262f" stroke="#ffffff" stroke-width="3" paint-order="stroke">gas</text>
+    </symbol>
+  </defs>
+
+  <!-- Sky -->
+  <rect width="1000" height="1000" fill="url(#sky)"/>
+  <circle cx="820" cy="560" r="260" fill="url(#sun)"/>
+  <g fill="#ffffff" opacity="0.55">
+    <ellipse cx="180" cy="140" rx="120" ry="16"/>
+    <ellipse cx="260" cy="125" rx="70" ry="12"/>
+    <ellipse cx="760" cy="200" rx="140" ry="14"/>
+    <ellipse cx="850" cy="186" rx="60" ry="10"/>
+  </g>
+
+  <!-- Distant skyline -->
+  <g fill="#c6ced2">
+    <rect x="610" y="560" width="70" height="80"/>
+    <rect x="690" y="585" width="80" height="55"/>
+    <rect x="780" y="548" width="120" height="92"/>
+    <rect x="905" y="575" width="95" height="65"/>
+  </g>
+  <rect x="790" y="560" width="10" height="10" fill="#e4e9eb"/>
+  <rect x="815" y="560" width="10" height="10" fill="#e4e9eb"/>
+  <rect x="840" y="560" width="10" height="10" fill="#e4e9eb"/>
+
+  <!-- Blue warehouse -->
+  <rect x="-10" y="470" width="330" height="200" fill="url(#ribs)"/>
+  <rect x="-10" y="460" width="330" height="14" fill="#1b4677"/>
+  <rect x="-10" y="610" width="330" height="60" fill="#ddd6c6"/>
+  <rect x="-10" y="608" width="330" height="4" fill="#b8b1a2"/>
+
+  <!-- Service building -->
+  <rect x="470" y="545" width="440" height="125" fill="#e8e3d8"/>
+  <rect x="458" y="518" width="464" height="32" fill="url(#fascia)"/>
+  <rect x="560" y="527" width="150" height="14" rx="2" fill="#fff" opacity="0.85"/>
+  <rect x="520" y="582" width="96" height="88" fill="#c8cfd3"/>
+  <rect x="650" y="582" width="96" height="88" fill="#c8cfd3"/>
+  <rect x="780" y="582" width="96" height="88" fill="#c8cfd3"/>
+  <g stroke="#b3bbbf" stroke-width="2">
+    <line x1="520" y1="600" x2="616" y2="600"/><line x1="520" y1="620" x2="616" y2="620"/><line x1="520" y1="640" x2="616" y2="640"/>
+    <line x1="650" y1="600" x2="746" y2="600"/><line x1="650" y1="620" x2="746" y2="620"/><line x1="650" y1="640" x2="746" y2="640"/>
+    <line x1="780" y1="600" x2="876" y2="600"/><line x1="780" y1="620" x2="876" y2="620"/><line x1="780" y1="640" x2="876" y2="640"/>
+  </g>
+
+  <!-- Ground -->
+  <rect x="0" y="668" width="1000" height="332" fill="url(#ground)"/>
+  <path d="M0 830 L1000 770 L1000 778 L0 840 Z" fill="#8f969b"/>
+  <path d="M0 935 L1000 855 L1000 1000 L0 1000 Z" fill="#cdc6b8"/>
+  <!-- canopy shadow & light pools -->
+  <polygon points="140,700 820,690 900,770 60,800" fill="#000" opacity="0.07"/>
+  <ellipse cx="300" cy="735" rx="170" ry="26" fill="url(#glow)"/>
+  <ellipse cx="610" cy="728" rx="170" ry="24" fill="url(#glow)"/>
+
+  <!-- Light pole -->
+  <rect x="912" y="300" width="8" height="390" fill="#76808a"/>
+  <rect x="884" y="284" width="64" height="18" rx="3" fill="#59626a"/>
+  <rect x="890" y="268" width="52" height="16" rx="3" fill="#69737b"/>
+  <rect x="892" y="300" width="48" height="4" fill="#fff6d8"/>
+
+  <!-- Background minibuses -->
+  <use href="#van" x="560" y="596" width="150" height="75" style="color:#f3f5f6"/>
+  <use href="#van" x="700" y="600" width="140" height="70" style="color:#ffffff"/>
+  <use href="#van" x="820" y="604" width="130" height="65" style="color:#eceff1"/>
+
+  <!-- Canopy underside with LED panels -->
+  <polygon points="70,330 905,368 830,420 150,450" fill="url(#underside)"/>
+  <polygon points="70,330 905,368 830,420 150,450" fill="url(#panels)" opacity="0.6"/>
+  <polygon points="150,450 830,420 826,430 154,461" fill="#6f7c83"/>
+
+  <!-- Pillars -->
+  <rect x="200" y="446" width="30" height="300" fill="url(#pillar)"/>
+  <rect x="196" y="730" width="38" height="16" fill="#0a716b"/>
+  <rect x="488" y="434" width="28" height="296" fill="url(#pillar)"/>
+  <rect x="484" y="716" width="36" height="16" fill="#0a716b"/>
+  <rect x="768" y="424" width="26" height="276" fill="url(#pillar)"/>
+  <rect x="764" y="686" width="34" height="14" fill="#0a716b"/>
+
+  <!-- Canopy fascia -->
+  <polygon points="70,250 905,300 905,368 70,330" fill="url(#fascia)"/>
+  <polygon points="70,250 905,300 905,307 70,257" fill="#3ccabd"/>
+  <polygon points="70,326 905,364 905,368 70,330" fill="#08665f"/>
+  <!-- red stripes + station name -->
+  <polygon points="440,297 640,309 640,320 440,308" fill="#e2262f"/>
+  <polygon points="760,317 900,325 900,336 760,328" fill="#e2262f"/>
+  <text x="700" y="324" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700"
+    fill="#ffffff" letter-spacing="1.5" transform="rotate(3.4 700 324)">EL-SALAM</text>
+
+  <!-- Logo sitting on top of the canopy -->
+  <use href="#logo" x="110" y="168" width="300" height="120"/>
+
+  <!-- Front vehicles -->
+  <use href="#van" x="40" y="626" width="230" height="115" style="color:#c92d2b"/>
+  <use href="#van" x="320" y="636" width="180" height="90" style="color:#f7f8f9"/>
+  <use href="#van" x="590" y="626" width="190" height="95" style="color:#ffffff"/>
+
+  <!-- Islands and dispensers -->
+  <rect x="236" y="732" width="134" height="24" fill="#959ca1"/>
+  <rect x="236" y="728" width="134" height="6" fill="#0c8a82"/>
+  <use href="#dispenser" x="266" y="560" width="70" height="170"/>
+  <rect x="520" y="716" width="134" height="24" fill="#959ca1"/>
+  <rect x="520" y="712" width="134" height="6" fill="#0c8a82"/>
+  <use href="#dispenser" x="550" y="544" width="70" height="170"/>
+
+  <!-- Bollards -->
+  <path d="M170 760 Q170 735 186 735 Q202 735 202 760" stroke="#1fab9f" stroke-width="7" fill="none"/>
+  <path d="M440 742 Q440 718 455 718 Q470 718 470 742" stroke="#1fab9f" stroke-width="7" fill="none"/>
+
+  <!-- Cones -->
+  <use href="#cone" x="600" y="768" width="28" height="40"/>
+  <use href="#cone" x="660" y="762" width="28" height="40"/>
+  <use href="#cone" x="725" y="756" width="28" height="40"/>
+</svg>

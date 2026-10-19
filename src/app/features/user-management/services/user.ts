@@ -23,6 +23,9 @@ export class User {
   getAllRoles(): Observable<string> {
     return this.http.get<string>(environment.url + 'auth/GetAllRoles');
   }
+  getMyProfile(): Observable<any> {
+    return this.http.get<any>(environment.url + 'auth/MyProfile');
+  }
   editUserRole(payload: any): Observable<string> {
     return this.http.put<string>(environment.url + 'auth/UpdateUser', payload);
   }

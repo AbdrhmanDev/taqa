@@ -25,17 +25,44 @@ export class AddUser implements OnInit {
   }
   addUserForm = new FormGroup({
     roleName: new FormControl('', Validators.required),
-    userName: new FormControl('', Validators.required),
-    email: new FormControl('', [Validators.required, Validators.email]),
+    userName: new FormControl('', [
+      Validators.required,
+      Validators.minLength(3),
+      Validators.maxLength(50),
+      Validators.pattern(/^[a-zA-Z0-9._@+-]+$/),
+    ]),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.email,
+      Validators.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/),
+    ]),
     phoneNumber: new FormControl('', [Validators.required, Validators.pattern('[0-9]{10}')]),
-    password: new FormControl('', Validators.required),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).+$/),
+    ]),
   });
 
+  isInvalid(name: string): boolean {
+    const control = this.addUserForm.get(name);
+    return !!control && control.invalid && (control.touched || control.dirty);
+  }
+
+  hasError(name: string, error: string): boolean {
+    return !!this.addUserForm.get(name)?.hasError(error);
+  }
+
   onAddUser() {
+    if (this.addUserForm.invalid) {
+      this.addUserForm.markAllAsTouched();
+      return;
+    }
     this._User.addUser(this.addUserForm.value).subscribe({
       next: (res) => {
         console.log(res);
         this.showSuccess('Add User Successfully');
+        this.addUserForm.reset();
       },
       error: (err) => {
         console.log(err);

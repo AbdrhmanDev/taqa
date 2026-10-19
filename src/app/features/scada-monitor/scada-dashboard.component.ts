@@ -96,11 +96,10 @@ export class ScadaDashboardComponent implements OnInit, AfterViewInit, OnDestroy
       attributionControl: true
     });
 
-    // Gray/Light tile layer (CartoDB Positron)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      attribution: '© CartoDB © OpenStreetMap contributors',
-      maxZoom: 19,
-      subdomains: 'abcd'
+    // Gray/Light tile layer (Esri World Light Gray Canvas - no API key required)
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles © Esri — Esri, DeLorme, NAVTEQ',
+      maxZoom: 16
     }).addTo(this.map);
 
     // Add zoom control to bottom-right

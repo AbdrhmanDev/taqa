@@ -2,7 +2,7 @@
   <!-- Terminal Grid -->
   <div class="pump-grid" *ngIf="!isLoading">
     <div *ngFor="let dispenser of filteredDispensers" class="pump-station"
-      [class.pump-offline]="dispenser.left?.connectionStatus !== 'Online' && dispenser.right?.connectionStatus !== 'Online'">
+      [class.pump-offline]="getComputedStatus(dispenser) === 'Offline'">
       
       <!-- LEFT SIDE: Hose + Nozzle Box -->
       <div class="side-unit left-unit">
@@ -13,7 +13,7 @@
         </div>
         
         <!-- LEFT NOZZLE BOX at the end of the hose -->
-        <div class="nozzle-box side-left" [class.offline]="dispenser.left?.connectionStatus !== 'Online'">
+        <div class="nozzle-box side-left" [class.offline]="getComputedStatus(dispenser) === 'Offline'">
           <div class="box-tag">LEFT NOZZLE</div>
           <div class="box-metrics">
             <div class="metric" (click)="openDialog(dispenser.dispenserName, dispenser.left?.dispenserNo, 'chargeVolume')"
@@ -39,7 +39,7 @@
       <div class="pump-main-unit">
         <div class="unit-head">
           <div class="id-badge">{{ dispenser.dispenserName }}</div>
-          <div class="status-indicator" [class.active]="dispenser.left?.connectionStatus === 'Online' || dispenser.right?.connectionStatus === 'Online'"></div>
+          <div class="status-indicator" [class.active]="getComputedStatus(dispenser) === 'Online'"></div>
         </div>
 
         <div class="main-lcd">
@@ -73,7 +73,7 @@
         </div>
 
         <!-- RIGHT NOZZLE BOX at the end of the hose -->
-        <div class="nozzle-box side-right" [class.offline]="dispenser.right?.connectionStatus !== 'Online'">
+        <div class="nozzle-box side-right" [class.offline]="getComputedStatus(dispenser) === 'Offline'">
           <div class="box-tag">RIGHT NOZZLE</div>
           <div class="box-metrics">
             <div class="metric" (click)="openDialog(dispenser.dispenserName, dispenser.right?.dispenserNo, 'chargeVolume')"

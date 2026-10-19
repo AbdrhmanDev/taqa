@@ -5,25 +5,56 @@
     <div class="grid grid-cols-12 gap-6">
       <div class="col-span-12 md:col-span-3"> <label class="block text-sm font-medium text-gray-700 mb-1"> Name </label>
         <input formControlName="userName" type="text" placeholder="Enter your name"
-          class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" />
+          [class.border-red-500]="isInvalid('userName')" [class.border-gray-300]="!isInvalid('userName')"
+          class="w-full rounded-lg border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" />
+        @if (isInvalid('userName')) {
+          <p class="text-xs text-red-500 mt-1">
+            @if (hasError('userName', 'required')) { Name is required }
+            @else if (hasError('userName', 'minlength')) { Name must be at least 3 characters }
+            @else if (hasError('userName', 'maxlength')) { Name must be at most 50 characters }
+            @else if (hasError('userName', 'pattern')) { Only letters, numbers and . _ &#64; + - are allowed (no spaces) }
+          </p>
+        }
       </div>
 
       <div class="col-span-12 md:col-span-3"> <label class="block text-sm font-medium text-gray-700 mb-1"> Email
         </label>
         <input formControlName="email" type="text" placeholder="Enter your email"
-          class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" />
+          [class.border-red-500]="isInvalid('email')" [class.border-gray-300]="!isInvalid('email')"
+          class="w-full rounded-lg border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" />
+        @if (isInvalid('email')) {
+          <p class="text-xs text-red-500 mt-1">
+            @if (hasError('email', 'required')) { Email is required }
+            @else { Enter a valid email address }
+          </p>
+        }
       </div>
 
       <div class="col-span-12 md:col-span-3"> <label class="block text-sm font-medium text-gray-700 mb-1"> PhoneNumber
         </label>
-        <input formControlName="phoneNumber" type="text" placeholder="Enter your PhoneNumber"
-          class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" />
+        <input formControlName="phoneNumber" type="text" inputmode="numeric" maxlength="10" placeholder="Enter your PhoneNumber"
+          [class.border-red-500]="isInvalid('phoneNumber')" [class.border-gray-300]="!isInvalid('phoneNumber')"
+          class="w-full rounded-lg border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" />
+        @if (isInvalid('phoneNumber')) {
+          <p class="text-xs text-red-500 mt-1">
+            @if (hasError('phoneNumber', 'required')) { Phone number is required }
+            @else { Phone number must be exactly 10 digits }
+          </p>
+        }
       </div>
 
       <div class="col-span-12 md:col-span-3"> <label class="block text-sm font-medium text-gray-700 mb-1"> Password
         </label>
         <input formControlName="password" type="password" placeholder="Enter your password"
-          class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" />
+          [class.border-red-500]="isInvalid('password')" [class.border-gray-300]="!isInvalid('password')"
+          class="w-full rounded-lg border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" />
+        @if (isInvalid('password')) {
+          <p class="text-xs text-red-500 mt-1">
+            @if (hasError('password', 'required')) { Password is required }
+            @else if (hasError('password', 'minlength')) { Password must be at least 8 characters }
+            @else { Password must contain uppercase, lowercase, a number and a special character }
+          </p>
+        }
       </div>
     </div>
 
@@ -32,8 +63,12 @@
       <div class="col-span-12 md:col-span-3">
         <label class="label">Roles</label>
         <p-select formControlName="roleName" [options]="allRoles" optionLabel="roleName" optionValue="roleName"
-          placeholder="Select a role" class="w-full">
+          placeholder="Select a role" class="w-full" [class.ng-invalid]="isInvalid('roleName')"
+          [class.ng-dirty]="isInvalid('roleName')">
         </p-select>
+        @if (isInvalid('roleName')) {
+          <p class="text-xs text-red-500 mt-1">Role is required</p>
+        }
       </div>
     </div>
 

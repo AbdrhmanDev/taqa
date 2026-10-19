@@ -1,19 +1,18 @@
 import { SharedData } from '../../../service/shared-data';
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
-import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
-import { filter } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, filter, of, Subject, switchMap } from 'rxjs';
 import { dashboardService } from '../../../../features/dashboard/service/dashboard';
+import { StationDetails } from '../../../../features/stations/service/station-details';
 import { DatePickerModule } from 'primeng/datepicker';
 @Component({
   selector: 'app-navbar',
   standalone: true,
   imports: [
     CommonModule,
-    AutoCompleteModule,
     RouterModule,
     FormsModule,
     SelectModule,
@@ -29,6 +28,7 @@ export class Navbar implements OnInit {
     private router: Router,
     private dashboardService: dashboardService,
     private SharedData: SharedData,
+    private _StationDetails: StationDetails,
   ) {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       this.pageTitle = this.getRouteTitle();
@@ -36,6 +36,22 @@ export class Navbar implements OnInit {
     });
   }
   ngOnInit(): void {
+    this.searchTerms
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap((term) => {
+          if (!term) return of(null);
+          this.searchLoading = true;
+          return this._StationDetails
+            .getAvailableStations(term, 8)
+            .pipe(catchError((err) => (console.log(err), of(null))));
+        }),
+      )
+      .subscribe((res) => {
+        this.searchResults = res?.items ?? [];
+        this.searchLoading = false;
+      });
     this.selectedTime = 0;
     // this.getDashbaordSummary();
     // this.getDashbaordRevenue();
@@ -60,11 +76,34 @@ export class Navbar implements OnInit {
   showZoneDropdown = false;
   selectedZone = 'All Zones';
   zones = ['All Zones', 'Zone A', 'Zone B', 'Zone C', 'Zone D'];
-  items: any[] | undefined;
+  // Station search
+  searchText = '';
+  searchResults: any[] = [];
+  searchLoading = false;
+  showSearchResults = false;
+  private searchTerms = new Subject<string>();
 
-  value: any;
+  onSearch(term: string) {
+    this.showSearchResults = true;
+    this.searchTerms.next(term.trim());
+    if (!term.trim()) this.searchResults = [];
+  }
 
-  search(event: AutoCompleteCompleteEvent) {}
+  onSearchEnter() {
+    if (this.searchResults.length) this.goToStation(this.searchResults[0]);
+  }
+
+  goToStation(station: any) {
+    this.router.navigate(['/dashboard/station-details', station.id]);
+    this.closeSearch();
+    this.searchText = '';
+    this.searchResults = [];
+  }
+
+  closeSearch() {
+    // Delay so a click on a result registers before the list is removed
+    setTimeout(() => (this.showSearchResults = false), 150);
+  }
 
   private getRouteTitle(): string {
     let route = this.router.routerState.root;

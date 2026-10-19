@@ -30,6 +30,10 @@ export class Login implements OnInit {
     private messageService: MessageService,
   ) {}
   ngOnInit(): void {}
+  showPassword = false;
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required]),
@@ -50,7 +54,14 @@ export class Login implements OnInit {
       life: 2000,
     });
   }
+  isLoading = false;
   Login() {
+    if (this.isLoading) return;
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+    this.isLoading = true;
     this._Authen.login(this.loginForm.value).subscribe({
       next: (res) => {
         console.log(res);
@@ -61,6 +72,7 @@ export class Login implements OnInit {
       },
       error: (err) => {
         console.log(err);
+        this.isLoading = false;
         this.showError();
       },
     });

@@ -38,6 +38,37 @@
       </div>
       <div class="result-meta">Continuous data stream frames</div>
     </div>
+
+    <div class="result-card interval">
+      <div class="result-label">Latest Signal Interval</div>
+      <div class="result-value">{{ formatDuration(lastIntervalMs) }}</div>
+      <div class="result-meta">Time since the previous dispenser signal</div>
+    </div>
+
+    <div class="result-card interval">
+      <div class="result-label">Average Signal Interval</div>
+      <div class="result-value">{{ formatDuration(averageIntervalMs) }}</div>
+      <div class="result-meta">
+        Min: {{ formatDuration(minIntervalMs) }} · Max: {{ formatDuration(maxIntervalMs) }}
+      </div>
+    </div>
+  </div>
+
+  <div class="interval-log" *ngIf="intervalHistory.length">
+    <div class="preview-header">
+      <span>Signal Interval Log</span>
+      <span>Latest {{ intervalHistory.length }} intervals</span>
+    </div>
+    <div class="interval-row interval-head">
+      <span>Packet</span>
+      <span>Received At</span>
+      <span>Since Previous</span>
+    </div>
+    <div class="interval-row" *ngFor="let item of intervalHistory">
+      <span>#{{ item.packet }}</span>
+      <span>{{ item.receivedAt | date:'mediumTime' }}</span>
+      <strong>{{ formatDuration(item.intervalMs) }}</strong>
+    </div>
   </div>
 
   <div class="error-panel" *ngIf="diagnostic.status === 'error'">

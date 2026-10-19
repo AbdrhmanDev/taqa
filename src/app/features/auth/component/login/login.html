@@ -66,19 +66,23 @@
             </span>
 
             <!-- Password Input -->
-            <input formControlName="password" type="password" id="password" placeholder="Enter your password" class="w-full rounded-lg border border-gray-300
+            <input formControlName="password" [type]="showPassword ? 'text' : 'password'" id="password" placeholder="Enter your password" class="w-full rounded-lg border border-gray-300
              pl-11 pr-11 py-2.5 text-sm
              focus:outline-none focus:ring-2 focus:ring-teal-500
              focus:border-transparent" />
 
 
-            <button type="button"
+            <button type="button" (click)="togglePassword()"
+              [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
               class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-teal-500">
               <!-- eye svg -->
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z" />
                 <circle cx="12" cy="12" r="3" />
+                @if (showPassword) {
+                  <line x1="2" y1="2" x2="22" y2="22" />
+                }
               </svg>
             </button>
           </div>
@@ -99,9 +103,18 @@
         </div>
 
 
-        <button type="submit" class="w-full bg-teal-500 hover:bg-teal-600
-                 text-white font-medium py-3 rounded-lg transition">
-          Sign in
+        <button type="submit" [disabled]="isLoading" class="w-full bg-teal-500 hover:bg-teal-600
+                 text-white font-medium py-3 rounded-lg transition flex items-center justify-center gap-2
+                 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-teal-500">
+          @if (isLoading) {
+            <svg class="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity="0.25" />
+              <path d="M22 12a10 10 0 0 0-10-10" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+            </svg>
+            Signing in...
+          } @else {
+            Sign in
+          }
         </button>
       </form>
     </div>
@@ -109,7 +122,7 @@
 
 
   <div class="hidden md:block md:w-1/2">
-    <img src="../../../../../assets/Images/auth-background.png" class="w-full h-full object-cover"
-      alt="Auth background" />
+    <img src="../../../../../assets/Images/master-gas-station.jpg" class="w-full h-full object-cover object-[35%_center]"
+      alt="Master Gas station" />
   </div>
 </section>
