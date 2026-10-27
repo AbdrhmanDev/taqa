@@ -1,34 +1,38 @@
-import { Component } from '@angular/core';
-import { SelectModule } from 'primeng/select';
-import { DatePickerModule } from 'primeng/datepicker';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { TableModule } from 'primeng/table';
-import { RouterLink } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TabsModule } from 'primeng/tabs';
+import { TicketsList } from '../tickets-list/tickets-list';
+import { TicketSource } from '../../../alarm-alerts/models/ticketing';
+
 @Component({
   selector: 'app-requests',
-  imports: [SelectModule, DatePickerModule, CommonModule, FormsModule, TableModule, RouterLink],
+  imports: [TabsModule, TicketsList],
   templateUrl: './requests.html',
   styleUrl: './requests.scss',
 })
-export class Requests {
-  date: Date | any;
-  tickets = [
-    {
-      Ticket_ID: '1000',
-      Station: 'El obour',
-      Date: '09:29:30 2025-06-01',
+export class Requests implements OnInit {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+  ) {}
 
-      Throughput: 'Assigned Engineer',
-      status: 'Pending visit',
-    },
-    {
-      Ticket_ID: '2000',
-      Station: 'El obour',
-      Date: '09:29:30 2025-06-01',
+  tab: TicketSource = 'compressor';
+  // Tabs are created on first visit and then kept, so switching back keeps page/filters
+  visited = new Set<TicketSource>();
 
-      Throughput: 'Assigned Engineer',
-      status: 'Pending visit',
-    },
-  ];
+  ngOnInit(): void {
+    const tab = this.route.snapshot.queryParamMap.get('tab');
+    this.tab = tab === 'dispenser' ? 'dispenser' : 'compressor';
+    this.visited.add(this.tab);
+  }
+
+  onTabChange(value: string | number | undefined) {
+    this.tab = value === 'dispenser' ? 'dispenser' : 'compressor';
+    this.visited.add(this.tab);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { tab: this.tab },
+      replaceUrl: true,
+    });
+  }
 }

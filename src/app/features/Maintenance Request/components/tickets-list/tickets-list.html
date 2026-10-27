@@ -1,0 +1,165 @@
+<div class="bg-white rounded-xl shadow-sm p-6">
+  <!-- Filters -->
+  <div class="grid grid-cols-12 gap-6">
+    <div class="col-span-12 md:col-span-3">
+      <label class="block text-sm font-medium text-gray-700 mb-1">Station</label>
+      <p-select [(ngModel)]="stationId" (onChange)="onFilterChange()" [options]="stations" optionLabel="name"
+        optionValue="id" [filter]="true" filterBy="name" [showClear]="true" placeholder="All" class="w-full">
+      </p-select>
+    </div>
+
+    <div class="col-span-12 md:col-span-3">
+      <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+      <p-select [(ngModel)]="status" (onChange)="onFilterChange()" [options]="statuses" optionLabel="label"
+        optionValue="value" [showClear]="true" placeholder="All" class="w-full">
+      </p-select>
+    </div>
+  </div>
+
+  @if (error) {
+  <div class="mt-6 flex items-center gap-3">
+    <p class="text-sm text-red-500">{{ error }}</p>
+    <button (click)="onGetTickets()" class="text-sm text-teal-600 hover:underline cursor-pointer">Retry</button>
+  </div>
+  }
+
+  <p-table class="mt-6" [value]="tickets" [lazy]="true" (onLazyLoad)="onLazyLoad($event)" [loading]="loading"
+    [paginator]="true" [rows]="pageSize" [first]="(page - 1) * pageSize" [totalRecords]="totalCount"
+    [tableStyle]="{ 'min-width': '60rem' }" dataKey="id">
+    <ng-template #header>
+      <tr>
+        <th>ID</th>
+        <th>Station</th>
+        <th>{{ source === 'dispenser' ? 'Dispenser' : 'Device' }}</th>
+        <th>Description</th>
+        <th>Priority</th>
+        <th>Status</th>
+        <th>Assigned To</th>
+        <th>Opened</th>
+        <th>Due Date</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-ticket>
+      <tr>
+        <td class="font-medium">#{{ ticket.id }}</td>
+        <td>{{ ticket.stationName || '-' }}</td>
+        <td>{{ ticket.deviceKey || '-' }}</td>
+        <td class="max-w-xs truncate" [title]="ticket.description || ''">{{ ticket.description || '-' }}</td>
+        <td>
+          <span class="text-xs font-medium px-2 py-0.5 rounded-full" [ngClass]="priorityClass(ticket.priority)">
+            {{ priorityName(ticket.priority) }}
+          </span>
+        </td>
+        <td>
+          <span class="text-xs font-medium px-2 py-0.5 rounded-full" [ngClass]="statusClass(ticket.status)">
+            {{ statusName(ticket.status) }}
+          </span>
+        </td>
+        <td [class.text-gray-400]="!ticket.assignedToUserId">{{ assigneeName(ticket.assignedToUserId) }}</td>
+        <td class="whitespace-nowrap">{{ ticket.openedAt ? (ticket.openedAt | date: 'yyyy-MM-dd HH:mm') : '-' }}</td>
+        <td class="whitespace-nowrap">{{ ticket.dueDate ? (ticket.dueDate | date: 'yyyy-MM-dd') : '-' }}</td>
+        <td>
+          <button (click)="openEdit(ticket)" class="font-bold text-indigo-700 px-2 py-1 rounded cursor-pointer">
+            {{ isTerminal(ticket.status) ? 'View' : 'Edit' }}
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="10" class="text-center text-gray-500 py-8">
+          {{ error ? '' : 'No maintenance requests found.' }}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!-- Edit dialog -->
+<p-dialog [visible]="!!editing" (visibleChange)="!$event && closeEdit()" [modal]="true" [draggable]="false"
+  [resizable]="false" [style]="{ width: '36rem' }" [header]="'Maintenance Request #' + (editing?.id ?? '')">
+  @if (editLoading) {
+  <p class="text-sm text-gray-500 py-6">Loading...</p>
+  } @else if (editing) {
+  <div class="space-y-4">
+    <div class="grid grid-cols-2 gap-3 text-sm bg-gray-50 rounded-lg p-3">
+      <div><span class="text-gray-500">Station:</span> {{ editing.stationName || '-' }}</div>
+      <div><span class="text-gray-500">Device:</span> {{ editing.deviceKey || '-' }}</div>
+      <div><span class="text-gray-500">Opened:</span>
+        {{ editing.openedAt ? (editing.openedAt | date: 'yyyy-MM-dd HH:mm') : '-' }}</div>
+      @if (editing.closedAtUtc) {
+      <div><span class="text-gray-500">Closed:</span> {{ editing.closedAtUtc | date: 'yyyy-MM-dd HH:mm' }}</div>
+      }
+    </div>
+
+    @if (editLocked) {
+    <p class="text-sm text-gray-600 bg-amber-50 border border-amber-200 rounded-lg p-3">
+      This request is {{ statusName(editing.status) }} and can no longer be changed.
+    </p>
+    }
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+        <p-select [(ngModel)]="form.status" [options]="statuses" optionLabel="label" optionValue="value"
+          [disabled]="editLocked" appendTo="body" class="w-full"></p-select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+        <p-select [(ngModel)]="form.priority" [options]="priorities" optionLabel="name" optionValue="value"
+          [disabled]="editLocked" appendTo="body" class="w-full"></p-select>
+      </div>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Assigned To</label>
+      <p-select [(ngModel)]="form.assignedToUserId" [options]="assignees" optionLabel="name" optionValue="id"
+        [filter]="true" (onFilter)="onAssigneeFilter($event)" [showClear]="true" placeholder="Unassigned"
+        [disabled]="editLocked" appendTo="body" class="w-full">
+        <ng-template #item let-user>
+          <div class="flex flex-col">
+            <span>{{ user.name || user.email }}</span>
+            @if (user.roles?.length) {
+            <span class="text-xs text-gray-500">{{ user.roles.join(', ') }}</span>
+            }
+          </div>
+        </ng-template>
+      </p-select>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Due Date</label>
+      <p-datepicker [(ngModel)]="form.dueDate" [showIcon]="true" [showTime]="true" hourFormat="24"
+        [showClear]="true" [disabled]="editLocked" appendTo="body" class="w-full" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+      <textarea pTextarea [(ngModel)]="form.description" rows="3" [disabled]="editLocked"
+        class="w-full"></textarea>
+    </div>
+
+    @if (editError) {
+    <p class="text-sm text-red-500">{{ editError }}</p>
+    }
+  </div>
+  } @else if (editError) {
+  <p class="text-sm text-red-500 py-6">{{ editError }}</p>
+  }
+
+  <ng-template #footer>
+    <div class="flex justify-end gap-2">
+      <button (click)="closeEdit()"
+        class="px-5 py-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 cursor-pointer">
+        {{ editLocked ? 'Close' : 'Cancel' }}
+      </button>
+      @if (!editLocked && !editLoading && editing) {
+      <button (click)="onSave()" [disabled]="saving"
+        class="px-6 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-60 cursor-pointer">
+        {{ saving ? 'Saving...' : 'Save' }}
+      </button>
+      }
+    </div>
+  </ng-template>
+</p-dialog>
